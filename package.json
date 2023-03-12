@@ -1,0 +1,35 @@
+{
+  "name": "vite-dero-wasm",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@rollup/plugin-html": "^1.0.2",
+    "await-to-js": "^3.0.0",
+    "crypto-js": "^4.1.1",
+    "dero-rpc-bridge-api": "^1.1.3",
+    "fs": "^0.0.1-security",
+    "golang": "^0.1.5-stable",
+    "html-webpack-plugin": "^5.5.0",
+    "ipfs-core": "^0.18.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-icons": "^4.7.1",
+    "react-router-dom": "^6.8.1",
+    "vite-plugin-top-level-await": "^1.3.0",
+    "webpack": "^5.75.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.27",
+    "@types/react-dom": "^18.0.10",
+    "@vitejs/plugin-react": "^3.1.0",
+    "add-asset-html-webpack-plugin": "^5.0.2",
+    "vite": "^4.1.0",
+    "vite-plugin-wasm": "^3.2.1"
+  }
+}
