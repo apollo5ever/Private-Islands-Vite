@@ -48,9 +48,9 @@ const WalletMenu = ({handleClose}) => {
      let wallet = walletInfo.value
      wallet.name=name
        if(!state.walletList){
-         setState({...state,"initialized":true,"walletList":[wallet]})
+         setState({...state,"initialized":true,"walletList":[wallet], "walletType":"WASM"})
        }else{
-         setState({...state,"initialized":true,"walletList":[...state.walletList,wallet]})
+         setState({...state,"initialized":true,"walletList":[...state.walletList,wallet], "walletType":"WASM"})
          
        }
         
@@ -88,9 +88,9 @@ console.log(walletInfo)
 let wallet = walletInfo.value
 wallet.name=name
   if(!state.walletList){
-    setState({...state,"initialized":true,"walletList":[wallet]})
+    setState({...state,"initialized":true,"walletList":[wallet], "walletType":"WASM"})
   }else{
-    setState({...state,"initialized":true,"walletList":[...state.walletList,wallet]})
+    setState({...state,"initialized":true,"walletList":[...state.walletList,wallet], "walletType":"WASM"})
     
   }
   
@@ -147,9 +147,9 @@ const handleSubmitCreateNewWallet = async (e) => {
   let wallet = walletInfo.value
   wallet.name=name
     if(!state.walletList){
-      setState({...state,"initialized":true,"walletList":[wallet]})
+      setState({...state,"initialized":true,"walletList":[wallet], "walletType":"WASM"})
     }else{
-      setState({...state,"initialized":true,"walletList":[...state.walletList,wallet]})
+      setState({...state,"initialized":true,"walletList":[...state.walletList,wallet], "walletType":"WASM"})
       
     }
   
