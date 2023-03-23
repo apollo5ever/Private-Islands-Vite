@@ -1,12 +1,11 @@
 import React from 'react'
-
 import to from 'await-to-js'
-
+import { useSendTransaction } from '../useSendTransaction'
 
 export default function Subscribe(props) {
 
  
-
+    const [sendTransaction] = useSendTransaction()
     const [availability,setAvailability] = React.useState("")
     const [subbed,setSubbed] = React.useState(false)
     const [expiry,setExpiry] = React.useState(null)
@@ -77,14 +76,42 @@ export default function Subscribe(props) {
        
         setError("");
 
-        const deroBridgeApi = props.dba.current
+      //  const deroBridgeApi = props.dba.current
 
 
         const TierHash = props.profile+props.index.toString()
         const SupporterHash = props.userAddress
      
+        const data = new Object(
+            {
+                "scid": props.scid,
+             "ringsize": 2,
+             "transfers": [{
+                "burn": (parseInt((event.target.amount.value)*100000)),
+                "destination":props.randomAddress
+              }],
+             "sc_rpc": [{
+                 "name": "entrypoint",
+                 "datatype": "S",
+                 "value": "TU"
+             },
+             {
+                 "name": "T",
+                 "datatype": "S",
+                 "value": TierHash
+             },
+             {
+                 "name": "S",
+                 "datatype": "S",
+                 "value": SupporterHash
+             }
+         ]
+            }
+        )
+            sendTransaction(data)
         
-         const [err0, res0] = await to(deroBridgeApi.wallet('start-transfer', {
+        
+/*          const [err0, res0] = await to(deroBridgeApi.wallet('start-transfer', {
              "scid": props.scid,
              "ringsize": 2,
              "transfers": [{
@@ -107,7 +134,7 @@ export default function Subscribe(props) {
                  "value": SupporterHash
              }
          ]
-         }))
+         })) */
      
          console.log(err0)
          console.log(res0)
@@ -118,14 +145,41 @@ export default function Subscribe(props) {
        
         setError("");
 
-        const deroBridgeApi = props.dba.current
+      //  const deroBridgeApi = props.dba.current
 
 
         const TierHash = props.profile+props.index.toString()
         const SupporterHash = props.userAddress
      
-        
-         const [err0, res0] = await to(deroBridgeApi.wallet('start-transfer', {
+        const data = new Object(
+            {
+                "scid": props.scid,
+             "ringsize": 2,
+             "transfers": [{
+                "burn": (parseInt((event.target.amount.value)*100000)),
+                "destination":props.randomAddress
+              }],
+             "sc_rpc": [{
+                 "name": "entrypoint",
+                 "datatype": "S",
+                 "value": "AS"
+             },
+             {
+                 "name": "T",
+                 "datatype": "S",
+                 "value": TierHash
+             },
+             {
+                 "name": "S",
+                 "datatype": "S",
+                 "value": SupporterHash
+             }
+         ]
+            }
+        )
+        sendTransaction(data)
+
+/*          const [err0, res0] = await to(deroBridgeApi.wallet('start-transfer', {
              "scid": props.scid,
              "ringsize": 2,
              "transfers": [{
@@ -148,7 +202,7 @@ export default function Subscribe(props) {
                  "value": SupporterHash
              }
          ]
-         }))
+         })) */
      
          console.log(err0)
          console.log(res0)

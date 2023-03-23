@@ -39,7 +39,7 @@ body {
   justify-content: center;
   display: flex;
   flex-direction: column;
-}
+}padding: 10px;
 
 .card-grid {
   margin-left: auto;
@@ -393,10 +393,12 @@ footer {
   justify-content: right;
   align-items: flex-end;
   flex-direction: column;
-  width: 100vw;
+  width: 99vw;
   margin-top: 9vh;
   background-color: #085479;
   transition: 0.5s;
+  
+
 }
 
 .dropdown-menu.inactive {
@@ -620,4 +622,20 @@ input[type="password"]:focus {
 .back-button {
   margin-top: 10px;
   cursor: pointer;
+}
+
+.walletSelectItem{
+  color:pink;
+}
+
+.walletSelectItem:hover{
+  cursor:pointer;
+}
+
+.walletSelectItem-Selected{
+  color:green;
+}
+
+.walletSelectItem-Selected:hover{
+  cursor:pointer;
 }

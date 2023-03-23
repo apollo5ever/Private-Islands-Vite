@@ -9,6 +9,7 @@ import { useParams,useSearchParams } from 'react-router-dom'
 import { LoginContext } from '../LoginContext';
 import Success from './success.jsx'
 import hex2a from './hex2a.js'
+import { useSendTransaction } from '../useSendTransaction'
 
 
 
@@ -27,6 +28,7 @@ const [searchParams,setSearchParams] = useSearchParams()
  const [judges,setJudges]=React.useState([])
  const [execs,setExecs] = React.useState([])
  const [error,setError] = React.useState("")
+ const [sendTransaction] = useSendTransaction()
 
  const getJudges = React.useCallback(async () =>{
   const deroBridgeApi = state.deroBridgeApiRef.current
@@ -169,8 +171,65 @@ React.useEffect(() => {
 
    
     let j=parseInt(state.myIslands.filter(x=>x.name=island)[0].j)
+
+    const txData = new Object(
+      {
+        "scid": state.scid,
+      "ringsize": 2,
+      "transfers": transfers,
+      "sc_rpc": [{
+        "name": "entrypoint",
+        "datatype": "S",
+        "value": "BT"
+      },
+
+      {
+        "name": "H",
+        "datatype": "S",
+        "value": island
+      },
+      {
+        "name": "i",
+        "datatype": "U",
+        "value": parseInt(index)
+      },
+      {
+        "name": "J",
+        "datatype": "S",
+        "value": event.target.judge.value
+      },
+      {
+        "name":"X",
+        "datatype":"S",
+        "value":event.target.executer.value
+      },
+      {
+        "name": "E",
+        "datatype": "U",
+        "value": expiry
+      },
+      {
+        "name": "M",
+        "datatype": "S",
+        "value": "M"
+      },
+     
+      {
+        "name": "m",
+        "datatype" : "S",
+        "value": metadata
+      },
+      {
+        "name":"j",
+        "datatype":"U",
+        "value":j
+      }
+      ]
+      }
+    )
+    sendTransaction(txData)
   
-    const [err, res] = await to(deroBridgeApi.wallet('start-transfer', {
+/*     const [err, res] = await to(deroBridgeApi.wallet('start-transfer', {
       "scid": state.scid,
       "ringsize": 2,
       "transfers": transfers,
@@ -222,16 +281,43 @@ React.useEffect(() => {
         "value":j
       }
       ]
-    }))
+    })) 
 
 
     console.log(err)
     console.log(res)
-
+*/
 
     const judgeAddress=hex2a(res0.data.result.stringkeys[`${event.target.judge.value}_O`])
     const executerAddress=hex2a(res0.data.result.stringkeys[`${event.target.executer.value}_O`])
-    const [err3,res3] =await to(deroBridgeApi.wallet('start-transfer',{
+
+    const data2 = new Object({
+      "ringsize":2,
+      "transfers":[
+      {"destination":judgeAddress,
+      "amount":1,
+          
+      "payload_rpc":[
+              {
+                      "name": "C",
+                      "datatype": "S",
+                      "value": "You have been nominated for bounty judge by: " +island
+              }]
+              },
+              
+                {"destination":executerAddress,
+                "amount":1,
+                    
+                "payload_rpc":[
+                        {
+                                "name": "C",
+                                "datatype": "S",
+                                "value": "You have been nominated for bounty executer by: " +island
+                        }]
+                        }]
+    })
+    sendTransaction(data2)
+/*     const [err3,res3] =await to(deroBridgeApi.wallet('start-transfer',{
       "ringsize":2,
       "transfers":[
       {"destination":judgeAddress,
@@ -256,7 +342,7 @@ React.useEffect(() => {
                         }]
                         }]
 
-    }))
+    })) */
 
    
 

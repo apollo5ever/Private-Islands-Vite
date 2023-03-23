@@ -1,8 +1,9 @@
-import React, { useState,useContext } from "react";
+import React, { useState,useContext,useEffect} from "react";
 import { LoginContext } from "./LoginContext";
 import initialize from "./initialize";
 import Info from "./info";
 import { useRPCWallet } from "./components/useRPCWallet";
+import Cookies from 'js-cookie'
 
 
 const WalletMenu = ({handleClose}) => {
@@ -11,6 +12,15 @@ const WalletMenu = ({handleClose}) => {
   const [walletInfo, isLoading, error, fetchWalletInfo] = useRPCWallet();
 
 
+  useEffect(()=>{
+    const walletListCookie = Cookies.get('walletList');
+if (walletListCookie) {
+  setState({...state,"walletList":JSON.parse(walletListCookie)})
+} else {
+  console.log('Cookie does not exist');
+}
+    
+  },[])
 
   const handleOptionClick = option => {
     setMenuOption(option);
@@ -49,8 +59,11 @@ const WalletMenu = ({handleClose}) => {
      wallet.name=name
        if(!state.walletList){
          setState({...state,"initialized":true,"walletList":[wallet], "walletType":"WASM"})
+         Cookies.set('walletList',[wallet],{ expires: 7, path: '/' })
        }else{
+        Cookies.set('walletList',[...state.walletList,wallet],{ expires: 7, path: '/' })
          setState({...state,"initialized":true,"walletList":[...state.walletList,wallet], "walletType":"WASM"})
+
          
        }
         
@@ -71,6 +84,7 @@ const handleSubmitHexSeed = async (e) => {
   console.log(state)
   if(!state.initialized){
     const init = await initialize()
+    console.log('INITIALIZED RESULT',init)
   }
 
 console.log(state)
@@ -83,14 +97,17 @@ const fileData=JSON.stringify(jsonObject)
 
 let err=  window.OpenWallet(walletInfo.value.hexSeed,pass,fileData,true)
 console.log(err)
-console.log(walletInfo)
+console.log("wallet info",walletInfo,fileData)
 
 let wallet = walletInfo.value
 wallet.name=name
   if(!state.walletList){
-    setState({...state,"initialized":true,"walletList":[wallet], "walletType":"WASM"})
+    Cookies.set('walletList',JSON.stringify([wallet]),{ expires: 7, path: '/' })
+    setState({...state,"initialized":true,"walletList":[wallet], "walletType":"WASM", "fileData":fileData, "userAddress":wallet.address})
   }else{
-    setState({...state,"initialized":true,"walletList":[...state.walletList,wallet], "walletType":"WASM"})
+    Cookies.remove('walletList')
+    Cookies.set('walletList',JSON.stringify([...state.walletList,wallet]),{ expires: 7, path: '/' })
+    setState({...state,"initialized":true,"walletList":[...state.walletList,wallet], "walletType":"WASM", "fileData":fileData, "userAddress":wallet.address})
     
   }
   

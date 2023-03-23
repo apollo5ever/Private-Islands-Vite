@@ -11,6 +11,7 @@ import Executer from './Executer';
 import N from './N';
 import Judge from './Judge';
 import getBounties from './getBounties';
+import { useSendTransaction } from '../useSendTransaction';
 
 
 export default function Treasure() {
@@ -22,6 +23,7 @@ export default function Treasure() {
   const [state, setState] = React.useContext(LoginContext);
   const [judging,setJudging]=React.useState([])
   const [executing,setExecuting] = React.useState(false)
+  const [sendTransaction] =useSendTransaction()
   
 
   const getJudging = ()=>{
@@ -59,9 +61,73 @@ export default function Treasure() {
   const AddTreasure =React.useCallback(async (event) =>{
     event.preventDefault();
 
-    const deroBridgeApi = state.deroBridgeApiRef.current
+    //const deroBridgeApi = state.deroBridgeApiRef.current
 
-    const [err, res] = await to(deroBridgeApi.wallet('start-transfer', {
+    const data = new Object(
+      {
+        "scid": state.scid,
+      "ringsize": 2,
+      "transfers": [
+        {
+          "destination":state.randomAddress,
+          "burn":parseInt(event.target.amount.value*100000)
+
+        }
+      ],
+      "sc_rpc": [{
+        "name": "entrypoint",
+        "datatype": "S",
+        "value": "BT"
+      },
+
+      {
+        "name": "H",
+        "datatype": "S",
+        "value": island
+      },
+      {
+        "name": "i",
+        "datatype": "U",
+        "value": parseInt(index)
+      },
+      {
+        "name": "J",
+        "datatype": "S",
+        "value": "J"
+      },
+      {
+        "name":"X",
+        "datatype":"S",
+        "value":"X"
+      },
+      {
+        "name": "E",
+        "datatype": "U",
+        "value": 0
+      },
+      {
+        "name": "M",
+        "datatype": "S",
+        "value": "M"
+      },
+     
+      {
+        "name": "m",
+        "datatype" : "S",
+        "value": "m"
+      },
+      {
+        "name":"j",
+        "datatype":"U",
+        "value":0
+      }
+      ]
+      }
+    )
+
+    sendTransaction(data)
+
+/*     const [err, res] = await to(deroBridgeApi.wallet('start-transfer', {
       "scid": state.scid,
       "ringsize": 2,
       "transfers": [
@@ -119,7 +185,7 @@ export default function Treasure() {
         "value":0
       }
       ]
-    }))
+    })) */
   })
 
   function hex2a(hex) {
@@ -147,7 +213,33 @@ export default function Treasure() {
     event.preventDefault()
     console.log(treasure.judge)
     var hash = params.island
-    const deroBridgeApi = state.deroBridgeApiRef.current
+
+    const data = new Object(
+      {
+        "ringsize": 16,
+        "transfers":[
+          {"destination":treasure.judgeAddress,
+          "amount":1,
+        
+  "payload_rpc":[
+          {
+                  "name": "C",
+                  "datatype": "S",
+                  "value": "Treasure Claim Submitted by: " +state.userAddress
+          },
+          {
+            "name":"POC",
+            "datatype":"S",
+            "value":event.target.proof.value
+          }
+  ]
+          }
+        ]
+      }
+    )
+      sendTransaction(data)
+
+/*     const deroBridgeApi = state.deroBridgeApiRef.current
     const [err, res] = await to(deroBridgeApi.wallet('start-transfer', {
 
        "ringsize": 16,
@@ -173,7 +265,7 @@ export default function Treasure() {
       
      
    
-  }))
+  })) */
 
   })
    

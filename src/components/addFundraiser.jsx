@@ -4,7 +4,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import to from 'await-to-js'
 import { useParams,useSearchParams } from 'react-router-dom'
-
+import { useSendTransaction } from '../useSendTransaction'
 
 
 import { LoginContext } from '../LoginContext';
@@ -14,7 +14,7 @@ import Success from './success.jsx'
 export default function CreateFund() {
 
     
-    
+    const [sendTransaction] = useSendTransaction()
     const [state, setState] = React.useContext(LoginContext);
     const [searchParams,setSearchParams] = useSearchParams()
 
@@ -29,7 +29,10 @@ const index = params.index
 
   const DoIt = React.useCallback(async (event) => {
     event.preventDefault();
-
+    let pass =""
+    if(event.target.pass.value){
+      pass = event.target.pass.value
+    }
     
      
       const deroBridgeApi = state.deroBridgeApiRef.current
@@ -122,8 +125,62 @@ const index = params.index
 
    
   
-    
-    const [err, res] = await to(deroBridgeApi.wallet('start-transfer', {
+    const txData = new Object(
+      {
+        "scid": state.scid,
+      "ringsize": 2,
+      "transfers": transfers,
+      "sc_rpc": [{
+        "name": "entrypoint",
+        "datatype": "S",
+        "value": "NF"
+      },
+
+      {
+        "name": "G",
+        "datatype": "U",
+        "value": parseInt(event.target.goal.value) * 100000
+      },
+      {
+        "name": "D",
+        "datatype": "U",
+        "value": deadline
+      },
+      {
+        "name": "A",
+        "datatype": "S",
+        "value": event.target.address.value
+      },
+      {
+        "name": "H",
+        "datatype": "S",
+        "value": island
+      },
+      {
+        "name": "i",
+        "datatype": "U",
+        "value": parseInt(index)
+      },
+      {
+        "name": "M",
+        "datatype" : "S",
+        "value": "m"
+      },
+      {
+        "name": "m",
+        "datatype" : "S",
+        "value": metadata
+      },
+      {
+        "name":"j",
+        "datatype":"U",
+        "value":j
+      }
+      ]
+      }
+    )
+    sendTransaction(txData,pass)
+   /*  const [err, res] = await to(deroBridgeApi.wallet('start-transfer', {
       "scid": state.scid,
       "ringsize": 2,
       "transfers": transfers,
@@ -178,7 +235,7 @@ const index = params.index
 
 
     console.log(err)
-    console.log(res)
+    console.log(res) */
 
    
 
@@ -209,6 +266,9 @@ const index = params.index
         <textarea placeholder="Description" rows="44" cols="80" id="description"/>
         <input placeholder="Goal" id="goal" type="text" />
         <input placeholder="Address" id="address" type="text" />
+        {state.walletType == "WASM"?
+        <input placeholder="wallet password" id="pass" type="password"/>
+      :""}
         <button type={"submit"}>Create</button>
       </form>
     </div>}

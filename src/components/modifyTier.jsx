@@ -7,10 +7,11 @@ import sha256 from 'crypto-js/sha256'
 import { useParams,useSearchParams } from 'react-router-dom'
 import { LoginContext } from '../LoginContext';
 import Success from './success'
+import { useSendTransaction } from '../useSendTransaction'
 
 
 export default function ModifyTier(){
-
+const [sendTransaction] = useSendTransaction()
 const [searchParams,setSearchParams] = useSearchParams()
 const params = useParams()
 const [state, setState] = React.useContext(LoginContext);
@@ -121,7 +122,68 @@ const handleChange = e=> {
         
         const addSub= await state.ipfs.add(JSON.stringify(islandMeta).toString())
         const M =addSub.cid.toString()
-      const deroBridgeApi=state.deroBridgeApiRef.current
+
+        const txData = new Object(
+          {
+            "scid": state.scid,
+          "ringsize": 2,
+          "transfers": transfers,
+          "sc_rpc": [{
+            "name": "entrypoint",
+            "datatype": "S",
+            "value": "AOMT"
+          },
+          {
+            "name": "Am",
+            "datatype": "U",
+            "value":parseInt(event.target.amount.value*100000)
+          },
+          {
+            "name": "I",
+            "datatype": "U",
+            "value":parseInt(interval)
+          },
+          {
+            "name":"L",
+            "datatype":"U",
+            "value":parseInt(event.target.limit.value)
+          },
+          {
+            "name":"Ad",
+            "datatype": "S",
+            "value": event.target.address.value
+          },
+          {
+            "name": "H",
+            "datatype": "S",
+            "value": params.island
+          },
+          {
+            "name":"i",
+            "datatype":"U",
+            "value":parseInt(params.tier)
+          },
+          {
+            "name":"W",
+            "datatype":"U",
+            "value":whitelisted
+          },
+          {
+            "name": "M",
+            "datatype": "S",
+            "value": M
+          },
+          {
+            "name":"j",
+            "datatype":"U",
+            "value":islandMeta.j
+          }
+          ]
+          }
+        )
+        sendTransaction(txData)
+        
+      /* const deroBridgeApi=state.deroBridgeApiRef.current
         const [err, res] = await to(deroBridgeApi.wallet('start-transfer', {
           "scid": state.scid,
           "ringsize": 2,
@@ -177,7 +239,7 @@ const handleChange = e=> {
             "value":islandMeta.j
           }
           ]
-        }))
+        })) */
       
       setSearchParams({"status":"success"})
     })

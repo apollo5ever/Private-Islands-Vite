@@ -4,6 +4,7 @@ import { LoginContext } from '../LoginContext';
 import to from 'await-to-js'
 import sha256 from 'crypto-js/sha256'
 import getFundraisers from './getFundraisers';
+import { useSendTransaction } from '../useSendTransaction';
 
 
 export default function Fundraiser() {
@@ -15,6 +16,7 @@ export default function Fundraiser() {
   const [state, setState] = React.useContext(LoginContext);
 
   const [raised,setRaised] = React.useState(-1)
+  const [sendTransaction] = useSendTransaction()
 
   function hex2a(hex) {
     var str = '';
@@ -37,8 +39,34 @@ export default function Fundraiser() {
   const withdraw = React.useCallback(async (event) =>{
     event.preventDefault()
     var hash = params.island
-    const deroBridgeApi = state.deroBridgeApiRef.current
-    const [err, res] = await to(deroBridgeApi.wallet('start-transfer', {
+    //const deroBridgeApi = state.deroBridgeApiRef.current
+
+    const data = new Object(
+      {
+        "scid": state.scid,
+        "ringsize": 2,
+        "sc_rpc": [{
+            "name": "entrypoint",
+            "datatype": "S",
+            "value": "WFF"
+        },
+        {
+            "name": "H",
+            "datatype": "S",
+            "value": hash
+        },
+        {
+          "name":"i",
+          "datatype": "U",
+          "value" : parseInt(params.index)
+        }
+    ]
+
+      }
+    )
+
+    sendTransaction(data)
+/*     const [err, res] = await to(deroBridgeApi.wallet('start-transfer', {
       "scid": state.scid,
       "ringsize": 2,
       "sc_rpc": [{
@@ -57,7 +85,7 @@ export default function Fundraiser() {
         "value" : parseInt(params.index)
       }
   ]
-  }))
+  })) */
 
   })
    
@@ -70,12 +98,43 @@ export default function Fundraiser() {
     }else {
       var refundable =0
     }
-console.log(HashAndIndex,refundable,state.scid,state.randomAddress)
+//console.log(HashAndIndex,refundable,state.scid,state.randomAddress)
    
 
 
-    const deroBridgeApi = state.deroBridgeApiRef.current
-    const [err, res] = await to(deroBridgeApi.wallet('start-transfer', {
+   // const deroBridgeApi = state.deroBridgeApiRef.current
+//console.log('STATE',state)
+    const data = new Object(
+      {
+        "scid": state.scid,
+        "ringsize": 2,
+        "transfers": [{
+           "burn": (parseInt((event.target.amount.value)*100000)),
+           "destination":state.randomAddress
+         }],
+        "sc_rpc": [{
+            "name": "entrypoint",
+            "datatype": "S",
+            "value": "SG"
+        },
+        {
+            "name": "H",
+            "datatype": "S",
+            "value": HashAndIndex
+        },
+        {
+          "name":"R",
+          "datatype": "U",
+          "value" : refundable
+        }
+    ]
+    }
+
+    )
+
+    sendTransaction(data)
+
+/*     const [err, res] = await to(deroBridgeApi.wallet('start-transfer', {
       "scid": state.scid,
       "ringsize": 2,
       "transfers": [{
@@ -98,7 +157,7 @@ console.log(HashAndIndex,refundable,state.scid,state.randomAddress)
         "value" : refundable
       }
   ]
-  }))
+  })) */
   })
 
 

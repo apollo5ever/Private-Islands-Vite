@@ -1,11 +1,13 @@
 import React from 'react'
 import to from 'await-to-js'
 import hex2a from './hex2a'
+import { useSendTransaction } from '../useSendTransaction'
 
 
 
 
 export default function N(props){
+  const [sendTransaction] = useSendTransaction()
 
     const [judges,setJudges] = React.useState([])
     const [execs,setExecs] = React.useState([])
@@ -42,9 +44,46 @@ export default function N(props){
 
   const nominate=React.useCallback(async (e) => {
     e.preventDefault()
-    const deroBridgeApi = props.dba.current
+
+    const data = new Object(
+      {
+        "scid": props.scid,
+         "ringsize": 2,
+          "sc_rpc": [{
+             "name": "entrypoint",
+             "datatype": "S",
+             "value": "N"
+         },
+         {
+             "name": "H",
+             "datatype": "S",
+             "value": props.island
+         },
+         {
+            "name": "i",
+            "datatype": "U",
+            "value":parseInt(props.index)
+         },
+         {
+             "name": "JX",
+             "datatype": "S",
+             "value": e.target.JX.value
+         },
+         {
+          "name":"l",
+          "datatype":"S",
+          "value":props.l
+         }
+     ]
+      }
+    )
 
 
+
+
+     const deroBridgeApi = props.dba.current
+
+/*
      const [err0, res0] = await to(deroBridgeApi.wallet('start-transfer', {
       
          "scid": props.scid,
@@ -75,7 +114,7 @@ export default function N(props){
           "value":props.l
          }
      ]
-     }))
+     })) */
 
      const [err, res] = await to(deroBridgeApi.daemon('get-sc', {
         scid:props.scid,
@@ -84,7 +123,26 @@ export default function N(props){
 }))
 
      const Address=hex2a(res.data.result.stringkeys[`${e.target.JX.value}_O`])
-     const [err3,res3] =await to(deroBridgeApi.wallet('start-transfer',{
+     const data2 = new Object(
+      {
+        "ringsize":2,
+        "transfers":[
+        {"destination":Address,
+        "amount":1,
+            
+        "payload_rpc":[
+                {
+                        "name": "C",
+                        "datatype": "S",
+                        "value": "You have been nominated for bounty executer by: " +props.island
+                }]
+                }]
+      }
+     )
+     sendTransaction(data2)
+
+
+/*      const [err3,res3] =await to(deroBridgeApi.wallet('start-transfer',{
        "ringsize":2,
        "transfers":[
        {"destination":Address,
@@ -97,7 +155,7 @@ export default function N(props){
                        "value": "You have been nominated for bounty executer by: " +props.island
                }]
                }]
-     }))
+     })) */
 
   }
   )

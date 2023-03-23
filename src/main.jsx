@@ -19,6 +19,7 @@ import FundList from './components/fundList'
 import Fundraiser from './components/fundraiser';
 import CreateFund from './components/addFundraiser'
 import BuryTreasure from './components/buryTreasure';
+import Test from './components/simulatorTest'
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
@@ -31,7 +32,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
      <Route path="/island/:island" element={<Island/>}/>
       <Route path="/island/:island/smokesignal/:index" element={<Fundraiser/>}/>
       <Route path="/island/:island/treasure/:index" element={<Treasure/>}/>
-      
+      <Route path="/test" element={<Test/>}/>
       <Route path="smokesignals" element={<FundList />} />
       <Route path="treasure" element={<BountyList/>}/>
       <Route path="/newsignal/:island/:index" element={<CreateFund/>}/>

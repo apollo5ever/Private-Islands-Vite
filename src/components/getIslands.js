@@ -28,7 +28,7 @@ export default async function getIslands(state,i){
     console.log("trying 127")
   //  console.log("call api response",await callApi())
   //  var islands = await callApi()
-   const response = await fetch('http://127.0.0.1:5000/islands');
+   const response = await fetch('http://127.0.0.1:5000/api/islands');
    console.log(response)
    const islands = await response.json();
  

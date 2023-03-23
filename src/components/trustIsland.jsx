@@ -1,19 +1,49 @@
 import React from 'react'
 import to from 'await-to-js'
 import { LoginContext } from '../LoginContext';
-
+import { useSendTransaction } from '../useSendTransaction';
 
 
 
 
 
 export default function TrustIsland(props){
+    const [sendTransaction] = useSendTransaction()
 const [state, setState] = React.useContext(LoginContext);
   const TI=React.useCallback(async (e) => {
     e.preventDefault()
 let island=state.myIslands[state.active].name
 
-      const deroBridgeApi = state.deroBridgeApiRef.current
+const data = new Object({
+    "scid": state.scid,
+    "ringsize": 2,
+     "sc_rpc": [{
+        "name": "entrypoint",
+        "datatype": "S",
+        "value": "TI"
+    },
+    {
+        "name": "H",
+        "datatype": "S",
+        "value": island
+    },
+    {
+        "name": "I",
+        "datatype": "S",
+        "value": props.island
+    },
+    {
+     "name":"T",
+     "datatype":"U",
+     "value":parseInt(e.target.trust.value)
+    }
+]
+})
+sendTransaction(data)
+
+
+
+/*       const deroBridgeApi = state.deroBridgeApiRef.current
      
       const [err, res] = await to(deroBridgeApi.wallet('start-transfer', {
        
@@ -40,7 +70,7 @@ let island=state.myIslands[state.active].name
            "value":parseInt(e.target.trust.value)
           }
       ]
-      }))
+      })) */
 
 
 

@@ -4,6 +4,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import to from 'await-to-js'
 import { useSearchParams } from 'react-router-dom'
+import { useSendTransaction } from '../useSendTransaction'
 
 
 
@@ -21,6 +22,7 @@ export default function ClaimIsland() {
     const [judges,setJudges]=React.useState([])
     const [execs,setExecs] = React.useState([])
     const [error,setError] = React.useState("")
+    const [sendTransaction] = useSendTransaction()
 
     const handleChange = e=> {
       if(e.target.value==="custom") setCustom(true)
@@ -144,7 +146,37 @@ if(addition!="sub"){
   }
     
     if(addition==""){
-      const [err, res] = await to(deroBridgeApi.wallet('start-transfer', {
+      const txData = new Object(
+        {
+          "scid":state.scid,
+          "ringsize":2,
+          "transfers":transfers,
+          "sc_rpc":[{
+            "name": "entrypoint",
+            "datatype": "S",
+            "value": "IVU"
+          },
+          {
+            "name": "H",
+            "datatype": "S",
+            "value": event.target.island.value
+          },
+          {
+            "name": "M",
+            "datatype": "S",
+            "value": M
+          },
+          {
+            "name": "j",
+            "datatype": "U",
+            "value": parseInt(event.target.j.value)
+          }
+          ]
+        }
+      )
+        sendTransaction(txData)
+
+      /* const [err, res] = await to(deroBridgeApi.wallet('start-transfer', {
         "scid": state.scid,
         "ringsize": 2,
         "transfers": transfers,
@@ -169,7 +201,7 @@ if(addition!="sub"){
           "value": parseInt(event.target.j.value)
         }
         ]
-      }))
+      })) */
 
     }
 
@@ -222,7 +254,66 @@ if(event.target.wl.checked){
   const addSub= await state.ipfs.add(JSON.stringify(islandMeta).toString())
   const M =addSub.cid.toString()
 
-  const [err, res] = await to(deroBridgeApi.wallet('start-transfer', {
+  const txData = new Object(
+    {
+      "scid": state.scid,
+    "ringsize": 2,
+    "transfers": transfers,
+    "sc_rpc": [{
+      "name": "entrypoint",
+      "datatype": "S",
+      "value": "AOMT"
+    },
+    {
+      "name": "Am",
+      "datatype": "U",
+      "value":parseInt(event.target.amount.value*100000)
+    },
+    {
+      "name": "I",
+      "datatype": "U",
+      "value":parseInt(interval)
+    },
+    {
+      "name":"L",
+      "datatype":"U",
+      "value":parseInt(event.target.limit.value)
+    },
+    {
+      "name":"Ad",
+      "datatype": "S",
+      "value": event.target.address.value
+    },
+    {
+      "name": "H",
+      "datatype": "S",
+      "value": event.target.island.value
+    },
+    {
+      "name":"i",
+      "datatype":"U",
+      "value":0
+    },
+    {
+      "name":"W",
+      "datatype":"U",
+      "value":whitelisted
+    },
+    {
+      "name": "M",
+      "datatype": "S",
+      "value": M
+    },
+    {
+      "name":"j",
+      "datatype":"U",
+      "value":parseInt(event.target.j.value)
+    }
+    ]
+    }
+  )
+  sendTransaction(txData)
+ /*  const [err, res] = await to(deroBridgeApi.wallet('start-transfer', {
     "scid": state.scid,
     "ringsize": 2,
     "transfers": transfers,
@@ -277,7 +368,7 @@ if(event.target.wl.checked){
       "value":parseInt(event.target.j.value)
     }
     ]
-  }))
+  })) */
   
 //------------------SMOKE SIGNALS-------------------------------------
 }else if(addition=="ss"){
@@ -316,7 +407,62 @@ if(event.target.wl.checked){
   const m =addSignal.cid.toString()
   var deadline = new Date(event.target.deadline.value).getTime()/1000
 
-  const [err, res] = await to(deroBridgeApi.wallet('start-transfer', {
+  const txData = new Object(
+    {
+      "scid": state.scid,
+    "ringsize": 2,
+    "transfers": transfers,
+    "sc_rpc": [{
+      "name": "entrypoint",
+      "datatype": "S",
+      "value": "NF"
+    },
+    {
+      "name": "G",
+      "datatype": "U",
+      "value": parseInt(event.target.goal.value*100000)
+    },
+    {
+      "name":"D",
+      "datatype":"U",
+      "value":deadline
+    },
+    {
+      "name":"A",
+      "datatype":"S",
+      "value":event.target.address.value
+    },
+    {
+      "name": "H",
+      "datatype": "S",
+      "value": event.target.island.value
+    },
+    {
+      "name": "i",
+      "datatype": "U",
+      "value": 0
+    },
+    {
+      "name":"M",
+      "datatype":"S",
+      "value":M
+    },
+    {
+      "name":"m",
+      "datatype":"S",
+      "value":m
+    },
+    {
+      "name":"j",
+      "datatype":"U",
+      "value":parseInt(event.target.j.value)
+    }
+    ]
+    }
+  )
+  sendTransaction(txData)
+
+ /*  const [err, res] = await to(deroBridgeApi.wallet('start-transfer', {
     "scid": state.scid,
     "ringsize": 2,
     "transfers": transfers,
@@ -366,7 +512,7 @@ if(event.target.wl.checked){
       "value":parseInt(event.target.j.value)
     }
     ]
-  }))
+  })) */
 //----------------------BURIED TREASURES-------------------------------
 }else{
 
@@ -454,7 +600,25 @@ if(judge=="self")judge=event.target.island.value
     if(event.target.judge.value!="self"){
 
       const judgeAddress=hex2a(res0.data.result.stringkeys[`${event.target.judge.value}_O`])
-    const [err3,res3] =await to(deroBridgeApi.wallet('start-transfer',{
+      const judgeMsg = new Object(
+        {
+          "ringsize":2,
+          "transfers":[
+          {"destination":judgeAddress,
+          "amount":1,
+              
+          "payload_rpc":[
+                  {
+                          "name": "C",
+                          "datatype": "S",
+                          "value": "You have been nominated for bounty judge by: " +event.target.island.value
+                  }]
+                  }]
+        }
+      )
+      sendTransaction(judgeMsg)
+
+/*     const [err3,res3] =await to(deroBridgeApi.wallet('start-transfer',{
       "ringsize":2,
       "transfers":[
       {"destination":judgeAddress,
@@ -467,12 +631,30 @@ if(judge=="self")judge=event.target.island.value
                       "value": "You have been nominated for bounty judge by: " +event.target.island.value
               }]
               }]
-    }))
+    })) */
 }
 if(event.target.executer.value!="self"){
 
   const execAddress=hex2a(res0.data.result.stringkeys[`${event.target.executer.value}_O`])
-const [err3,res3] =await to(deroBridgeApi.wallet('start-transfer',{
+  const execMsg = new Object(
+    {
+      "ringsize":2,
+      "transfers":[
+      {"destination":execAddress,
+      "amount":1,
+          
+      "payload_rpc":[
+              {
+                      "name": "C",
+                      "datatype": "S",
+                      "value": "You have been nominated for bounty executer by: " +event.target.island.value
+              }]
+              }]
+    }
+  )
+  sendTransaction(execMsg)
+
+/* const [err3,res3] =await to(deroBridgeApi.wallet('start-transfer',{
   "ringsize":2,
   "transfers":[
   {"destination":execAddress,
@@ -485,9 +667,65 @@ const [err3,res3] =await to(deroBridgeApi.wallet('start-transfer',{
                   "value": "You have been nominated for bounty executer by: " +event.target.island.value
           }]
           }]
-}))
+})) */
 }
-    const [err, res] = await to(deroBridgeApi.wallet('start-transfer', {
+    const btTX = new Object(
+      {
+        "scid": state.scid,
+      "ringsize": 2,
+      "transfers": transfers,
+      "sc_rpc": [{
+        "name": "entrypoint",
+        "datatype": "S",
+        "value": "BT"
+      },
+
+      {
+        "name": "H",
+        "datatype": "S",
+        "value": event.target.island.value
+      },
+      {
+        "name": "i",
+        "datatype": "U",
+        "value": 0
+      },
+      {
+        "name": "J",
+        "datatype": "S",
+        "value": judge
+      },
+      {
+        "name": "X",
+        "datatype": "S",
+        "value": executer
+      },
+      {
+        "name": "E",
+        "datatype": "U",
+        "value": expiry
+      },
+      {
+        "name": "M",
+        "datatype" : "S",
+        "value": M
+      },
+      {
+        "name": "m",
+        "datatype" : "S",
+        "value": m
+      },
+      {
+        "name":"j",
+        "datatype":"U",
+        "value":parseInt(event.target.j.value)
+      }
+      ]
+      }
+    )
+    sendTransaction(btTX)
+
+    /* const [err, res] = await to(deroBridgeApi.wallet('start-transfer', {
       "scid": state.scid,
       "ringsize": 2,
       "transfers": transfers,
@@ -543,7 +781,7 @@ const [err3,res3] =await to(deroBridgeApi.wallet('start-transfer',{
 
     console.log(err)
     console.log(res)
-
+ */
     
 
   

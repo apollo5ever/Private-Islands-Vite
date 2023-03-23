@@ -58,7 +58,7 @@ if(state.deroBridgeApiRef){
    }
    catch{
     console.log("try 127")
-  const response = await fetch('http://127.0.0.1:5000/islands/fundraisers');
+  const response = await fetch('http://127.0.0.1:5000/api/islands/fundraisers');
   console.log(response)
   bounties = await response.json();
 

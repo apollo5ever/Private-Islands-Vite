@@ -8,12 +8,13 @@ import FundCard from './fundCard';
 import Feed from './feed';
 import FutureFeed from './futureFeed';
 import PublishPost from './publishPost';
+import { useSendTransaction } from '../useSendTransaction';
 
 
 
 export default function MyIsland(){
   
-  
+  const [sendTransaction] = useSendTransaction()
   const [post,setPost]=React.useState([])
   const [editing,setEditing]=React.useState("")
   const [tierToModify,setTierToModify]=React.useState(0)
@@ -315,7 +316,40 @@ React.useEffect(()=>{
       
       const addIsland= await state.ipfs.add(JSON.stringify(state.myIslands[state.active]).toString())
       const M =addIsland.cid.toString()
-      const deroBridgeApi=state.deroBridgeApiRef.current
+
+      const data = new Object(
+        {
+          "scid": state.scid,
+          "ringsize": 2,
+          "transfers": transfers,
+          "sc_rpc": [{
+            "name": "entrypoint",
+            "datatype": "S",
+            "value": "IVU"
+          },
+          {
+            "name": "H",
+            "datatype": "S",
+            "value": state.myIslands[state.active].name
+          },
+          {
+            "name": "M",
+            "datatype": "S",
+            "value": M
+          },
+          {
+            "name": "j",
+            "datatype": "U",
+            "value": state.myIslands[state.active].j
+          }
+          ]
+        }
+      )
+     
+
+      sendTransaction(data)
+      
+/*       const deroBridgeApi=state.deroBridgeApiRef.current
       
         const [err, res] = await to(deroBridgeApi.wallet('start-transfer', {
           "scid": state.scid,
@@ -342,7 +376,7 @@ React.useEffect(()=>{
             "value": state.myIslands[state.active].j
           }
           ]
-        }))
+        })) */
       /////////////end copy
 
 
@@ -413,6 +447,7 @@ React.useEffect(()=>{
            <>
             <form onSubmit={editIsland}>
             <input id="edit" defaultValue={state.myIslands[state.active].image} />
+           
             <button type="submit">Submit</button>
             </form>
             <small onClick={()=>setEditing("")}>cancel</small></>

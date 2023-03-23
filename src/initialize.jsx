@@ -1,12 +1,16 @@
 import React, { useState,useContext } from "react";
 import { LoginContext } from "./LoginContext";
+import Cookies from "js-cookie";
 
 
 export default async function initialize(){
 
+   
 
     
+    
     await new Promise(resolve => {
+        
       window.Initialize("mainnet","https://dero-api.mysrv.cloud")
       const handleConnected = () => {
           
