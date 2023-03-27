@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import Cookies from 'js-cookie';
 
 const LoginContext = React.createContext([{}, () => {}]);
@@ -36,4 +36,4 @@ const LoginProvider = (props) => {
   );
 }
 
-export { LoginContext, LoginProvider };
+export {LoginContext, LoginProvider};

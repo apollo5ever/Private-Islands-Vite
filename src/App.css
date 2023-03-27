@@ -1,8 +1,8 @@
+/*TODO MTS - 'safe' doesnt name sense to me, but keeps the content hidden - redo menu & this file*/
 .App {
   display: flex;
-  justify-content: safe;
+  justify-content: flex-start;
   align-items: center;
-  height: 100vh;
   margin-left: auto;
   margin-right: auto;
 
@@ -32,14 +32,14 @@ body {
 
 .function form {
   position: inherit;
-
   margin-left: auto;
   margin-right: auto;
   align-items: center;
   justify-content: center;
   display: flex;
   flex-direction: column;
-}padding: 10px;
+  /*padding: 10px;*/
+}
 
 .card-grid {
   margin-left: auto;
@@ -88,21 +88,20 @@ ul {
   margin-top:2vw;
   margin-left: auto;
   margin-right: auto;
-  padding: 10px;
+  padding: 25px;
   border-width: 1px;
   border-style: inset;
   border-color: blue;
-  max-width: fit-content;
+  max-width: 90vw;
 
   min-width: 40vw;
   height: auto;
   overflow: visible;
 
-  align-items: center;
-  justify-content: center;
   display: flex;
   flex-direction: column;
-
+  justify-content: center;
+  align-items: center;
   position: relative;
 }
 
@@ -136,7 +135,7 @@ a {
   */
   background: none;
   /* position:absolute(top);*/
-  position: absolute(top);
+  position: absolute;
   display: inline-block;
   padding: 0px;
   margin: 0px;
@@ -176,7 +175,6 @@ footer {
 .ProfileCard {
   border-style: dashed;
   cursor: pointer;
-
   border-color: rgba(7, 145, 80, 0.65);
   width: auto;
 }
@@ -185,6 +183,7 @@ footer {
   width: 120px;
   height: 180px;
   border-radius: 50%;
+  margin: auto;
 }
 
 .icons {
@@ -271,6 +270,7 @@ footer {
   width: 120px;
   height: auto;
   border-radius: 50%;
+  margin: auto;
 }
 
 .PostCard {
@@ -310,7 +310,7 @@ footer {
 
 .navbar {
   height: 10vh;
-  background-color: #85c9e0;
+  background-color: #22d3ee;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -318,8 +318,6 @@ footer {
   position: absolute;
   top: 0;
   width: 100%;
-  display: flex;
-  flex-direction: row;
   transition: 0.5s;
 }
 
@@ -328,6 +326,7 @@ footer {
   color: #f8f2ee;
   font-size: 3em;
   margin-left: 15px;
+  margin-right: 25px;
   filter: drop-shadow(5px 5px 10px rgba(0, 0, 0, 0.178));
 }
 
@@ -351,10 +350,10 @@ footer {
 
 .menu-bars {
   transform: translateY(5px);
-  margin-right: 15%;
+  margin-right: 5%;
   margin-left: auto;
   max-height: 100%;
-  color: white;
+  color: #085479;
   transition: 0.5s;
 }
 
@@ -362,43 +361,48 @@ footer {
   cursor: pointer;
   filter: drop-shadow(2px 2px 5px #fff);
   transition: 0.5s;
+  color: white;
 }
 
 .navlink {
   text-decoration: none;
-  font-family: Arial, Helvetica, sans-serif;
   font-weight: bolder;
   font-size: 1.5em;
   transition: 0.2s;
   margin: 0;
   padding: 0;
-  width: 100vw;
+  width: 25vw;
   border-bottom: solid 1px;
   border-color: rgba(255, 255, 255, 0.342);
 }
 
 .navlink:hover {
   transition: 0.5s;
-  background-color: #85c9e0;
+  background-color: #085479;
+  color: white;
 }
 
 .navlink-text {
   margin-top: 5px;
-  margin-right: 15%;
+  margin-right: 5%;
+  color: #085479;
+}
+
+.navlink-text:hover {
+  color: white;
 }
 
 .dropdown-menu {
   text-align: right;
   display: flex;
-  justify-content: right;
+  justify-content: flex-end;
   align-items: flex-end;
   flex-direction: column;
-  width: 99vw;
   margin-top: 9vh;
-  background-color: #085479;
+  margin-left: auto;
+  margin-right: 5vw;
+  background-color: #22d3ee;
   transition: 0.5s;
-  
-
 }
 
 .dropdown-menu.inactive {
@@ -437,25 +441,25 @@ small:hover {
 input[type="button"],
 input[type="submit"],
 input[type="reset"],
-button {
-  background-color: #4CAF50; /* Green */
-  border: none;
-  color: white;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 4px 2px;
-  cursor: pointer;
-  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
-  border-radius: 12px;
-  text-shadow: 1px 1px #000;
-}
-
-button:active {
-  box-shadow: none;
-}
+/*button {*/
+/*  background-color: #4CAF50; !* Green *!*/
+/*  border: none;*/
+/*  color: white;*/
+/*  padding: 15px 32px;*/
+/*  text-align: center;*/
+/*  text-decoration: none;*/
+/*  display: inline-block;*/
+/*  font-size: 16px;*/
+/*  margin: 4px 2px;*/
+/*  cursor: pointer;*/
+/*  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);*/
+/*  border-radius: 12px;*/
+/*  text-shadow: 1px 1px #000;*/
+/*}*/
+/**/
+/*button:active {*/
+/*  box-shadow: none;*/
+/*}*/
 
 input[type="text"],
 input[type="password"] {

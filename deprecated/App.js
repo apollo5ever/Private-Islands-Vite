@@ -209,7 +209,7 @@ function App() {
     <div className="App">
       <div className="navbar">
         <img src={logotransparent} className="nav-logo" />
-        <h1 className="nav-header">Dero Private Islands</h1>
+        <h1 className="nav-header">Old Dero Private Islands</h1>
         <div className="menu-bars" onClick={() => toggleMenuActive()}>
           <FaIcons.FaBars size={40} />
         </div>
