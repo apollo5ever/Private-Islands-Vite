@@ -14,7 +14,7 @@ const Info = () => {
     }
     return(<div>
         
-{state.walletList && state.walletList.map((x,i)=><WalletSelectItem name={x.name} address={x.address} i={i} selectWallet={selectWallet} selected={selected}/>)
+{state.walletList && state.walletList.slice(1,).map((x,i)=><WalletSelectItem name={x.name} address={x.address} i={i+1} selectWallet={selectWallet} selected={selected}/>)
 }
 </div>
     );

@@ -166,16 +166,11 @@ async function run() {
   console.log(wasm)
   const { instance } = await WebAssembly.instantiateStreaming(wasm,GO.importObject);
   GO.run(instance) */
-setWorkerActive(true)
-console.log("create worker")
-const worker = new Worker('src/worker.js')
-worker.postMessage({ type: 'initialize' });
-setState((state)=>({...state,"worker":worker}))
-
-worker.addEventListener('message', event => {
-  console.log(`Received message from worker: ${event.data}`);
-});
- 
+  console.log("create worker")
+  const worker = new Worker('src/worker.jsx');
+  worker.postMessage({ type: 'initialize'});
+  setState((state)=>({...state,"worker":worker}));
+  
 
 
 

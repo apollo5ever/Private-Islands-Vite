@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState ,useContext} from "react";
 import WalletMenu from "./menu";
+import { LoginContext } from "./LoginContext";
 
 function PopUpMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const [menuOption, setMenuOption] = useState("main");
+  const [state,setState] = useContext(LoginContext)
 
   const handleOpen = () => {
     setIsOpen(true);
@@ -19,7 +21,13 @@ function PopUpMenu() {
 
   return (
     <div>
-      <button onClick={handleOpen}>Open Menu</button>
+      <button onClick={handleOpen}>{
+        state.walletType=="rpc"?
+        "Wallet [RPC]"
+        :
+      state.walletList?
+      `Wallet [${state.walletList[state.activeWallet].name}]`
+    :'Wallet'}</button>
       {isOpen && 
         
           

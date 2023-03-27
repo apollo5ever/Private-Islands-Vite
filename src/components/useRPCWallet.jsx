@@ -54,9 +54,12 @@ export function useRPCWallet() {
     console.log("get-address-error", err0);
     console.log(res0);
     if (err0 == null) {
+      let newWalletList = state.walletList
+      newWalletList[0].address = res0.data.result.address
       setState((state) => ({
         ...state,
         userAddress: res0.data.result.address,
+        walletList:newWalletList
       }));
     }
   });

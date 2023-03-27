@@ -23,7 +23,7 @@ import Test from './components/simulatorTest'
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
+  
     <LoginProvider>
       <HashRouter>
       <Routes className="main">
@@ -48,5 +48,5 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   </Routes>
       </HashRouter>
     </LoginProvider>
-  </React.StrictMode>,
+  ,
 )

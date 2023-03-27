@@ -12,15 +12,16 @@ const WalletMenu = ({handleClose}) => {
   const [walletInfo, isLoading, error, fetchWalletInfo] = useRPCWallet();
 
 
-  useEffect(()=>{
+/*   useEffect(()=>{
     const walletListCookie = Cookies.get('walletList');
 if (walletListCookie) {
+  console.log("cookie detected",walletListCookie)
   setState({...state,"walletList":JSON.parse(walletListCookie)})
 } else {
   console.log('Cookie does not exist');
 }
     
-  },[])
+  },[]) */
 
   const handleOptionClick = option => {
     setMenuOption(option);
@@ -83,30 +84,46 @@ const handleSubmitHexSeed = async (e) => {
   if(pass!=conf) return
   console.log(state)
   if(!state.initialized){
-    const init = await initialize()
-    console.log('INITIALIZED RESULT',init)
+    //const init = await initialize()
+    //console.log('INITIALIZED RESULT',init)
   }
 
 console.log(state)
-const walletInfo = window.RecoverWalletFromHexSeed(pass,seed)
+const walletInfo = await new Promise((resolve) => {
+  state.worker.onmessage = (event) => {
+    resolve(event.data.result);
+  };
+
+  state.worker.postMessage({ functionName: "RecoverWalletFromHexSeed", args: [pass, seed] });
+});
+
+console.log("walletInfo",walletInfo)
 const arrayBuffer = new Uint8Array(walletInfo.value.fileData).slice();
 const decoder = new TextDecoder();
 const jsonString = decoder.decode(arrayBuffer);
 const jsonObject = JSON.parse(jsonString);
 const fileData=JSON.stringify(jsonObject)
 
-let err=  window.OpenWallet(walletInfo.value.hexSeed,pass,fileData,true)
+const err = await new Promise((resolve) => {
+  state.worker.onmessage = (event) => {
+    resolve(event.data.result);
+  };
+
+  state.worker.postMessage({ functionName: "OpenWallet", args: [walletInfo.value.hexSeed,pass,fileData,true] });
+});
+
+
 console.log(err)
 console.log("wallet info",walletInfo,fileData)
 
 let wallet = walletInfo.value
 wallet.name=name
-  if(!state.walletList){
+  if(state.walletList.length==1){
     Cookies.set('walletList',JSON.stringify([wallet]),{ expires: 7, path: '/' })
-    setState({...state,"initialized":true,"walletList":[wallet], "walletType":"WASM", "fileData":fileData, "userAddress":wallet.address})
+    setState({...state,"initialized":true,"walletList":[...state.walletList,wallet], "walletType":"WASM", "fileData":fileData, "userAddress":wallet.address})
   }else{
     Cookies.remove('walletList')
-    Cookies.set('walletList',JSON.stringify([...state.walletList,wallet]),{ expires: 7, path: '/' })
+    Cookies.set('walletList',JSON.stringify([...state.walletList.slice(1,),wallet]),{ expires: 7, path: '/' })
     setState({...state,"initialized":true,"walletList":[...state.walletList,wallet], "walletType":"WASM", "fileData":fileData, "userAddress":wallet.address})
     
   }
@@ -227,7 +244,7 @@ const renderMainMenu = () =>{
       <button onClick={()=>handleClose()}>X</button>
       <div><h3>RPC Wallet</h3>
       <button onClick={()=>handleSelectRPC()}>Select</button>
-      <p>{state.walletType &&state.walletType}</p></div>
+      </div>
       <div><h3>Integrated Wallets</h3>
       <Info/>
       <button onClick={()=>handleOptionClick("addWallet")}>Add Wallet</button></div>
