@@ -12,16 +12,7 @@ const WalletMenu = ({handleClose}) => {
   const [walletInfo, isLoading, error, fetchWalletInfo] = useRPCWallet();
 
 
-/*   useEffect(()=>{
-    const walletListCookie = Cookies.get('walletList');
-if (walletListCookie) {
-  console.log("cookie detected",walletListCookie)
-  setState({...state,"walletList":JSON.parse(walletListCookie)})
-} else {
-  console.log('Cookie does not exist');
-}
-    
-  },[]) */
+
 
   const handleOptionClick = option => {
     setMenuOption(option);
@@ -41,9 +32,7 @@ if (walletListCookie) {
         let seed = e.target.seed.value
         if(pass!=conf) return
         console.log(state)
-        if(!state.initialized){
-          const init = await initialize()
-   }
+
      console.log(state)
      const walletInfo = window.RecoverWalletFromSeed(pass,seed)
      const arrayBuffer = new Uint8Array(walletInfo.value.fileData).slice();
@@ -83,17 +72,15 @@ const handleSubmitHexSeed = async (e) => {
   let seed = e.target.seed.value
   if(pass!=conf) return
   console.log(state)
-  if(!state.initialized){
-    //const init = await initialize()
-    //console.log('INITIALIZED RESULT',init)
-  }
+
 
 console.log(state)
 const walletInfo = await new Promise((resolve) => {
   state.worker.onmessage = (event) => {
+    
     resolve(event.data.result);
   };
-
+  console.log("waiting for worker",pass,seed)
   state.worker.postMessage({ functionName: "RecoverWalletFromHexSeed", args: [pass, seed] });
 });
 
@@ -104,38 +91,20 @@ const jsonString = decoder.decode(arrayBuffer);
 const jsonObject = JSON.parse(jsonString);
 const fileData=JSON.stringify(jsonObject)
 
-const err = await new Promise((resolve) => {
-  state.worker.onmessage = (event) => {
-    resolve(event.data.result);
-  };
 
-  state.worker.postMessage({ functionName: "OpenWallet", args: [walletInfo.value.hexSeed,pass,fileData,true] });
-});
-
-
-console.log(err)
 console.log("wallet info",walletInfo,fileData)
 
 let wallet = walletInfo.value
 wallet.name=name
-  if(state.walletList.length==1){
-    Cookies.set('walletList',JSON.stringify([wallet]),{ expires: 7, path: '/' })
-    setState({...state,"initialized":true,"walletList":[...state.walletList,wallet], "walletType":"WASM", "fileData":fileData, "userAddress":wallet.address})
-  }else{
-    Cookies.remove('walletList')
-    Cookies.set('walletList',JSON.stringify([...state.walletList.slice(1,),wallet]),{ expires: 7, path: '/' })
-    setState({...state,"initialized":true,"walletList":[...state.walletList,wallet], "walletType":"WASM", "fileData":fileData, "userAddress":wallet.address})
-    
-  }
-  
-  
-
-
+wallet.fileData=fileData
+wallet.open=false
  
-
- 
-
-
+  //console.log("cookie time baby",JSON.stringify([...state.walletList.slice(1,),wallet]))  
+  localStorage.setItem(`wallet-${state.walletList.length}-${wallet.name}`,JSON.stringify(wallet))
+ // Cookies.remove('walletList')
+  //  Cookies.set('walletList',JSON.stringify([...state.walletList.slice(1,),wallet]),{ expires: 7, path: '/' })
+    setState({...state,"initialized":true,"walletList":[...state.walletList,wallet], "walletType":"WASM" })
+  
 }
 
 const handleSubmitCreateNewWallet = async (e) => {
@@ -145,29 +114,21 @@ const handleSubmitCreateNewWallet = async (e) => {
   let conf = e.target.conf.value
   let name = e.target.name.value
   console.log(state)
-  if(!state.initialized){
-    const init = await initialize()
 
-// console.log("state",state)
-// const walletInfo = window.CreateNewWallet(pass)
-// const arrayBuffer = new Uint8Array(walletInfo.value.fileData).slice();
-// const decoder = new TextDecoder();
-// const jsonString = decoder.decode(arrayBuffer);
-// const jsonObject = JSON.parse(jsonString);
-// const fileData=JSON.stringify(jsonObject)
-
-// let err=  window.OpenWallet(walletInfo.value.hexSeed,pass,fileData,true)
-// console.log(err)
-// console.log(walletInfo)
-
-// setState({...state,"walletInfo":walletInfo,"initialized":init})
-  }
   
 
 
   if (pass === conf) {
+
+    const walletInfo = await new Promise((resolve) => {
+      state.worker.onmessage = (event) => {
+        resolve(event.data.result);
+      };
+    
+      state.worker.postMessage({ functionName: "CreateNewWallet", args: [pass] });
+    });
    
-    const walletInfo = window.CreateNewWallet(pass)
+    
     
   const arrayBuffer = new Uint8Array(walletInfo.value.fileData).slice();
   const decoder = new TextDecoder();
@@ -175,17 +136,21 @@ const handleSubmitCreateNewWallet = async (e) => {
   const jsonObject = JSON.parse(jsonString);
   const fileData=JSON.stringify(jsonObject)
 
-  let err=  window.OpenWallet(walletInfo.value.hexSeed,pass,fileData,true)
-  console.log(err)
+ 
   console.log(walletInfo)
+  
   let wallet = walletInfo.value
   wallet.name=name
-    if(!state.walletList){
-      setState({...state,"initialized":true,"walletList":[wallet], "walletType":"WASM"})
-    }else{
-      setState({...state,"initialized":true,"walletList":[...state.walletList,wallet], "walletType":"WASM"})
-      
-    }
+  wallet.fileData = fileData
+  if(state.walletList.length==1){
+    Cookies.set('walletList',JSON.stringify([wallet]),{ expires: 7, path: '/' })
+    setState({...state,"initialized":true,"walletList":[...state.walletList,wallet], "walletType":"WASM"})
+  }else{
+    Cookies.remove('walletList')
+    Cookies.set('walletList',JSON.stringify([...state.walletList.slice(1,),wallet]),{ expires: 7, path: '/' })
+    setState({...state,"initialized":true,"walletList":[...state.walletList,wallet], "walletType":"WASM" })
+    
+  }
   
 
   }
@@ -205,29 +170,38 @@ const handleSubmitDisk = async (e) => {
   
   
   
-  if(!state.initialized){
-    const init = await initialize()
-}
+
 console.log(state)
-const walletInfo = window.RecoverWalletFromDisk(pass,file)
+const walletInfo = await new Promise((resolve) => {
+  state.worker.onmessage = (event) => {
+    resolve(event.data.result);
+  };
+
+  state.worker.postMessage({ functionName: "RecoverWalletFromDisk", args: [pass, file] });
+});
+console.log("walletInfo",walletInfo)
+
 const arrayBuffer = new Uint8Array(walletInfo.value.fileData).slice();
 const decoder = new TextDecoder();
 const jsonString = decoder.decode(arrayBuffer);
 const jsonObject = JSON.parse(jsonString);
 const fileData=JSON.stringify(jsonObject)
 
-let err=  window.OpenWallet(walletInfo.value.hexSeed,pass,fileData,true)
-console.log(err)
+
 console.log(walletInfo)
 
 let wallet = walletInfo.value
 wallet.name=name
-  if(!state.walletList){
-    setState({...state,"initialized":true,"walletList":[wallet]})
-  }else{
-    setState({...state,"initialized":true,"walletList":[...state.walletList,wallet]})
-    
-  }
+wallet.fileData = fileData
+if(state.walletList.length==1){
+  Cookies.set('walletList',JSON.stringify([wallet]),{ expires: 7, path: '/' })
+  setState({...state,"initialized":true,"walletList":[...state.walletList,wallet], "walletType":"WASM"})
+}else{
+  Cookies.remove('walletList')
+  Cookies.set('walletList',JSON.stringify([...state.walletList.slice(1,),wallet]),{ expires: 7, path: '/' })
+  setState({...state,"initialized":true,"walletList":[...state.walletList,wallet], "walletType":"WASM" })
+  
+}
   
   
 
@@ -235,6 +209,30 @@ wallet.name=name
 
  
 
+
+}
+
+const openSelectedWallet = async (e) =>{
+  e.preventDefault()
+  let pass = e.target.pass.value
+  /* const arrayBuffer = new Uint8Array(state.walletList[state.selectedWallet].fileData).slice();
+  const decoder = new TextDecoder();
+  const jsonString = decoder.decode(arrayBuffer);
+  const jsonObject = JSON.parse(jsonString);
+  const fileData=JSON.stringify(jsonObject) */
+  const err = await new Promise((resolve) => {pass
+    state.worker.onmessage = (event) => {
+      resolve(event.data.result);
+    };
+  
+    state.worker.postMessage({ functionName: "OpenWallet", args: [state.walletList[state.activeWallet].hexSeed,pass,state.walletList[state.activeWallet].fileData,true] });
+  });
+  console.log(err)
+  if(err.err == null) {
+    let walletList = state.walletList
+    walletList[state.activeWallet].open = true
+    setState({...state,walletList:walletList})
+  }
 
 }
 
@@ -247,7 +245,12 @@ const renderMainMenu = () =>{
       </div>
       <div><h3>Integrated Wallets</h3>
       <Info/>
-      <button onClick={()=>handleOptionClick("addWallet")}>Add Wallet</button></div>
+      <button onClick={()=>handleOptionClick("addWallet")}>Add Wallet</button>
+      <form onSubmit={openSelectedWallet}>
+        <input id="pass" type="password"/>
+        <button type={"submit"}>Open</button>
+      </form>
+      </div>
     </div>
   )
 }

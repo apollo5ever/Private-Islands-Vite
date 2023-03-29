@@ -8,7 +8,7 @@ const Info = () => {
     const [selected,setSelected] = useState(null)
 
     const selectWallet = (i)=>{
-        setState({...state,"selectedWallet":i})
+        setState({...state,"activeWallet":i})
         setSelected(i)
 
     }
