@@ -212,12 +212,31 @@ const openSelectedWallet = async (e) =>{
       resolve(event.data.result);
     };
   
-    state.worker.postMessage({ functionName: "OpenWallet", args: [state.walletList[state.activeWallet].hexSeed,pass,state.walletList[state.activeWallet].fileData,true] });
+    state.worker.postMessage({ functionName: "OpenWallet", args: [state.walletList[state.activeWallet].name,pass,state.walletList[state.activeWallet].fileData,true] });
   });
   console.log(err)
   if(err.err == null) {
     let walletList = state.walletList
     walletList[state.activeWallet].open = true
+    setState({...state,walletList:walletList})
+  }
+
+}
+
+const closeSelectedWallet = async () =>{
+  
+ 
+  const err = await new Promise((resolve) => {pass
+    state.worker.onmessage = (event) => {
+      resolve(event.data.result);
+    };
+  
+    state.worker.postMessage({ functionName: "CloseWallet", args: [state.walletList[state.activeWallet].name] });
+  });
+  console.log(err)
+  if(err.err == null) {
+    let walletList = state.walletList
+    walletList[state.activeWallet].open = false
     setState({...state,walletList:walletList})
   }
 
@@ -237,6 +256,7 @@ const renderMainMenu = () =>{
         <input id="pass" type="password"/>
         <button type={"submit"}>Open</button>
       </form>
+      <button onClick={()=>closeSelectedWallet()}>Close</button>
       </div>
     </div>
   )
