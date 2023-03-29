@@ -34,16 +34,20 @@ console.log("window",self)
   
 
 
-self.onmessage = (event) => {
+
+self.onmessage = async (event) => {
+
   if (event.data.type === 'initialize') {
     console.log("LOADING WORKER");
     initialize();
   }else{
-    self.onmessage = async (event) => {
+
+    
       const { functionName, args } = event.data;
-      const result = self[functionName].apply(null, args);
+      const result = await self[functionName].apply(null, args);
       let key = args[0];
-      
+      console.log("worker received this msg",functionName,args)
+
       if (key == "key") {
         const intervalId = setInterval(() => {
           console.log('waiting for key',key)
@@ -56,7 +60,7 @@ self.onmessage = (event) => {
       } else {
         self.postMessage({ result });
       }
-    };
+
     
   }
 };
