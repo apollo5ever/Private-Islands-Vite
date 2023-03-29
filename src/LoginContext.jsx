@@ -6,7 +6,7 @@ const LoginContext = React.createContext([{}, () => {}]);
 
 function getWalletItemsFromLocalStorage() {
   const walletItems = [];
-  const pattern = /^wallet-\d+-\w+$/;
+  const pattern = /^wallet-\d+-[\w\s]+$/;
 
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);

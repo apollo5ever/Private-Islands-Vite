@@ -33,29 +33,32 @@ const WalletMenu = ({handleClose}) => {
         if(pass!=conf) return
         console.log(state)
 
-     console.log(state)
-     const walletInfo = window.RecoverWalletFromSeed(pass,seed)
+        const walletInfo = await new Promise((resolve) => {
+          state.worker.onmessage = (event) => {
+            
+            resolve(event.data.result);
+          };
+          
+          state.worker.postMessage({ functionName: "RecoverWalletFromSeed", args: [pass, seed] });
+        });
+     
      const arrayBuffer = new Uint8Array(walletInfo.value.fileData).slice();
      const decoder = new TextDecoder();
      const jsonString = decoder.decode(arrayBuffer);
      const jsonObject = JSON.parse(jsonString);
      const fileData=JSON.stringify(jsonObject)
  
-     let err=  window.OpenWallet(walletInfo.value.hexSeed,pass,fileData,true)
-     console.log(err)
+     
+     
      console.log(walletInfo)
 
      let wallet = walletInfo.value
-     wallet.name=name
-       if(!state.walletList){
-         setState({...state,"initialized":true,"walletList":[wallet], "walletType":"WASM"})
-         Cookies.set('walletList',[wallet],{ expires: 7, path: '/' })
-       }else{
-        Cookies.set('walletList',[...state.walletList,wallet],{ expires: 7, path: '/' })
-         setState({...state,"initialized":true,"walletList":[...state.walletList,wallet], "walletType":"WASM"})
-
-         
-       }
+wallet.name=name
+wallet.fileData=fileData
+wallet.open=false
+   
+  localStorage.setItem(`wallet-${state.walletList.length}-${wallet.name}`,JSON.stringify(wallet))
+  setState({...state,"initialized":true,"walletList":[...state.walletList,wallet], "walletType":"WASM" })
         
         
        
