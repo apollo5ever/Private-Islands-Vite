@@ -116,11 +116,7 @@ const handleSubmitCreateNewWallet = async (e) => {
   let pass = e.target.pass.value
   let conf = e.target.conf.value
   let name = e.target.name.value
-  console.log(state)
-
   
-
-
   if (pass === conf) {
 
     const walletInfo = await new Promise((resolve) => {
@@ -144,16 +140,11 @@ const handleSubmitCreateNewWallet = async (e) => {
   
   let wallet = walletInfo.value
   wallet.name=name
-  wallet.fileData = fileData
-  if(state.walletList.length==1){
-    Cookies.set('walletList',JSON.stringify([wallet]),{ expires: 7, path: '/' })
-    setState({...state,"initialized":true,"walletList":[...state.walletList,wallet], "walletType":"WASM"})
-  }else{
-    Cookies.remove('walletList')
-    Cookies.set('walletList',JSON.stringify([...state.walletList.slice(1,),wallet]),{ expires: 7, path: '/' })
+  wallet.fileData=fileData
+  wallet.open=false
+     
+    localStorage.setItem(`wallet-${state.walletList.length}-${wallet.name}`,JSON.stringify(wallet))
     setState({...state,"initialized":true,"walletList":[...state.walletList,wallet], "walletType":"WASM" })
-    
-  }
   
 
   }
