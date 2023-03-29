@@ -11,6 +11,7 @@ import initialize from './initialize';
 import { LoginContext } from './LoginContext';
 import { useGetSC } from './useGetSC';
 import {default as GI} from './components/getIslands';
+import hex2a from './components/hex2a';
 
 
 function App() {
@@ -41,17 +42,17 @@ function App() {
     }
   }
 
-  function hex2a(hex) {
+/*   function hex2a(hex) {
     var str = "";
     for (var i = 0; i < hex.length; i += 2)
       str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
     return str;
-  }
+  } */
 
-  useEffect(() => {
+ /*  useEffect(() => {
     setState((state) => ({ ...state, daemon:"pools" }))
     
-  }, []);
+  }, []); */
 
  
 
@@ -202,7 +203,14 @@ useEffect(()=>{
 async function createIPFSNode() {
   const node = await window.Ipfs.create()
   console.log('IPFS node created:', node)
+  const validIp4 =
+      "/ip4/64.225.105.42/tcp/4001/p2p/QmPo1ygpngghu5it8u4Mr3ym6SEU2Wp2wA66Z91Y1S1g29";
+
+    const rez = await node.bootstrap.add(validIp4);
+    console.log(rez.Peers);
+    const config = await node.config.getAll();
   setState((state)=>({...state,ipfs:node}))
+  
 }
 
 useEffect(()=>{
@@ -221,6 +229,7 @@ useEffect(() => {
 
 const getIslands = async () => {state
   console.log("GET ISLANDS");
+  if(!state.walletList[state.activeWallet].address) return
 
   let res = await getSC(state.scid)
 /*   const deroBridgeApi = state.deroBridgeApiRef.current;
@@ -273,7 +282,7 @@ const getIslands = async () => {state
 
 useEffect(() => {
   getIslands();
-}, [state.deroBridgeApiRef, state.ipfs, state.userAddress,state.scid]);
+}, [state.deroBridgeApiRef, state.ipfs, state.activeWallet,state.scid]);
 
 
 
@@ -325,6 +334,7 @@ useEffect(() => {
       :""}
       <button onClick={()=>{console.log(state)}}>state</button>
       <button onClick={()=>{console.log(window)}}>window</button>
+      <button onClick={()=>{state.ipfs.cat("QmZzzweveHKAnVawvHzaJWSP32X5EgpqkXZrrd176aPsAk")}}>cat</button>
       
       
     </div>

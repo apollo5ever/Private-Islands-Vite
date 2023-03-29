@@ -91,6 +91,7 @@ console.log("i",i)
       var search
       if(i){
         search = new RegExp(`${i}_M`)
+        console.log("i search",search)
 
       }else{
         search= new RegExp(`.*_M`)
@@ -110,11 +111,15 @@ console.log("i",i)
          for await (const buf of state.ipfs.cat(islandList[i].toString())){
            
           try{
-            let island = JSON.parse(buf.toString())
+            let island = await JSON.parse(buf.toString())
            console.log(island)
            islands.push(island)
            console.log(islands)
-          }catch{
+          }catch(error){
+            console.error(error.message)
+            console.log(buf.toString())
+            console.log("ipfs failed")
+            console.log("islandList[i].toString()",islandList[i].toString())
             if(i){
               return( islands.filter(x=>x.name==i))
           }
