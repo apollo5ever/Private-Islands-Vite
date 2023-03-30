@@ -12,6 +12,7 @@ import { LoginContext } from './LoginContext';
 import { useGetSC } from './useGetSC';
 import {default as GI} from './components/getIslands';
 import hex2a from './components/hex2a';
+import { useGetBalance } from './useGetBalance';
 
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
   const [state,setState] = useContext(LoginContext)
   const deroBridgeApiRef = useRef();
   const [getSC] = useGetSC()
+  const [getBalance] =useGetBalance()
   const [workerActive,setWorkerActive] = useState(false)
   const [bridgeInitText, setBridgeInitText] = useState(
     <a
@@ -82,7 +84,11 @@ function App() {
 
 
   const getCocoBalance = useCallback(async () => {
-    if(state.activeWallet != 0) return
+    if(!state.coco) return
+    let balance = await getBalance(state.coco)
+    setState((state) => ({...state,cocoBalance: balance}))
+
+   /*  if(state.activeWallet != 0) return
     const deroBridgeApi = deroBridgeApiRef.current;
     const [err, res] = await to(
       deroBridgeApi.wallet("get-balance", {
@@ -90,12 +96,12 @@ function App() {
       })
     );
     console.log("balance:", res.data.result.balance);
-    setState((state) => ({ ...state, cocoBalance: res.data.result.balance }));
+    setState((state) => ({ ...state, cocoBalance: res.data.result.balance })); */
   });
 
   useEffect(() => {
     getCocoBalance();
-  }, [state.scid, state.activeWallet]);
+  }, [state.scid, state.activeWallet,state.walletList[state.activeWallet].open]);
 
 
 
