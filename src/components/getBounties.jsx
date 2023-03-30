@@ -81,11 +81,8 @@ if(state.deroBridgeApiRef) {
   for(let i = 0; i<fundList.length; i++){
 
    for await (const buf of state.ipfs.cat(fundList[i][0].toString())){
-     try{  const GO = new Go();
-      const wasm = await fetch('dero_wallet.wasm');
-      console.log(wasm)
-      const { instance } = await WebAssembly.instantiateStreaming(wasm,GO.importObject);
-      GO.run(instance)
+     try{  
+     
      let fund = JSON.parse(buf.toString())
      bounties.push(fund)
   

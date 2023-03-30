@@ -54,7 +54,7 @@ export default function OAO() {
     let idSearch = /\bmember_\d{1,2}\b/
    let id= Object.keys(res.data.result.stringkeys)
     .filter(key=>idSearch.test(key))
-    .filter(key=>hex2a(res.data.result.stringkeys[key])==state.userAddress)
+    .filter(key=>hex2a(res.data.result.stringkeys[key])==state.walletList[state.activeWallet].address)
     .map(key=>key.substring(key.length-1,key.length))
     
     setID(id[0])

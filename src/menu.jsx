@@ -287,7 +287,7 @@ const renderMainMenu = () =>{
         <button onClick={handleClose}>X</button>
         <h2>Select an option:</h2>
         <div className="menu-options">
-        <div className="menu-option" onClick={() => handleOptionClick("Fast Registration")}>Fast Registration</div>
+        
         <div className="menu-option" onClick={() => handleOptionClick("Create New Wallet")}>Create New Wallet</div>
         <div className="menu-option" onClick={() => handleOptionClick("Recover From Seed")}>Recover From Seed</div>
         <div className="menu-option" onClick={() => handleOptionClick("Recover From Hex Seed")}>Recover From Hex Seed</div>

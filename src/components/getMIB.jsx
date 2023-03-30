@@ -45,7 +45,7 @@ else{
 
     let tierList = Object.keys(scData)
     .filter(key=>bottleSearch.test(key))  
-    .map(key=><Subscribe profile={island.name} name={island.tiers[key.substring(key.length-4,key.length-3)].name} index={key.substring(key.length-4,key.length-3)} perks={island.tiers[key.substring(key.length-4,key.length-3)].perks} amount={scData[key.substring(0,key.length-2)+"Am"]} interval={scData[key.substring(0,key.length-2)+"I"]} userAddress={state.userAddress} dba={state.deroBridgeApiRef} scid={state.scid} randomAddress={state.randomAddress} available={scData[key.substring(0,key.length-2)+"Av"]}/>)
+    .map(key=><Subscribe profile={island.name} name={island.tiers[key.substring(key.length-4,key.length-3)].name} index={key.substring(key.length-4,key.length-3)} perks={island.tiers[key.substring(key.length-4,key.length-3)].perks} amount={scData[key.substring(0,key.length-2)+"Am"]} interval={scData[key.substring(0,key.length-2)+"I"]} userAddress={state.walletList[state.activeWallet].address} dba={state.deroBridgeApiRef} scid={state.scid} randomAddress={state.randomAddress} available={scData[key.substring(0,key.length-2)+"Av"]}/>)
   
 if(index==-1){
     return(tierList)
