@@ -242,6 +242,15 @@ const closeSelectedWallet = async () =>{
 
 }
 
+const removeSelectedWallet = ()=>{
+  localStorage.removeItem(`wallet-${state.activeWallet}-${state.walletList[state.activeWallet].name}`)
+  let newWalletList = state.walletList.filter(function(item){
+    return item != state.walletList[state.activeWallet]
+  })
+  console.log(newWalletList)
+  setState({...state,walletList:newWalletList,activeWallet:state.activeWallet-1})
+}
+
 const renderMainMenu = () =>{
   return(
     <div className="menu">
@@ -257,6 +266,7 @@ const renderMainMenu = () =>{
         <button type={"submit"}>Open</button>
       </form>
       <button onClick={()=>closeSelectedWallet()}>Close</button>
+      <button onClick={()=>removeSelectedWallet()}>Remove Wallet</button>
       </div>
     </div>
   )
@@ -291,8 +301,6 @@ const renderMainMenu = () =>{
 
   const renderInputFields = () => {
     switch (menuOption) {
-      case "Fast Registration":
-        return <input type="text" placeholder="Enter your email"></input>;
       case "Create New Wallet":
         return <form onSubmit={handleSubmitCreateNewWallet}>
           <input type="text" placeholder="Name your new wallet" id="name"/>
