@@ -32,7 +32,7 @@ export default function Feed(){
                 scid:state.scid,
                 variables:true
         }))
-        let tierSearch = new RegExp(`${state.userAddress}_`)
+        let tierSearch = new RegExp(`${state.walletList[state.activeWallet].address}_`)
 
 
         var scData = res.data.result.stringkeys
@@ -41,7 +41,7 @@ export default function Feed(){
         .filter(key=>tierSearch.test(key))
         .filter(key=>scData[key]>new Date().getTime()/1000)
         console.log(scData)
-        console.log(state.userAddress)
+        
         console.log(tierList)
         console.log(tierList.map(x=>x.substring(67,x.length-3)))
         let islandNames = tierList.map(x=>x.substring(67,x.length-3))
@@ -49,7 +49,7 @@ export default function Feed(){
             return array.indexOf(item)==index;
         })
         console.log(islandNames)
-        const subscriberPosts = await getSubscriberPosts(islandNames,state.userAddress,state)
+        const subscriberPosts = await getSubscriberPosts(islandNames,state.walletList[state.activeWallet].address,state)
         console.log(subscriberPosts)
         setEncryptedPosts(subscriberPosts)
         setEncryptedCount(subscriberPosts.length)

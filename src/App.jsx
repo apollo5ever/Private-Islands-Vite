@@ -80,69 +80,9 @@ function App() {
     setState((state) => ({ ...state, scid: scid, coco: coco }));
   };
 
-  // useEffect(() => {
-  //   const load = async () => {
-  //     deroBridgeApiRef.current = new DeroBridgeApi();
-  //     const deroBridgeApi = deroBridgeApiRef.current;
-
-  //     const [err] = await to(deroBridgeApi.init());
-  //     if (err) {
-  //       setBridgeInitText(
-  //         <a
-  //           href="https://chrome.google.com/webstore/detail/dero-rpc-bridge/nmofcfcaegdplgbjnadipebgfbodplpd"
-  //           target="_blank"
-  //           rel="noopener noreferrer"
-  //         >
-  //           Not connected to extension. Download here.
-  //         </a>
-  //       );
-  //     } else {
-  //       setBridgeInitText("rpc-bridge connected");
-  //       setState((state) => ({ ...state, deroBridgeApiRef: deroBridgeApiRef }));
-  //       getAddress();
-  //       getSCID();
-  //       getRandom();
-  //     }
-  //   };
-
-  //   window.addEventListener("load", load);
-  //   return () => window.removeEventListener("load", load);
-  // }, []);
-
-
-/*   const getAddress = useCallback(async () => {
-    const deroBridgeApi = deroBridgeApiRef.current;
-
-    const [err0, res0] = await to(deroBridgeApi.wallet("get-address", {}));
-
-    console.log("get-address-error", err0);
-    console.log(res0);
-    if (err0 == null) {
-      setState((state) => ({
-        ...state,
-        userAddress: res0.data.result.address,
-      }));
-    }
-  }); */
-
-/*   const getRandom = useCallback(async () => {
-    const deroBridgeApi = deroBridgeApiRef.current;
-
-    const [err0, res0] = await to(
-      deroBridgeApi.daemon("get-random-address", {})
-    );
-
-    console.log("get-random-address-error", err0);
-    console.log(res0);
-    if (err0 == null) {
-      setState((state) => ({
-        ...state,
-        randomAddress: res0.data.result.address[0],
-      }));
-    }
-  }); */
 
   const getCocoBalance = useCallback(async () => {
+    if(state.activeWallet != 0) return
     const deroBridgeApi = deroBridgeApiRef.current;
     const [err, res] = await to(
       deroBridgeApi.wallet("get-balance", {
@@ -155,7 +95,7 @@ function App() {
 
   useEffect(() => {
     getCocoBalance();
-  }, [state.scid, state.userAddress]);
+  }, [state.scid, state.activeWallet]);
 
 
 
@@ -230,7 +170,7 @@ useEffect(() => {
 const getIslands = async () => {state
   console.log("GET ISLANDS");
   if(!state.walletList[state.activeWallet].address) return
-
+console.log("address exists")
   let res = await getSC(state.scid)
 /*   const deroBridgeApi = state.deroBridgeApiRef.current;
 
@@ -251,7 +191,7 @@ const getIslands = async () => {state
 
   const myList = Object.keys(scData)
     .filter((key) => search.test(key))
-    .filter((key) => hex2a(scData[key]) == state.userAddress)
+    .filter((key) => hex2a(scData[key]) == state.walletList[state.activeWallet].address)
     .map(
       (key) =>
         new Object({

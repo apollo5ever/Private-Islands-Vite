@@ -108,7 +108,7 @@ setTrust(trustScore/trustList.length)
 
   let tierList = Object.keys(scData)
   .filter(key=>bottleSearch.test(key))  
-  .map(key=><Subscribe profile={params.island} name={postFiltered[0].tiers[key.substring(key.length-4,key.length-3)].name} index={key.substring(key.length-4,key.length-3)} perks={postFiltered[0].tiers[key.substring(key.length-4,key.length-3)].perks} amount={scData[key.substring(0,key.length-2)+"Am"]} interval={scData[key.substring(0,key.length-2)+"I"]} userAddress={state.userAddress} dba={state.deroBridgeApiRef} scid={state.scid} randomAddress={state.randomAddress}/>)
+  .map(key=><Subscribe profile={params.island} name={postFiltered[0].tiers[key.substring(key.length-4,key.length-3)].name} index={key.substring(key.length-4,key.length-3)} perks={postFiltered[0].tiers[key.substring(key.length-4,key.length-3)].perks} amount={scData[key.substring(0,key.length-2)+"Am"]} interval={scData[key.substring(0,key.length-2)+"I"]} userAddress={state.walletList[state.activeWallet].address} dba={state.deroBridgeApiRef} scid={state.scid} randomAddress={state.randomAddress}/>)
 
   console.log("tierList",tierList)
   console.log(bottleSearch)
