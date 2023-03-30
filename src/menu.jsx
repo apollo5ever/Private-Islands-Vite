@@ -59,7 +59,7 @@ wallet.fileData=fileData
 wallet.open=false
    
   localStorage.setItem(`wallet-${state.walletList.length}-${wallet.name}`,JSON.stringify(wallet))
-  setState({...state,"initialized":true,"walletList":[...state.walletList,wallet], "walletType":"WASM" })
+  setState({...state,"initialized":true,"walletList":[...state.walletList,wallet]})
         
         
        
@@ -106,7 +106,7 @@ wallet.open=false
 
   localStorage.setItem(`wallet-${state.walletList.length}-${wallet.name}`,JSON.stringify(wallet))
 
-    setState({...state,"initialized":true,"walletList":[...state.walletList,wallet], "walletType":"WASM" })
+    setState({...state,"initialized":true,"walletList":[...state.walletList,wallet]})
   
 }
 
@@ -144,7 +144,7 @@ const handleSubmitCreateNewWallet = async (e) => {
   wallet.open=false
      
     localStorage.setItem(`wallet-${state.walletList.length}-${wallet.name}`,JSON.stringify(wallet))
-    setState({...state,"initialized":true,"walletList":[...state.walletList,wallet], "walletType":"WASM" })
+    setState({...state,"initialized":true,"walletList":[...state.walletList,wallet]})
   
 
   }
@@ -190,7 +190,7 @@ wallet.fileData=fileData
 wallet.open=false
    
   localStorage.setItem(`wallet-${state.walletList.length}-${wallet.name}`,JSON.stringify(wallet))
-  setState({...state,"initialized":true,"walletList":[...state.walletList,wallet], "walletType":"WASM" })
+  setState({...state,"initialized":true,"walletList":[...state.walletList,wallet]})
   
   
 

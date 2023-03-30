@@ -21,13 +21,9 @@ function PopUpMenu() {
 
   return (
     <div>
-      <button onClick={handleOpen}>{
-        state.walletType=="rpc"?
-        "Wallet [RPC]"
-        :
-      state.walletList?
-      `Wallet [${state.walletList[state.activeWallet].name}]`
-    :'Wallet'}</button>
+      <button onClick={handleOpen}>
+     { `Wallet [${state.walletList[state.activeWallet].name}]`}
+  </button>
       {isOpen && 
         
           

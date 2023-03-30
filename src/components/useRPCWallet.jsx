@@ -21,7 +21,7 @@ export function useRPCWallet() {
       setError(err)
       console.log("ERR",err)
     } else {
-      setState((state) => ({ ...state, deroBridgeApiRef: deroBridgeApiRef, walletType:"rpc" })); 
+      setState((state) => ({ ...state, deroBridgeApiRef: deroBridgeApiRef})); 
       console.log("STATE",state)
       getRandom()
       getAddress()
