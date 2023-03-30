@@ -3,6 +3,7 @@ import { LoginContext } from "./LoginContext";
 import initialize from "./initialize";
 import Info from "./info";
 import { useRPCWallet } from "./components/useRPCWallet";
+import WalletSelectItem from "./walletSelectItem";
 
 
 const WalletMenu = ({handleClose}) => {
@@ -19,6 +20,7 @@ const WalletMenu = ({handleClose}) => {
 
   const handleSelectRPC = ()=>{
     fetchWalletInfo()
+    
   }
 
   const handleSubmitSeed = async (e) => {
@@ -256,7 +258,12 @@ const renderMainMenu = () =>{
     <div className="menu">
       <button onClick={()=>handleClose()}>X</button>
       <div><h3>RPC Wallet</h3>
-      <button onClick={()=>handleSelectRPC()}>Select</button>
+      {state.walletList[0].address?<WalletSelectItem i={0} address={state.walletList[0].address} />:"Not Connected"}
+    {/*   <div className={state.activeWallet==0?"walletSelectItem-Selected":"walletSelectItem"} onClick={()=>handleSelectRPC()}>
+      {state.walletList[0].address ?state.walletList[0].address
+      : "select"}
+      </div> */}
+      
       </div>
       <div><h3>Integrated Wallets</h3>
       <Info/>
