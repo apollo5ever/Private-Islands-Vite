@@ -264,7 +264,7 @@ useEffect(() => {
       <h3>Coco Balance: {state.cocoBalance}</h3>
       
       
-     {state.walletType=="rpc"? <small
+     {state.activeWallet==0? <small
         onClick={() => {
           getAddress();
         }}

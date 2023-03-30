@@ -29,10 +29,7 @@ const index = params.index
 
   const DoIt = React.useCallback(async (event) => {
     event.preventDefault();
-    let pass =""
-    if(event.target.pass.value){
-      pass = event.target.pass.value
-    }
+    
     
      
       const deroBridgeApi = state.deroBridgeApiRef.current
@@ -179,7 +176,7 @@ const index = params.index
       ]
       }
     )
-    sendTransaction(txData,pass)
+    sendTransaction(txData)
    /*  const [err, res] = await to(deroBridgeApi.wallet('start-transfer', {
       "scid": state.scid,
       "ringsize": 2,
@@ -266,9 +263,7 @@ const index = params.index
         <textarea placeholder="Description" rows="44" cols="80" id="description"/>
         <input placeholder="Goal" id="goal" type="text" />
         <input placeholder="Address" id="address" type="text" />
-        {state.walletType == "WASM"?
-        <input placeholder="wallet password" id="pass" type="password"/>
-      :""}
+       
         <button type={"submit"}>Create</button>
       </form>
     </div>}

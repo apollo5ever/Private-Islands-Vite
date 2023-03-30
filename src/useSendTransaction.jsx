@@ -14,7 +14,7 @@ export function useSendTransaction(){
       }
       )
 
-async function  sendTransaction(data){    if(state.walletType == "rpc"){
+async function  sendTransaction(data){    if(state.activeWallet == 0){
         const rpcData ={
             "scid": data.scid,
             "ringsize": data.ringsize,
@@ -24,7 +24,7 @@ async function  sendTransaction(data){    if(state.walletType == "rpc"){
 
           rpcSend(rpcData)
     
-    }else if(state.walletType =="WASM"){     
+    }else{     
       const wasmData ={
         "Transfers": data.transfers,
         "SC_Code": "",
@@ -37,7 +37,7 @@ async function  sendTransaction(data){    if(state.walletType == "rpc"){
 
 console.log('WINDOW',window)
 console.log('STATE',state)
-let fileData = JSON.parse(state.fileData)
+let fileData = JSON.parse(state.walletList[state.activeWallet].fileData)
 console.log(fileData)
 console.log(JSON.stringify(fileData))
 /* const init = await initialize()
@@ -53,7 +53,7 @@ console.log(state.walletList[0]) */
       resolve(event.data);
     }; 
   
-    state.worker.postMessage({ functionName: "WalletTransfer", args: ["key",state.walletList[0].hexSeed, JSON.stringify(wasmData)] });
+    state.worker.postMessage({ functionName: "WalletTransfer", args: ["key",state.walletList[state.activeWallet].name, JSON.stringify(wasmData)] });
   });
   //const tx = state.worker.postMessage("WalletTransfer",["tx", state.walletList[0].hexSeed, JSON.stringify(wasmData)])
   console.log('TX',tx)
@@ -71,7 +71,7 @@ console.log(state.walletList[0]) */
           resolve(event.data);
         }; 
       
-        state.worker.postMessage({ functionName: "WalletSendTransaction", args: ["key", state.walletList[0].hexSeed, tx.key.txHex] });
+        state.worker.postMessage({ functionName: "WalletSendTransaction", args: ["key", state.walletList[state.activeWallet].name, tx.key.txHex] });
       });
       console.log("send",send)
       //console.log("window[asyncKey2]",window[asyncKey2])
