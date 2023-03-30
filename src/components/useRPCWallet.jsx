@@ -61,6 +61,9 @@ export function useRPCWallet() {
         userAddress: res0.data.result.address,
         walletList:newWalletList
       }));
+    }else{
+      let newWalletList = state.walletList
+      newWalletList[0].address = null
     }
   });
 
