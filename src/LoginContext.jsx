@@ -20,7 +20,7 @@ function getWalletItemsFromLocalStorage() {
 }
 
 
-let walletList = [{"name":"rpc"}]
+let walletList = [{"name":"rpc", "open":true}]
 
   walletList = walletList.concat(getWalletItemsFromLocalStorage())
 
