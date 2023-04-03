@@ -2,28 +2,29 @@ import React from 'react'
 import to from 'await-to-js'
 import hex2a from './hex2a'
 import { useSendTransaction } from '../useSendTransaction'
-
+import { useGetSC } from '../useGetSC'
 
 
 
 export default function N(props){
   const [sendTransaction] = useSendTransaction()
-
+  const [getSC] =useGetSC()
     const [judges,setJudges] = React.useState([])
     const [execs,setExecs] = React.useState([])
 
 
     const getJudges = React.useCallback(async () =>{
-        const deroBridgeApi = props.dba.current
-          const [err, res] = await to(deroBridgeApi.daemon('get-sc', {
+        //const deroBridgeApi = props.dba.current
+       /*    const [err, res] = await to(deroBridgeApi.daemon('get-sc', {
                   scid:props.scid,
                   code:false,
                   variables:true
-          }))
+          })) */
+          const res = await getSC(props.scid)
     
           var search= new RegExp(`.*_j`)  
          
-          var scData = res.data.result.stringkeys //.map(x=>x.match(search))
+          var scData = res.stringkeys //.map(x=>x.match(search))
         
         
         const judgeList=Object.keys(scData)
@@ -116,13 +117,15 @@ export default function N(props){
      ]
      })) */
 
-     const [err, res] = await to(deroBridgeApi.daemon('get-sc', {
+/*      const [err, res] = await to(deroBridgeApi.daemon('get-sc', {
         scid:props.scid,
         code:false,
         variables:true
-}))
+})) */
 
-     const Address=hex2a(res.data.result.stringkeys[`${e.target.JX.value}_O`])
+const res = await getSC(props.scid)
+
+     const Address=hex2a(res.stringkeys[`${e.target.JX.value}_O`])
      const data2 = new Object(
       {
         "ringsize":2,

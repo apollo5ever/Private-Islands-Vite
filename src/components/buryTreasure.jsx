@@ -10,6 +10,7 @@ import { LoginContext } from '../LoginContext';
 import Success from './success.jsx'
 import hex2a from './hex2a.js'
 import { useSendTransaction } from '../useSendTransaction'
+import { useGetSC } from '../useGetSC'
 
 
 
@@ -29,18 +30,21 @@ const [searchParams,setSearchParams] = useSearchParams()
  const [execs,setExecs] = React.useState([])
  const [error,setError] = React.useState("")
  const [sendTransaction] = useSendTransaction()
+ const [getSC] = useGetSC()
 
  const getJudges = React.useCallback(async () =>{
-  const deroBridgeApi = state.deroBridgeApiRef.current
+/*   const deroBridgeApi = state.deroBridgeApiRef.current
     const [err, res] = await to(deroBridgeApi.daemon('get-sc', {
             scid:state.scid,
             code:false,
             variables:true
-    }))
+    })) */
+
+    const res = await getSC(state.scid)
 
     var search= new RegExp(`.*_j`)  
    
-    var scData = res.data.result.stringkeys //.map(x=>x.match(search))
+    var scData = res.stringkeys //.map(x=>x.match(search))
   
   
   const judgeList=Object.keys(scData)
@@ -79,12 +83,13 @@ React.useEffect(() => {
     }
 
 
-    const deroBridgeApi = state.deroBridgeApiRef.current
+   /*  const deroBridgeApi = state.deroBridgeApiRef.current
     const [err0, res0] = await to(deroBridgeApi.daemon('get-sc', {
             scid:state.scid,
             code:false,
             variables:true
-    }))
+    })) */
+    const res0 = await getSC(state.scid)
     var executer = event.target.executer.value
   
     if(executer=="self")executer=event.target.island.value
@@ -288,8 +293,8 @@ React.useEffect(() => {
     console.log(res)
 */
 
-    const judgeAddress=hex2a(res0.data.result.stringkeys[`${event.target.judge.value}_O`])
-    const executerAddress=hex2a(res0.data.result.stringkeys[`${event.target.executer.value}_O`])
+    const judgeAddress=hex2a(res0.stringkeys[`${event.target.judge.value}_O`])
+    const executerAddress=hex2a(res0.stringkeys[`${event.target.executer.value}_O`])
 
     const data2 = new Object({
       "ringsize":2,

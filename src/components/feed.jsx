@@ -8,6 +8,7 @@ import { Buffer } from 'buffer';
 import Post from './post';
 import to from 'await-to-js';
 import { getSubscriberPosts } from './getSubscriberPosts';
+import { useGetSC } from '../useGetSC';
 
 export default function Feed(){
     const [posts,setPosts] = React.useState([])
@@ -16,6 +17,7 @@ export default function Feed(){
     const [formType, setFormType] = React.useState("cid");
     const [encryptedCount, setEncryptedCount] = React.useState(0)
     const [encryptedPosts, setEncryptedPosts] = React.useState([])
+    const [getSC] = useGetSC()
 
     function hex2a(hex) {
         var str = '';
@@ -27,15 +29,17 @@ export default function Feed(){
     },[])
 
     const getTiers = useCallback(async () =>{
-        const deroBridgeApi = state.deroBridgeApiRef.current
+      /*   const deroBridgeApi = state.deroBridgeApiRef.current
         const [err, res] = await to(deroBridgeApi.daemon('get-sc', {
                 scid:state.scid,
                 variables:true
-        }))
+        })) */
+        const res = await getSC(state.scid)
+        
         let tierSearch = new RegExp(`${state.walletList[state.activeWallet].address}_`)
 
 
-        var scData = res.data.result.stringkeys
+        var scData = res.stringkeys
  
         let tierList = Object.keys(scData)
         .filter(key=>tierSearch.test(key))
@@ -99,6 +103,7 @@ export default function Feed(){
                 }
             }
         }else if(formType === 'txid'){
+            //this won't work without rpc. maybe better to change useGetSC into useDaemon
           const deroBridgeApi = state.deroBridgeApiRef.current
           const [err0, res0] = await to(deroBridgeApi.daemon('get-transaction', {
             "txs_hashes": [`${e.target.txid.value}`]

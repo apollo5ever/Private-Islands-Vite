@@ -5,6 +5,7 @@ import {useParams,useSearchParams} from 'react-router-dom'
 import CryptoJS, { x64 } from 'crypto-js';
 import to from 'await-to-js';
 import Success from './success';
+import { useGetSC } from '../useGetSC';
 
 
 
@@ -16,6 +17,7 @@ export default function PublishPost(props){
   const [tierList,setTierList]=React.useState([]) 
   const [searchParams,setSearchParams]=useSearchParams()
   const [randomKey,setRandomKey] = React.useState(true)
+  const [getSC] = useGetSC()
 
 
   const getIsland = async () => {
@@ -40,13 +42,14 @@ export default function PublishPost(props){
     e.preventDefault()
     
 
-    const deroBridgeApi = state.deroBridgeApiRef.current
+   /*  const deroBridgeApi = state.deroBridgeApiRef.current
     const [err0, res0] = await to(deroBridgeApi.daemon('get-sc', {
             scid:state.scid,
             code:false,
             variables:true
-    }))
-    var scData = res0.data.result.stringkeys
+    })) */
+    const res0 = await getSC(state.scid)
+    var scData = res0.stringkeys
 
     let supporterList=[]
     let checkedTiers = []

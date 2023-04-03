@@ -5,6 +5,7 @@ import callApi from "./APITest";
 
 
 
+
 export default async function getBounties(state,island){
   let bounties = []
   var scData
