@@ -264,17 +264,15 @@ function App() {
       <h3>Coco Balance: {state.cocoBalance}</h3>
 
 
-      {state.activeWallet==0? <small
+    {/*   {state.activeWallet==0? <small
           onClick={() => {
             getAddress();
           }}
         >
           Refresh Wallet
         </small>
-        :""}
-      <button onClick={()=>{console.log(state)}}>state</button>
-      <button onClick={()=>{console.log(window)}}>window</button>
-      <button onClick={()=>{state.ipfs.cat("QmZzzweveHKAnVawvHzaJWSP32X5EgpqkXZrrd176aPsAk")}}>cat</button>
+        :""} */}
+      
 
 
     </div>

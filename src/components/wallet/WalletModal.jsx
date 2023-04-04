@@ -71,7 +71,7 @@ wallet.name=name
 wallet.fileData=fileData
 wallet.open=false
 
-localStorage.setItem(`wallet-${state.walletList.length}-${wallet.name}`,JSON.stringify(wallet))
+localStorage.setItem(`wallet-${wallet.name}`,JSON.stringify(wallet))
 setState({...state,"initialized":true,"walletList":[...state.walletList,wallet]})
     
   
@@ -116,7 +116,7 @@ setState({...state,"initialized":true,"walletList":[...state.walletList,wallet]}
   wallet.open=false
    
   
-    localStorage.setItem(`wallet-${state.walletList.length}-${wallet.name}`,JSON.stringify(wallet))
+    localStorage.setItem(`wallet-${wallet.name}`,JSON.stringify(wallet))
   
       setState({...state,"initialized":true,"walletList":[...state.walletList,wallet]})
     
@@ -158,7 +158,7 @@ setState({...state,"initialized":true,"walletList":[...state.walletList,wallet]}
     wallet.fileData=fileData
     wallet.open=false
        
-      localStorage.setItem(`wallet-${state.walletList.length}-${wallet.name}`,JSON.stringify(wallet))
+      localStorage.setItem(`wallet-${wallet.name}`,JSON.stringify(wallet))
       setState({...state,"initialized":true,"walletList":[...state.walletList,wallet]})
     
   
@@ -199,7 +199,7 @@ setState({...state,"initialized":true,"walletList":[...state.walletList,wallet]}
   wallet.fileData=fileData
   wallet.open=false
      
-    localStorage.setItem(`wallet-${state.walletList.length}-${wallet.name}`,JSON.stringify(wallet))
+    localStorage.setItem(`wallet-${wallet.name}`,JSON.stringify(wallet))
     setState({...state,"initialized":true,"walletList":[...state.walletList,wallet]})
     
   }
@@ -253,7 +253,7 @@ setState({...state,"initialized":true,"walletList":[...state.walletList,wallet]}
   }
 
   const removeSelectedWallet = () => {
-    localStorage.removeItem(`wallet-${state.activeWallet}-${state.walletList[state.activeWallet].name}`)
+    localStorage.removeItem(`wallet-${state.walletList[state.activeWallet].name}`)
     let newWalletList = state.walletList.filter(function (item) {
       return item != state.walletList[state.activeWallet]
     })
