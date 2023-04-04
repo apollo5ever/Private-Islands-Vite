@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import Cookies from 'js-cookie';
 
 const LoginContext = React.createContext([{}, () => {}]);
@@ -6,7 +6,8 @@ const LoginContext = React.createContext([{}, () => {}]);
 
 function getWalletItemsFromLocalStorage() {
   const walletItems = [];
-  const pattern = /^wallet-\d+-[\w\s]+$/;
+  const pattern = /^wallet-[\w\s]+$/;
+ 
 
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
@@ -36,4 +37,4 @@ const LoginProvider = (props) => {
   );
 }
 
-export { LoginContext, LoginProvider };
+export {LoginContext, LoginProvider};

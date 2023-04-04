@@ -1,18 +1,14 @@
 import React,{ useState,useEffect, useContext,useRef,useCallback } from 'react'
-import reactLogo from './assets/react.svg'
 import PopUpMenu from './popup';
-import DeroBridgeApi from "dero-rpc-bridge-api";
-import to from 'await-to-js';
 import { Outlet, NavLink, Link } from "react-router-dom";
-import logotransparent from "./images/logotransparent.png";
 import * as FaIcons from "react-icons/fa";
 import './App.css'
-import initialize from './initialize';
 import { LoginContext } from './LoginContext';
 import { useGetSC } from './useGetSC';
 import {default as GI} from './components/getIslands';
 import hex2a from './components/hex2a';
 import { useGetBalance } from './useGetBalance';
+import WalletSelectButton from "@/components/wallet/WalletSelectButton.jsx";
 
 
 function App() {
@@ -44,37 +40,37 @@ function App() {
     }
   }
 
-/*   function hex2a(hex) {
-    var str = "";
-    for (var i = 0; i < hex.length; i += 2)
-      str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
-    return str;
-  } */
+  /*   function hex2a(hex) {
+      var str = "";
+      for (var i = 0; i < hex.length; i += 2)
+        str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+      return str;
+    } */
 
- /*  useEffect(() => {
-    setState((state) => ({ ...state, daemon:"pools" }))
-    
-  }, []); */
+  /*  useEffect(() => {
+     setState((state) => ({ ...state, daemon:"pools" }))
 
- 
+   }, []); */
+
+
 
   const getSCID = async () => {
     console.log('getting scid')
-/*     const deroBridgeApi = deroBridgeApiRef.current;
-    const [err, res] = await to(
-      deroBridgeApi.daemon("get-sc", {
-        scid: "0000000000000000000000000000000000000000000000000000000000000001",
-        keysstring: ["keystore"],
-      })
-    ); */
+    /*     const deroBridgeApi = deroBridgeApiRef.current;
+        const [err, res] = await to(
+          deroBridgeApi.daemon("get-sc", {
+            scid: "0000000000000000000000000000000000000000000000000000000000000001",
+            keysstring: ["keystore"],
+          })
+        ); */
     let res = await getSC("0000000000000000000000000000000000000000000000000000000000000001",["keystore"])
     let keystore_scid = "80" + res.valuesstring[0].substring(2, 64);
-/*     const [err2, res2] = await to(
-      deroBridgeApi.daemon("get-sc", {
-        scid: keystore_scid,
-        keysstring: ["k:private.islands.scid", "k:private.islands.coco"],
-      })
-    ); */
+    /*     const [err2, res2] = await to(
+          deroBridgeApi.daemon("get-sc", {
+            scid: keystore_scid,
+            keysstring: ["k:private.islands.scid", "k:private.islands.coco"],
+          })
+        ); */
     let res2 = await getSC(keystore_scid,["k:private.islands.scid", "k:private.islands.coco"])
     let scid = res2.valuesstring[0];
     let coco = res2.valuesstring[1];
@@ -88,15 +84,15 @@ function App() {
     let balance = await getBalance(state.coco)
     setState((state) => ({...state,cocoBalance: balance}))
 
-   /*  if(state.activeWallet != 0) return
-    const deroBridgeApi = deroBridgeApiRef.current;
-    const [err, res] = await to(
-      deroBridgeApi.wallet("get-balance", {
-        scid: state.coco,
-      })
-    );
-    console.log("balance:", res.data.result.balance);
-    setState((state) => ({ ...state, cocoBalance: res.data.result.balance })); */
+    /*  if(state.activeWallet != 0) return
+     const deroBridgeApi = deroBridgeApiRef.current;
+     const [err, res] = await to(
+       deroBridgeApi.wallet("get-balance", {
+         scid: state.coco,
+       })
+     );
+     console.log("balance:", res.data.result.balance);
+     setState((state) => ({ ...state, cocoBalance: res.data.result.balance })); */
   });
 
   useEffect(() => {
@@ -106,25 +102,25 @@ function App() {
 
 
 
-async function run() {
-  
- /*  const GO = new Go();
-  const wasm = await fetch('dero_wallet.wasm');
-  console.log(wasm)
-  const { instance } = await WebAssembly.instantiateStreaming(wasm,GO.importObject);
-  GO.run(instance) */
-  console.log("create worker")
-  const worker = new Worker('src/worker.jsx');
-  worker.postMessage({ type: 'initialize'});
-  setState((state)=>({...state,"worker":worker}));
-  
+  async function run() {
+
+    /*  const GO = new Go();
+     const wasm = await fetch('dero_wallet.wasm');
+     console.log(wasm)
+     const { instance } = await WebAssembly.instantiateStreaming(wasm,GO.importObject);
+     GO.run(instance) */
+    console.log("create worker")
+    const worker = new Worker('src/worker.jsx');
+    worker.postMessage({ type: 'initialize'});
+    setState((state)=>({...state,"worker":worker}));
+
 
 
 
 //  initialize()
 
 //   const walletInfo = window.CreateNewWallet("pass")
-    
+
 //   const arrayBuffer = new Uint8Array(walletInfo.value.fileData).slice();
 //   const decoder = new TextDecoder();
 //   const jsonString = decoder.decode(arrayBuffer);
@@ -135,100 +131,98 @@ async function run() {
 //   console.log(err)
 //   console.log(walletInfo)
 //   let wallet = walletInfo.value
-  
-}
-useEffect(()=>{
-  console.log("worker",workerActive)
-  if(!workerActive){
-    run()
+
   }
-  
-},[])
+  useEffect(()=>{
+    console.log("worker",workerActive)
+    if(!workerActive){
+      run()
+    }
+
+  },[])
 
 
-async function createIPFSNode() {
-  const node = await window.Ipfs.create()
-  console.log('IPFS node created:', node)
-  const validIp4 =
+  async function createIPFSNode() {
+    const node = await window.Ipfs.create()
+    console.log('IPFS node created:', node)
+    const validIp4 =
       "/ip4/64.225.105.42/tcp/4001/p2p/QmPo1ygpngghu5it8u4Mr3ym6SEU2Wp2wA66Z91Y1S1g29";
 
     const rez = await node.bootstrap.add(validIp4);
     console.log(rez.Peers);
     const config = await node.config.getAll();
-  setState((state)=>({...state,ipfs:node}))
-  
-}
+    setState((state)=>({...state,ipfs:node}))
 
-useEffect(()=>{
-  createIPFSNode()
-},[])
-
-useEffect(() => {
-  console.log("using effect")
-  async function fetchData() {
-    const result = await getSCID();
-    // do something with the result
   }
-  fetchData();
-}, [state.daemon]);
+
+  useEffect(()=>{
+    createIPFSNode()
+  },[])
+
+  useEffect(() => {
+    console.log("using effect")
+    async function fetchData() {
+      const result = await getSCID();
+      // do something with the result
+    }
+    fetchData();
+  }, [state.daemon]);
 
 
-const getIslands = async () => {state
-  console.log("GET ISLANDS");
-  if(!state.walletList[state.activeWallet].address) return
-console.log("address exists")
-  let res = await getSC(state.scid)
-/*   const deroBridgeApi = state.deroBridgeApiRef.current;
-
-  const [err, res] = await to(
-    deroBridgeApi.daemon("get-sc", {
-      scid: state.scid,
-      variables: true,
-    })
-  ); */
-
-  console.log("res",res)
-
-  var search = new RegExp(`.*_O`);
-  console.log("search", search);
-  var scData = res.stringkeys; //.map(x=>x.match(search))
-  console.log("scData",scData);
-  var myIslands = [];
-
-  const myList = Object.keys(scData)
-    .filter((key) => search.test(key))
-    .filter((key) => hex2a(scData[key]) == state.walletList[state.activeWallet].address)
-    .map(
-      (key) =>
-        new Object({
-          name: key.substring(0, key.length - 2),
-          meta: hex2a(scData[`${key.substring(0, key.length - 2)}_M`]),
-          j: scData[`${key.substring(0, key.length - 2)}_j`],
+  const getIslands = async () => {state
+    console.log("GET ISLANDS");
+    if(!state.walletList[state.activeWallet].address) return
+    console.log("address exists")
+    let res = await getSC(state.scid)
+    /*   const deroBridgeApi = state.deroBridgeApiRef.current;
+      const [err, res] = await to(
+        deroBridgeApi.daemon("get-sc", {
+          scid: state.scid,
+          variables: true,
         })
-    );
-  console.log("MY LIST", myList);
-  for (var i = 0; i < myList.length; i++) {
-/*     let k = myList[i].meta;
-    let j = myList[i].j;
-    for await (const buf of state.ipfs.cat(k)) {
-      console.log("buf",buf.toString())
-      let m = await JSON.parse(buf.toString());
-      m.j = j;
-      myIslands.push(m);
-    } */
-    let island = await GI(state,myList[i].name)
-    island[0].j = myList[i].j
-    console.log("geet islands return",island)
-    myIslands.push(island[0])
+      ); */
+
+    console.log("res",res)
+
+    var search = new RegExp(`.*_O`);
+    console.log("search", search);
+    var scData = res.stringkeys; //.map(x=>x.match(search))
+    console.log("scData",scData);
+    var myIslands = [];
+
+    const myList = Object.keys(scData)
+      .filter((key) => search.test(key))
+      .filter((key) => hex2a(scData[key]) == state.walletList[state.activeWallet].address)
+      .map(
+        (key) =>
+          new Object({
+            name: key.substring(0, key.length - 2),
+            meta: hex2a(scData[`${key.substring(0, key.length - 2)}_M`]),
+            j: scData[`${key.substring(0, key.length - 2)}_j`],
+          })
+      );
+    console.log("MY LIST", myList);
+    for (var i = 0; i < myList.length; i++) {
+      /*     let k = myList[i].meta;
+          let j = myList[i].j;
+          for await (const buf of state.ipfs.cat(k)) {
+            console.log("buf",buf.toString())
+            let m = await JSON.parse(buf.toString());
+            m.j = j;
+            myIslands.push(m);
+          } */
+      let island = await GI(state,myList[i].name)
+      island[0].j = myList[i].j
+      console.log("geet islands return",island)
+      myIslands.push(island[0])
+    }
+
+    setState((state) => ({ ...state, myIslands: myIslands, active: 0 }));
   }
 
-  setState((state) => ({ ...state, myIslands: myIslands, active: 0 }));
-}
-
-
-useEffect(() => {
-  getIslands();
-}, [state.deroBridgeApiRef, state.ipfs, state.activeWallet,state.scid]);
+  useEffect(() => {
+    getIslands();
+  }, [state.deroBridgeApiRef, state.ipfs, state.activeWallet,state.scid]);
 
 
 
@@ -236,13 +230,13 @@ useEffect(() => {
 
   return (
     <div className="App">
-      
+
       <div className="navbar">
-        
+
         <h1 className="nav-header">Dero Private Islands</h1>
-        <PopUpMenu/>
+        <WalletSelectButton />
         <div className="menu-bars" onClick={() => toggleMenuActive()}>
-        <FaIcons.FaBars size={40} />
+          <FaIcons.FaBars size={40} />
         </div>
       </div>
       <div className={menuActive ? "dropdown-menu" : "dropdown-menu inactive"}>
@@ -261,28 +255,26 @@ useEffect(() => {
         <NavLink className="navlink" to="oao">
           <div className="navlink-text">OAO</div>
         </NavLink>
-        
+
       </div>
 
       <div className="rpc-bridge-data"></div>
 
       <Outlet />
       <h3>Coco Balance: {state.cocoBalance}</h3>
+
+
+    {/*   {state.activeWallet==0? <small
+          onClick={() => {
+            getAddress();
+          }}
+        >
+          Refresh Wallet
+        </small>
+        :""} */}
       
-      
-     {state.activeWallet==0? <small
-        onClick={() => {
-          getAddress();
-        }}
-      >
-        Refresh Wallet
-      </small>
-      :""}
-      <button onClick={()=>{console.log(state)}}>state</button>
-      <button onClick={()=>{console.log(window)}}>window</button>
-      <button onClick={()=>{state.ipfs.cat("QmZzzweveHKAnVawvHzaJWSP32X5EgpqkXZrrd176aPsAk")}}>cat</button>
-      
-      
+
+
     </div>
   )
 }

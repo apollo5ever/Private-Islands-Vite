@@ -1,12 +1,35 @@
-.main {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  margin-left: auto;
-  margin-right: auto;
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
- flex-direction: column;
+html,
+body,
+#root,
+.app,
+.content {
+  width: 100%;
+  font-family: "Roboto Thin", sans-serif;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  box-sizing: border-box;
+}
 
-  
-  }
+button {
+  cursor: pointer;
+}
+
+input {
+  color: #c0c0c0;
+}
+
+/*
+ Theme documentation for reference now & for when we create a theme
+ colors: (from the standard tailwind color palette)
+    primary: sky-900
+    primary-light: cyan-400
+    blue-200 is the light blue background
+    sky-900 is the dark blue
+    cyan-400 is the middle blue
+ */
