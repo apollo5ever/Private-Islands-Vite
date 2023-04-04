@@ -1,6 +1,7 @@
 import React from 'react'
 import to from 'await-to-js'
 import { useSendTransaction } from '../useSendTransaction'
+import { useGetSC } from '../useGetSC'
 
 export default function Subscribe(props) {
 
@@ -11,16 +12,18 @@ export default function Subscribe(props) {
     const [expiry,setExpiry] = React.useState(null)
     const [integrated,setIntegrated] = React.useState(false)
     const [integratedAddress,setIntegratedAddress] = React.useState("")
+    const [getSC] = useGetSC()
 
     const checkAvailability = React.useCallback(async () => {
         
-        const deroBridgeApi = props.dba.current
+      /*   const deroBridgeApi = props.dba.current
         const [err, res] = await to(deroBridgeApi.daemon('get-sc', {
             scid: props.scid,
             code: false,
             variables: true
-        }))
-        const obj = res.data.result.stringkeys
+        })) */
+        const res = await getSC(props.scid)
+        const obj = res.stringkeys
        let search = props.profile +props.index+"_Av"
        let avail = obj[search]
        console.log("avail",avail)
@@ -44,15 +47,16 @@ export default function Subscribe(props) {
     }
 
     const checkSubbed = React.useCallback(async ()=>{
-        const deroBridgeApi = props.dba.current
+       /*  const deroBridgeApi = props.dba.current
 
         
         const [err0, res0] = await to(deroBridgeApi.daemon('get-sc', {
                 scid:props.scid,
                 code:false,
                 variables:true
-        }))
-        var scData = res0.data.result.stringkeys
+        })) */
+        const res0 = await getSC(props.scid)
+        var scData = res0.stringkeys
         var supporterSearch = `${props.userAddress}_${props.profile+props.index}_E`
         var expiry = scData[supporterSearch]
         if(expiry){

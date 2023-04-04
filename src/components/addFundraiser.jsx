@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom'
 import to from 'await-to-js'
 import { useParams,useSearchParams } from 'react-router-dom'
 import { useSendTransaction } from '../useSendTransaction'
-
+import { useGetSC } from '../useGetSC'
 
 import { LoginContext } from '../LoginContext';
 import Success from './success.jsx'
@@ -17,7 +17,7 @@ export default function CreateFund() {
     const [sendTransaction] = useSendTransaction()
     const [state, setState] = React.useContext(LoginContext);
     const [searchParams,setSearchParams] = useSearchParams()
-
+    const [getSC] = useGetSC()
     const params=useParams()
 const island=params.island
 const index = params.index
@@ -32,14 +32,14 @@ const index = params.index
     
     
      
-      const deroBridgeApi = state.deroBridgeApiRef.current
+     /*  const deroBridgeApi = state.deroBridgeApiRef.current
       const [err0, res0] = await to(deroBridgeApi.daemon('get-sc', {
               scid:state.scid,
               code:false,
               variables:true
-      }))
+      })) */
     
-   
+   //const res0 = await getSC(state.scid)
       
  
  

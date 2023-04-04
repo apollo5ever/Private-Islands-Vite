@@ -8,6 +8,7 @@ import { useParams,useSearchParams } from 'react-router-dom'
 import { LoginContext } from '../LoginContext';
 import Success from './success'
 import { useSendTransaction } from '../useSendTransaction'
+import { useGetSC } from '../useGetSC'
 
 
 export default function ModifyTier(){
@@ -17,6 +18,7 @@ const params = useParams()
 const [state, setState] = React.useContext(LoginContext);
 const [tierObj,setTierObj] = React.useState({"name":null})
 const [custom,setCustom]=React.useState(false)
+const [getSC] = useGetSC()
 
 function hex2a(hex) {
   var str = '';
@@ -27,15 +29,16 @@ function hex2a(hex) {
 const getTier = React.useCallback(async()=>{
   if(!state.myIslands) return
   let island = state.myIslands.filter(x=>x.name==params.island)
-  const deroBridgeApi = state.deroBridgeApiRef.current
+/*   const deroBridgeApi = state.deroBridgeApiRef.current
   const [err, res] = await to(deroBridgeApi.daemon('get-sc', {
           scid:state.scid,
           code:false,
           variables:true
-  }))
-  island[0].tiers[params.tier].av=res.data.result.stringkeys[params.island+params.tier+"_Av"]
-  island[0].tiers[params.tier].ad=hex2a(res.data.result.stringkeys[params.island+params.tier+"_Ad"])
-  island[0].tiers[params.tier].am=res.data.result.stringkeys[params.island+params.tier+"_Am"]/100000
+  })) */
+  const res = await getSC(state.scid)
+  island[0].tiers[params.tier].av=res.stringkeys[params.island+params.tier+"_Av"]
+  island[0].tiers[params.tier].ad=hex2a(res.stringkeys[params.island+params.tier+"_Ad"])
+  island[0].tiers[params.tier].am=res.stringkeys[params.island+params.tier+"_Am"]/100000
   setTierObj(island[0].tiers[params.tier])
 })
 

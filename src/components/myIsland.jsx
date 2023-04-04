@@ -9,6 +9,7 @@ import Feed from './feed';
 import FutureFeed from './futureFeed';
 import PublishPost from './publishPost';
 import { useSendTransaction } from '../useSendTransaction';
+import { useGetSC } from '../useGetSC';
 
 
 
@@ -29,6 +30,7 @@ export default function MyIsland(){
   const [view,setView] = React.useState("main")
   const [judging,setJudging]=React.useState([])
   const [executing,setExecuting] = React.useState([])
+  const [getSC] = useGetSC()
 
   function hex2a(hex) {
     var str = '';
@@ -54,13 +56,14 @@ const getIslandObjects = React.useCallback(async () => {
   setSignals([])
   setJudging([])
   let signalArray =[]
-  const deroBridgeApi = state.deroBridgeApiRef.current
+/*   const deroBridgeApi = state.deroBridgeApiRef.current
   const [err, res] = await to(deroBridgeApi.daemon('get-sc', {
           scid:state.scid,
           code:false,
           variables:true
-  }))
-var scData = res.data.result.stringkeys //.map(x=>x.match(search))
+  })) */
+  const res = await getSC(state.scid)
+var scData = res.stringkeys //.map(x=>x.match(search))
 
   var treasureSearch= new RegExp(`${state.myIslands[state.active].name}[0-9]*_bm`)
   var signalSearch= new RegExp(`${state.myIslands[state.active].name}[0-9]*_sm`)

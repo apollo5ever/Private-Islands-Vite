@@ -5,6 +5,7 @@ import ReactDOM from 'react-dom'
 import to from 'await-to-js'
 import { useSearchParams } from 'react-router-dom'
 import { useSendTransaction } from '../useSendTransaction'
+import { useGetSC } from '../useGetSC'
 
 
 
@@ -23,6 +24,7 @@ export default function ClaimIsland() {
     const [execs,setExecs] = React.useState([])
     const [error,setError] = React.useState("")
     const [sendTransaction] = useSendTransaction()
+    const [getSC] = useGetSC()
 
     const handleChange = e=> {
       if(e.target.value==="custom") setCustom(true)
@@ -40,16 +42,17 @@ export default function ClaimIsland() {
 
 
   const getJudges = React.useCallback(async () =>{
-    const deroBridgeApi = state.deroBridgeApiRef.current
+   /*  const deroBridgeApi = state.deroBridgeApiRef.current
       const [err, res] = await to(deroBridgeApi.daemon('get-sc', {
               scid:state.scid,
               code:false,
               variables:true
-      }))
+      })) */
+      const res = await getSC(state.scid)
 
       var search= new RegExp(`.*_j`)  
      
-      var scData = res.data.result.stringkeys //.map(x=>x.match(search))
+      var scData = res.stringkeys //.map(x=>x.match(search))
     
     
     const judgeList=Object.keys(scData)
@@ -74,14 +77,15 @@ export default function ClaimIsland() {
   const DoIt = React.useCallback(async (event) => {
     event.preventDefault();
     
-      const deroBridgeApi = state.deroBridgeApiRef.current
+     /*  const deroBridgeApi = state.deroBridgeApiRef.current
       const [err0, res0] = await to(deroBridgeApi.daemon('get-sc', {
               scid:state.scid,
               code:false,
               variables:true
-      }))
+      })) */
+      const res0 = await getSC(state.scid)
       var search= event.target.island.value+"_O"
-      var owner = res0.data.result.stringkeys[search]
+      var owner = res0.stringkeys[search]
 
 
     var index = 0
@@ -517,11 +521,13 @@ if(event.target.wl.checked){
 }else{
 
  
-  const [err0, res0] = await to(deroBridgeApi.daemon('get-sc', {
+/*   const [err0, res0] = await to(deroBridgeApi.daemon('get-sc', {
           scid:state.scid,
           code:false,
           variables:true
-  }))
+  })) */
+
+  const res0 = await getSC(state.scid)
   
 
 var executer = event.target.executer.value
@@ -599,7 +605,7 @@ if(judge=="self")judge=event.target.island.value
     }
     if(event.target.judge.value!="self"){
 
-      const judgeAddress=hex2a(res0.data.result.stringkeys[`${event.target.judge.value}_O`])
+      const judgeAddress=hex2a(res0.stringkeys[`${event.target.judge.value}_O`])
       const judgeMsg = new Object(
         {
           "ringsize":2,
@@ -635,7 +641,7 @@ if(judge=="self")judge=event.target.island.value
 }
 if(event.target.executer.value!="self"){
 
-  const execAddress=hex2a(res0.data.result.stringkeys[`${event.target.executer.value}_O`])
+  const execAddress=hex2a(res0.stringkeys[`${event.target.executer.value}_O`])
   const execMsg = new Object(
     {
       "ringsize":2,
