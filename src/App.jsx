@@ -110,7 +110,7 @@ function App() {
      const { instance } = await WebAssembly.instantiateStreaming(wasm,GO.importObject);
      GO.run(instance) */
     console.log("create worker")
-    const worker = new Worker('src/worker.jsx');
+    const worker = new Worker('worker.jsx');
     worker.postMessage({ type: 'initialize'});
     setState((state)=>({...state,"worker":worker}));
 

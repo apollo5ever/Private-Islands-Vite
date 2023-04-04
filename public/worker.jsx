@@ -1,4 +1,7 @@
-importScripts('/wasmjs/wasm_exec.js');
+if( 'undefined' === typeof window){
+   importScripts('wasm_exec.js');
+} 
+
 
 async function initialize() {
   const GO = new self.Go();
