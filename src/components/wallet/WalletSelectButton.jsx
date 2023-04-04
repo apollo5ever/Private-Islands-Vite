@@ -1,6 +1,7 @@
 import React, {useState, useContext} from "react";
 import WalletModal from "./WalletModal.jsx";
 import {LoginContext} from "../../LoginContext.jsx";
+import {Button} from 'react-daisyui';
 
 const WalletSelectButton = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,7 +23,7 @@ const WalletSelectButton = () => {
 
   return (
     <>
-      <button className='btn btn-primary' onClick={handleOpen}>
+      <Button size='sm' className='btn btn-primary' onClick={handleOpen}>
         {
           state.walletType === "rpc" ?
             "Wallet [RPC]"
@@ -31,7 +32,7 @@ const WalletSelectButton = () => {
               `Wallet [${state.walletList[state.activeWallet].name}]`
               : 'Wallet'
         }
-      </button>
+      </Button>
       {isOpen && <WalletModal handleClose={handleClose} />}
     </>
   );
