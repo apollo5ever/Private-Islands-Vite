@@ -159,12 +159,15 @@ for(var i=0;i<bounties.length;i++){
       console.log(bounties.filter(x=>x.island==island))
       return( bounties.filter(x=>x.island==island))
   }
-      else return(bounties)
+      else{
+        console.log("no island filter. return bounties:",bounties)
+        return(bounties)
+      } 
   }
  
 
 }
-
+return([])
 
 }
 
