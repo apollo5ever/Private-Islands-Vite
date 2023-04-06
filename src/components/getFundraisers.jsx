@@ -53,6 +53,7 @@ if(state.deroBridgeApiRef){
     const response = await fetch('/api/islands/fundraisers');
     console.log(response)
     bounties = await response.json();
+    console.log(bounties)
   
     if (response.status !== 200) throw Error(bounties.message);
    }
