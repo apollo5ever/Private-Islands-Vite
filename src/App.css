@@ -88,7 +88,7 @@ ul {
   margin-top:2vw;
   margin-left: auto;
   margin-right: auto;
-  padding: 25px;
+  padding: 0 25px 25px 25px;
   border-width: 1px;
   border-style: inset;
   border-color: blue;
@@ -518,8 +518,6 @@ input[type="password"]:focus {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
- 
- 
 }
 
 .profile-card {

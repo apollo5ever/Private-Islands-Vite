@@ -10,6 +10,7 @@ import FutureFeed from './futureFeed';
 import PublishPost from './publishPost';
 import { useSendTransaction } from '../useSendTransaction';
 import { useGetSC } from '../useGetSC';
+import {Button} from 'react-daisyui'
 
 
 
@@ -451,7 +452,7 @@ React.useEffect(()=>{
             <form onSubmit={editIsland}>
             <input id="edit" defaultValue={state.myIslands[state.active].image} />
            
-            <button type="submit">Submit</button>
+            <Button size='sm' type="submit">Submit</Button>
             </form>
             <small onClick={()=>setEditing("")}>cancel</small></>
             :
@@ -468,7 +469,7 @@ React.useEffect(()=>{
           <>
           <form onSubmit={editIsland}>
           <input id="edit" defaultValue={state.myIslands[state.active].tagline} />
-          <button type="submit">Submit</button>
+          <Button size='sm' type="submit">Submit</Button>
           </form>
           <small onClick={()=>setEditing("")}>cancel</small></>
           :<><p>{state.myIslands[state.active].tagline}</p>
@@ -479,7 +480,7 @@ React.useEffect(()=>{
           <>
           <form onSubmit={editIsland}>
           <textarea rows="44" cols="80" id="edit" defaultValue={state.myIslands[state.active].bio} />
-          <button type="submit">Submit</button>
+          <Button size='' type="submit">Submit</Button>
           </form>
           <small onClick={()=>setEditing("")}>cancel</small></>
           :<><p dangerouslySetInnerHTML={{__html: state.myIslands[state.active].bio}} />
@@ -514,27 +515,27 @@ React.useEffect(()=>{
 </>}
 </>
           :view=="mail-in"?<>
-          <button onClick={()=>{setView("mail-in")}}>Incoming</button><button onClick={()=>{setView("mail-out")}}>Outgoing</button>
+          <Button size='sm' onClick={()=>{setView("mail-in")}}>Incoming</Button><Button size='sm' onClick={()=>{setView("mail-out")}}>Outgoing</Button>
           
           <Feed/>
           
           </>
           :view=="mail-out"?<>
-          <button onClick={()=>{setView("mail-in")}}>Incoming</button><button onClick={()=>{setView("mail-out")}}>Outgoing</button>
+          <Button size='sm' onClick={()=>{setView("mail-in")}}>Incoming</Button><Button size='sm' onClick={()=>{setView("mail-out")}}>Outgoing</Button>
           <h3>Your Subscription Tiers</h3>
           {state.myIslands[state.active].tiers.map(t=><p>{t.name}, subs:{t.subs.length}<NavLink to={`/island/${state.myIslands[state.active].name}/modifytier/${t.index}`}>Edit</NavLink></p>)}
           <NavLink to={`/island/${state.myIslands[state.active].name}/compose`}>Put a Message in a Bottle</NavLink>
-          <button onClick={()=>{setView("compose");setEditing("posts")}}>Compose Message</button>
+          <Button size='sm' onClick={()=>{setView("compose");setEditing("posts")}}>Compose Message</Button>
           <NavLink to={`/island/${state.myIslands[state.active].name}/modifytier/${state.myIslands[state.active].tiers.length}`}>New Subscription Tier</NavLink>
           </>
           :view=="compose"?<>
-          <button onClick={()=>{if(state.myIslands[state.active].posts){console.log(state.myIslands[state.active].posts)}}}>State</button>
+          <Button size='sm' onClick={()=>{if(state.myIslands[state.active].posts){console.log(state.myIslands[state.active].posts)}}}>State</Button>
           <PublishPost editIsland={editIsland} setView={setView}/>
           
           </>
           :view=="success"?<>
           Success!
-          <button onClick={()=>{setView("main")}}>Return</button>
+          <Button size='sm' onClick={()=>{setView("main")}}>Return</Button>
           </>
           :""}
 

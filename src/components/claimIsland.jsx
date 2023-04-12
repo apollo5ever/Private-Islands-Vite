@@ -1,21 +1,15 @@
 
-import DeroBridgeApi from 'dero-rpc-bridge-api'
 import React from 'react'
-import ReactDOM from 'react-dom'
-import to from 'await-to-js'
 import { useSearchParams } from 'react-router-dom'
 import { useSendTransaction } from '../useSendTransaction'
 import { useGetSC } from '../useGetSC'
-
-
-
 import { LoginContext } from '../LoginContext';
 import Success from './success'
+import {Button} from 'react-daisyui'
 
 
 export default function ClaimIsland() {
 
-    
   let [searchParams, setSearchParams] = useSearchParams();
     const [state, setState] = React.useContext(LoginContext);
     const [addition,setAddition] = React.useState("")
@@ -882,7 +876,8 @@ setSearchParams({"status":"success"})
         <select id="executer"><option value="self">Nominate this Island</option>{execs}</select>
         
         </>:""}
-        <button type={"submit"}>Create</button>
+        <p>&nbsp;</p>
+        <Button size='sm' type={"submit"}>Create</Button>
       </form>
       {error}
     </div>}

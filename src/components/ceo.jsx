@@ -5,6 +5,7 @@ import { LoginContext } from '../LoginContext';
 import to from 'await-to-js';
 import DeroBridgeApi from 'dero-rpc-bridge-api'
 import sha256 from 'crypto-js/sha256'
+import {Button} from 'react-daisyui'
 
 
 export default function CEO() {
@@ -277,7 +278,7 @@ setBalanceAsset(asset)
   </>
   :""}
     	
-    	<button type={"submit"}>Open Vote</button>
+    	<Button size='sm' type={"submit"}>Open Vote</Button>
     </form>
     </div>
 
@@ -298,7 +299,7 @@ setBalanceAsset(asset)
       <input id="scid" type="text"/>
       <p>Asset</p>
       <input id="asset" type="text"/>
-      <button type={"submit"}>Check Balance</button>
+      <Button size='sm' type={"submit"}>Check Balance</Button>
     </form>
     </div>
 
@@ -313,7 +314,7 @@ setBalanceAsset(asset)
     <input id="scid" type="text" />
     <p>Vote Index</p>
     <input id="index" type="text" />
-    <button type={"submit"}>Check Vote</button>
+    <Button size='sm' type={"submit"}>Check Vote</Button>
   </form>
   </div>
 
@@ -325,7 +326,7 @@ setBalanceAsset(asset)
     <input id="scid" type="text" />
     <p>Asset</p>
     <input id="asset" type="text" />
-    <button type={"submit"}>Check Allowance</button>
+    <Button size='sm' type={"submit"}>Check Allowance</Button>
   </form>
   </div>
 
@@ -340,7 +341,7 @@ setBalanceAsset(asset)
       <input id="asset" type="text" />
       <p>Amount</p>
       <input id="amount" type="text" />
-      <button type={"submit"}>Withdraw</button>
+      <Button size='sm' type={"submit"}>Withdraw</Button>
     </form>
   </div>
 
@@ -351,7 +352,7 @@ setBalanceAsset(asset)
       <input id="scid" type="text" />
       <p>New Code</p>
       <textarea placeholder="Enter New Code Here" rows="44" cols="80" id="code"/>
-      <button type={"submit"}>Update</button>
+      <Button size='sm' type={"submit"}>Update</Button>
     </form>
   </div>
         </div>
