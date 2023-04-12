@@ -8,7 +8,7 @@ import sha256 from 'crypto-js/sha256'
 import getFundraisers from './getFundraisers'
 
 
-export default function FundList(){
+export default function FundList({islands}){
 
 
     const [state, setState] = React.useContext(LoginContext);
@@ -25,7 +25,15 @@ export default function FundList(){
   }
   
     const getFunds = React.useCallback(async () => {
-     setFunds(await getFundraisers(state))
+      var fundraisers = []
+      console.log(islands)
+      
+      for(var i=0;i<islands.length;i++){
+          for(var b=0;b<islands[i].fundraisers.length;b++){
+              fundraisers.push(islands[i].fundraisers[b])
+          }
+      }
+      setFunds(fundraisers)
      
      //const meta = state.ipfs.get(subList[0].toString())
     // console.log("meta",meta)
@@ -51,7 +59,7 @@ for await (const buf of state.ipfs.cat(cid)) {
   //  setFunds(await getFundraisers(state))
     
     getFunds();
-  },[])
+  },[islands])
 
 
      

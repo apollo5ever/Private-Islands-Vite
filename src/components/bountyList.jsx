@@ -8,7 +8,7 @@ import sha256 from 'crypto-js/sha256'
 import getBounties from './getBounties'
 
 
-export default function BountyList(){
+export default function BountyList({islands}){
 
 
     const [state, setState] = React.useContext(LoginContext);
@@ -26,7 +26,17 @@ export default function BountyList(){
   
     const getFunds = React.useCallback(async () => {
 
-      setFunds(await getBounties(state))
+     
+
+      var bounties = []
+      console.log(islands)
+      
+      for(var i=0;i<islands.length;i++){
+          for(var b=0;b<islands[i].bounties.length;b++){
+              bounties.push(islands[i].bounties[b])
+          }
+      }
+      setFunds(bounties)
       
 
 }) 
@@ -34,7 +44,7 @@ export default function BountyList(){
    React.useEffect(()=>{
     
    getFunds();
-  },[state])
+  },[state,islands])
 
   React.useEffect(()=>{
    console.log("funds??",funds)

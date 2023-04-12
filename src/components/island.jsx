@@ -33,6 +33,7 @@ export default function Island() {
   const [trust, setTrust] = React.useState(0)
   const [view, setView] = React.useState("main")
   const params = useParams()
+  const [island,setIsland] = React.useState(null)
 
 
   /* function hex2a(hex) {
@@ -43,8 +44,8 @@ export default function Island() {
 
 
   const getIslands = React.useCallback(async () => {
-    setPost(await GI(state, params.island))
-
+    setIsland(await GI(state, params.island))
+    
 
     //   const deroBridgeApi = state.deroBridgeApiRef.current
     //   const [err, res] = await to(deroBridgeApi.daemon('get-sc', {
@@ -110,7 +111,7 @@ export default function Island() {
 
 
   React.useEffect(() => {
-    getIslandObjects()
+   // getIslandObjects()
   }, [post, searchParams, state.ipfs])
 
 
@@ -121,12 +122,7 @@ export default function Island() {
   }, [state.myIslands])
 
 
-  const postFiltered = post.filter((i, x) => {
-    if (searchParams.get("index") && x != searchParams.get("index")) return
-    return (i)
-
-  })
-  console.log(postFiltered)
+ 
 
 
   const changeTierToModify = e => {
@@ -154,26 +150,24 @@ export default function Island() {
 
   return (
     <div className="function">
-      <div className="profile">
-        <>{postFiltered.length === 0 ?
-          <p>Loading...</p>
-          : postFiltered.length === 1 ?
+     {island? <div className="profile">
+        
             <div>
               <div className="icons">
-                <img src={postFiltered[0].image} />
-                <h1 onClick={() => setSearchParams({"view": "main"})}>{postFiltered[0].name}</h1>
+                <img src={island.image} />
+                <h1 onClick={() => setSearchParams({"view": "main"})}>{island.name}</h1>
               </div>
               {searchParams.get("view") === "main" ?
                 <>
-                  <p>{postFiltered[0].tagline}</p>
+                  <p>{island.tagline}</p>
                   <p>Social Coconut Score:{trust ? trust : "Not trusted by any island operators"}</p>
-                  <p dangerouslySetInnerHTML={{__html: postFiltered[0].bio}} />
+                  <p dangerouslySetInnerHTML={{__html: island.bio}} />
                 </>
                 : searchParams.get("view") === "treasure" ?
                   <>
-                    {treasures && treasures.length > 0 ?
+                    {island.bounties && island.bounties.length > 0 ?
                     <>
-                      {treasures.map(x => <TreasureCard className="mytreasure" name={x.name} profile={x.island}
+                      {island.bounties.map(x => <TreasureCard className="mytreasure" name={x.name} profile={island.name}
                                                       tagline={x.tagline} treasure={x.treasure} image={x.image}
                                                       judgeList={x.judgeList} index={x.index} />)}
                     </>
@@ -188,15 +182,15 @@ export default function Island() {
                   </>
                 : searchParams.get("view") === "signal" ?
                   <>
-                      {signals && signals.length > 0 ?
+                      {island.fundraisers && island.fundraisers.length > 0 ?
                         <>
-                        {signals.map(x => <NavLink to={`/island/${x.island}/smokesignal/${x.index}`}><FundCard
+                        {island.fundraisers.map(x => <NavLink to={`/island/${x.island}/smokesignal/${x.index}`}><FundCard
                           name={x.name} profile={x.island} tagline={x.tagline} goal={x.goal} image={x.image}
                           deadline={x.deadline} /></NavLink>)}
                         </>
                         : <><p>No Smoke Signals Yet</p></>}
                   </>
-                : searchParams.get("view") === "mail" ? <>{bottles}</> : ""}
+                : searchParams.get("view") === "mail" ? <>{island.tiers.map(key=><Subscribe profile={island.name} name={key.name} index={key.index} perks={key.perks} amount={key.amount} interval={key.interval} userAddress={state.walletList[state.activeWallet].address} dba={state.deroBridgeApiRef} scid={state.scid} randomAddress={state.randomAddress} available={key.available}/>)}</> : ""}
 
               <div className="icons">
                 <div className="icons-treasure" onClick={() => setSearchParams({"view": "treasure"})}>
@@ -211,57 +205,15 @@ export default function Island() {
 
               </div>
 
-              {/*
-          <h3>Add or Modify Subscription Tiers</h3>
-          
-          <form>
-          <select id="tier" onChange={changeTierToModify} >{postFiltered[0].tiers.map(x=><option value={x.index}>{x.name}</option>)}<option value={postFiltered[0].tiers.length}>New Tier</option></select>
-          <NavLink to={`/modifytier/${postFiltered[0].name}/${tierToModify}`}><button>Add or Modify</button></NavLink>
-          </form>
-          <NavLink to={`/newsignal/${postFiltered[0].name}`}><h3>Add Smoke Signal Fundraiser</h3></NavLink>
-          <NavLink to={`/burytreasure/${postFiltered[0].name}`}><h3>Bury Treasure</h3></NavLink>
-          <NavLink to={`/newPost/${postFiltered[0].name}`}><h3>Publish new Post</h3></NavLink>
-          {postFiltered[0].tiers.length === 0? "":<>
-          <h3>View and Edit Old Posts</h3>
-          <form>
-          <select id="tier" onChange={changePostTier} >{postFiltered[0].tiers.map(x=><option value={x.index}>{x.name}</option>)}</select>
-          <select id="post" onChange={changePostToEdit} >{postFiltered[0].tiers[postTier].posts.map((x,i)=><option value={i}>{x.title}</option>)}</select>
-          <NavLink to={`/island/${postFiltered[0].name}/${postTier}/${postToEdit}/edit`}><button>View and Edit Post</button></NavLink>
-          
-          </form>
-        
-          </> }
-          <h3>Your Fundraisers</h3>
-          <form>
-            
-          <select id="signal" onChange={changeSignalToClaim} >{postFiltered[0].fundraisers.map(x=><option value={x.index}>{x.name}</option>)}</select>
-          <NavLink to={`/island/${postFiltered[0].name}/smokesignal/${signalToClaim}`}><button>View</button></NavLink>
-          </form>
-
-
-          <h3>Your Buried Treasures</h3>
-          <form>
-            
-          <select id="signal" onChange={changeTreasureToClaim} >{postFiltered[0].treasures.map(x=><option value={x.index}>{x.name}</option>)}</select>
-          <NavLink to={`/island/${postFiltered[0].name}/treasure/${treasureToClaim}`}><button>View</button></NavLink>
-          </form>
-
-          
-
-
-          */}
 
             </div>
 
 
-            :
-            <div><h1>Choose your Island</h1>
-              {postFiltered.map((x, i) => <h2 onClick={() => setSearchParams({"index": i})}>{x.name}</h2>)}
-            </div>
-        }</>
+         
 
 
       </div>
+      :""}
       {state.myIslands && state.myIslands.length > 0 ? <TrustIsland island={params.island} /> : ""}
     </div>
   )

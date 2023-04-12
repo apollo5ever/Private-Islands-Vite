@@ -74,7 +74,7 @@ var scData = res.stringkeys //.map(x=>x.match(search))
 if(state.myIslands[state.active].tiers){
   for(var t of state.myIslands[state.active].tiers){
    // var supporterSearch = new RegExp(`.*_\\${state.myIslands[state.active].name+t.index}\_E`)
-    var supporterSearch = new RegExp(`_`+state.myIslands[state.active].name+t.index+`_E`)
+    var supporterSearch = new RegExp(`_`+state.island.tiers[j].island=namemyIslands[state.active].name+t.index+`_E`)
     t.subs=Object.keys(scData)
     .filter(key=>supporterSearch.test(key))
     .filter(key=>scData[key]> new Date().getTime()/1000)

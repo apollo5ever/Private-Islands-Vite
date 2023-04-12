@@ -140,8 +140,7 @@ export default function Subscribe(props) {
          ]
          })) */
      
-         console.log(err0)
-         console.log(res0)
+         
          } )
 
     const subscribe = React.useCallback(async (event) => {
@@ -208,8 +207,7 @@ export default function Subscribe(props) {
          ]
          })) */
      
-         console.log(err0)
-         console.log(res0)
+         
          setTimeout(()=>{
             checkAvailability()
          },10000)
