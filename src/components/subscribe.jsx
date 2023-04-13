@@ -1,91 +1,88 @@
 import React from 'react'
-import to from 'await-to-js'
-import { useSendTransaction } from '../useSendTransaction'
-import { useGetSC } from '../useGetSC'
+import {useSendTransaction} from '../useSendTransaction'
+import {useGetSC} from '../useGetSC'
+import {Button} from 'react-daisyui';
 
 export default function Subscribe(props) {
 
- 
-    const [sendTransaction] = useSendTransaction()
-    const [availability,setAvailability] = React.useState("")
-    const [subbed,setSubbed] = React.useState(false)
-    const [expiry,setExpiry] = React.useState(null)
-    const [integrated,setIntegrated] = React.useState(false)
-    const [integratedAddress,setIntegratedAddress] = React.useState("")
-    const [getSC] = useGetSC()
 
-    const checkAvailability = React.useCallback(async () => {
-        
-      /*   const deroBridgeApi = props.dba.current
-        const [err, res] = await to(deroBridgeApi.daemon('get-sc', {
-            scid: props.scid,
-            code: false,
-            variables: true
-        })) */
-        const res = await getSC(props.scid)
-        const obj = res.stringkeys
-       let search = props.profile +props.index+"_Av"
-       let avail = obj[search]
-       console.log("avail",avail)
-        setAvailability(avail)
-        
+  const [sendTransaction] = useSendTransaction()
+  const [availability, setAvailability] = React.useState("")
+  const [subbed, setSubbed] = React.useState(false)
+  const [expiry, setExpiry] = React.useState(null)
+  const [integrated, setIntegrated] = React.useState(false)
+  const [integratedAddress, setIntegratedAddress] = React.useState("")
+  const [getSC] = useGetSC()
 
-        
-        
+  const checkAvailability = React.useCallback(async () => {
 
-    })
+    /*   const deroBridgeApi = props.dba.current
+      const [err, res] = await to(deroBridgeApi.daemon('get-sc', {
+          scid: props.scid,
+          code: false,
+          variables: true
+      })) */
+    const res = await getSC(props.scid)
+    const obj = res.stringkeys
+    let search = props.profile + props.index + "_Av"
+    let avail = obj[search]
+    console.log("avail", avail)
+    setAvailability(avail)
 
-    const getIntegrated = async (e)=>{
-        e.preventDefault()
-        console.log("integrate")
-        const response = await fetch(`/api/islands/integrate/${e.target.address.value}/${props.profile+props.index}`)
-        console.log(response)
-        const body = await response.json()
-        console.log(body)
-        setIntegratedAddress(body.address)
-        
+
+  })
+
+  const getIntegrated = async (e) => {
+    e.preventDefault()
+    console.log("integrate")
+    const response = await fetch(`/api/islands/integrate/${e.target.address.value}/${props.profile + props.index}`)
+    console.log(response)
+    const body = await response.json()
+    console.log(body)
+    setIntegratedAddress(body.address)
+
+  }
+
+  const checkSubbed = React.useCallback(async () => {
+    /*  const deroBridgeApi = props.dba.current
+
+
+     const [err0, res0] = await to(deroBridgeApi.daemon('get-sc', {
+             scid:props.scid,
+             code:false,
+             variables:true
+     })) */
+    const res0 = await getSC(props.scid)
+    var scData = res0.stringkeys
+    var supporterSearch = `${props.userAddress}_${props.profile + props.index}_E`
+    var expiry = scData[supporterSearch]
+    if (expiry) {
+      if (expiry > new Date().getTime() / 1000) {
+        setSubbed(true)
+        setExpiry(Math.round((expiry - new Date().getTime() / 1000) / (60 * 60 * 24)))
+      } else {
+        setSubbed(true)
+        setExpiry(0)
+      }
+
     }
 
-    const checkSubbed = React.useCallback(async ()=>{
-       /*  const deroBridgeApi = props.dba.current
 
-        
-        const [err0, res0] = await to(deroBridgeApi.daemon('get-sc', {
-                scid:props.scid,
-                code:false,
-                variables:true
-        })) */
-        const res0 = await getSC(props.scid)
-        var scData = res0.stringkeys
-        var supporterSearch = `${props.userAddress}_${props.profile+props.index}_E`
-        var expiry = scData[supporterSearch]
-        if(expiry){
-           if(expiry> new Date().getTime()/1000){
-             setSubbed(true)
-             setExpiry(Math.round((expiry-new Date().getTime()/1000)/(60*60*24)))
-        } else{
-            setSubbed(true)
-            setExpiry(0)
-        }
+  })
 
-        }
-        
-   
-    })
+  const [error, setError] = React.useState("")
 
-    const [error,setError]=React.useState("")
+  const topUp = React.useCallback(async (event) => {
+    event.preventDefault();
 
-    const topUp = React.useCallback(async (event) => {
-        event.preventDefault();
-       
-        setError("");
+    setError("");
 
-      //  const deroBridgeApi = props.dba.current
+    //  const deroBridgeApi = props.dba.current
 
 
         const TierHash = props.profile+props.index.toString()
         const SupporterHash = props.userAddress
-     
+
         const data = new Object(
             {
                 "scid": props.scid,
@@ -113,8 +110,8 @@ export default function Subscribe(props) {
             }
         )
             sendTransaction(data)
-        
-        
+
+
 /*          const [err0, res0] = await to(deroBridgeApi.wallet('start-transfer', {
              "scid": props.scid,
              "ringsize": 2,
@@ -139,13 +136,13 @@ export default function Subscribe(props) {
              }
          ]
          })) */
-     
-         
+
+
          } )
 
     const subscribe = React.useCallback(async (event) => {
         event.preventDefault();
-       
+
         setError("");
 
       //  const deroBridgeApi = props.dba.current
@@ -153,7 +150,7 @@ export default function Subscribe(props) {
 
         const TierHash = props.profile+props.index.toString()
         const SupporterHash = props.userAddress
-     
+
         const data = new Object(
             {
                 "scid": props.scid,
@@ -206,12 +203,12 @@ export default function Subscribe(props) {
              }
          ]
          })) */
-     
-         
+
+
          setTimeout(()=>{
             checkAvailability()
          },10000)
-         
+
          } )
          React.useEffect(() => {
             console.log("executed only once!");
@@ -229,17 +226,17 @@ export default function Subscribe(props) {
            { subbed?<form onSubmit={topUp}>
             {expiry==0?<p>Your subscription has expired.</p>:<p>You are subscribed to this tier. Your subscription ends in {expiry} days.</p>}
                 <input placeholder="Dero Amount" id="amount" type="text"/>
-                <button type={"submit"}>Top Up</button>
+                <Button size='sm' type={"submit"}>Top Up</Button>
             </form>:
            <form onSubmit={subscribe}>
                 <input placeholder="Dero Amount" id="amount" type="text"/>
-                <button type={"submit"}>Subscribe</button>
+                <Button size='sm' type={"submit"}>Subscribe</Button>
             </form>}
            <div className="error"> {error}</div>
            <small onClick={()=>setIntegrated(!integrated)}>Get Integrated Address</small>
            {integrated?<form onSubmit={getIntegrated}><input id="address" type="text" placeholder="Subscriber's Dero Address"/>
-           <button type={"submit"}>Get</button></form>:""}
+           <Button size='sm' type={"submit"}>Get</Button></form>:""}
            {integratedAddress}
         </div>
-    )
+  )
 }

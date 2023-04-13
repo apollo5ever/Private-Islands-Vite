@@ -1,5 +1,9 @@
-// General utility functions
+// App Constants
 
+export const MOBILE_BREAKPOINT = '768px'
+
+
+// General utility functions
 /*
  To get classnames formatted properly
  -- Usage example

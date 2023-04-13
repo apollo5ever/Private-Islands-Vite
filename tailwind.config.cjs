@@ -4,7 +4,6 @@ module.exports = {
   theme: {
     extend: {}
   },
-  plugins: [require("daisyui")],
   daisyui: {
     themes: [
       {
@@ -25,5 +24,6 @@ module.exports = {
         },
       }
     ]
-  }
+  },
+  plugins: [require("@tailwindcss/typography"), require("daisyui")],
 }

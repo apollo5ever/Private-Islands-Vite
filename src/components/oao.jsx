@@ -5,6 +5,7 @@ import { LoginContext } from '../LoginContext';
 import to from 'await-to-js';
 import DeroBridgeApi from 'dero-rpc-bridge-api'
 import sha256 from 'crypto-js/sha256'
+import {Button} from 'react-daisyui'
 
 
 export default function OAO() {
@@ -375,9 +376,9 @@ setBalanceAsset(asset)
         <option value="0"> no </option>
         <option value="1"> yes</option>
       </select>
-      <button type={"submit"}>Cast Vote</button>
+      <Button size='sm' type={"submit"}>Cast Vote</Button>
     </form>
-    <button onClick={()=>closeVote()}>Close Vote</button>
+    <Button size='sm' onClick={()=>closeVote()}>Close Vote</Button>
 </>
    :<>
     <h3> Open a Vote </h3>
@@ -417,7 +418,7 @@ setBalanceAsset(asset)
   </>
   :""}
     	
-    	<button type={"submit"}>Open Vote</button>
+    	<Button size='sm' type={"submit"}>Open Vote</Button>
     </form>
     </> }
     </div>
@@ -431,14 +432,14 @@ setBalanceAsset(asset)
     
     <p>Vote Index</p>
     <select id="index">{voteList}</select>
-    <button type={"submit"}>Check Vote</button>
+    <Button size='sm' type={"submit"}>Check Vote</Button>
   </form>
   {type === 5?
   
   <form onSubmit={hashCode}>
     <p>Hash:{hash} </p>
     <textarea placeholder="Enter New Code Here" rows="44" cols="80" id="code"/>
-    <button type={"submit"}>Check Hash</button>
+    <Button size='sm' type={"submit"}>Check Hash</Button>
   </form>
   :""
 }
@@ -451,7 +452,7 @@ setBalanceAsset(asset)
     <p>Address</p>
     <input id="address" type="text" />
 
-    <button type={"submit"}>Transfer Seat</button>
+    <Button size='sm' type={"submit"}>Transfer Seat</Button>
   </form>
   </div>
 
