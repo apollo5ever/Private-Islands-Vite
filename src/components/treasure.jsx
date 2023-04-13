@@ -12,6 +12,7 @@ import N from './N';
 import Judge from './Judge';
 import getBounties from './getBounties';
 import { useSendTransaction } from '../useSendTransaction';
+import GI from './getIslands'
 
 
 export default function Treasure() {
@@ -195,13 +196,15 @@ export default function Treasure() {
 }
 
   const getFunds = React.useCallback(async () => {
-     
+     let profile = await GI(state,island)
+     console.log(profile.bounties)
+     setTreasure(profile.bounties[index])
   
-     const t = await getBounties(state,island)
+     //const t = await getBounties(state,island)
         //setTreasure(await getBounties(state,island))
-        console.log(t)
+      /*   console.log(t)
         console.log(t[0].executerList.length)
-        setTreasure(t[params.index])
+        setTreasure(t[params.index]) */
   }
   )
 
