@@ -1,21 +1,22 @@
-import React from 'react'
+import {useCallback, useContext, useEffect, useState} from 'react'
 import {NavLink} from 'react-router-dom';
 import IslandCard from './islandCard';
 import {LoginContext} from '../LoginContext';
-import to from 'await-to-js';
 import {useSearchParams} from 'react-router-dom';
 import BountyList from './bountyList';
 import FundList from './fundList';
 import {default as GI} from './getIslands'
 import BottleList from './bottleList';
-
+import {Card} from 'react-daisyui';
+import {FlexBoxColumn} from "@/components/common/FlexBoxColumn.jsx";
+import {FlexBoxRow} from "@/components/common/FlexBoxRow.jsx";
+import {Divider} from "@/components/common/Divider.jsx";
+import {FeatureNav} from "@/components/common/FeatureNav.jsx";
 
 export default function IslandList() {
-
-  const [islands, setIslands] = React.useState([])
-  const [shuffledIslands, setShuffledIslands] = React.useState([]);
-  const [state, setState] = React.useContext(LoginContext);
-  const [view, setView] = React.useState("");
+  const [islands, setIslands] = useState([])
+  const [shuffledIslands, setShuffledIslands] = useState([]);
+  const [state, setState] = useContext(LoginContext);
   let [searchParams, setSearchParams] = useSearchParams();
 
   function shuffleArray(array) {
@@ -26,64 +27,49 @@ export default function IslandList() {
     return array
   }
 
-
-  function hex2a(hex) {
-    var str = '';
-    for (var i = 0; i < hex.length; i += 2) str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
-    return str;
-  }
-
-  const getIslands = React.useCallback(async () => {
+  const getIslands = useCallback(async () => {
     setIslands(await GI(state))
   })
 
-
-  React.useEffect(() => {
+  useEffect(() => {
     getIslands()
   }, [])
 
-  React.useEffect(() => {
+  useEffect(() => {
     // shuffle the array and update the state
     setShuffledIslands(shuffleArray(islands));
   }, [islands]); // specify an empty array as the dependencies to run the effect only when the component mounts or updates
 
-
-//     const islandJSX = shuffleArray(islands).map(bio => {
-  //       return( <NavLink to={`/island/${bio.name}?view=main`}><IslandCard  name={bio.name} tagline={bio.tagline} image={bio.image} /></NavLink> )
-  // })
   return (
-    <div className="function">
-      <NavLink to={`/archipelago`}><h1>The Archipelago</h1></NavLink>
-      <div className="icons">
-        <div className="icons-treasure" onClick={() => {
-          setSearchParams({filter: "treasure"})
-        }}>
-          <div className="icons-text">Bounties</div>
-        </div>
-        <div className="icons-signal" onClick={() => {
-          setSearchParams({filter: "smokesignals"})
-        }}>
-          <div className="icons-text">Fundraisers</div>
-        </div>
-        <div className="icons-mail" onClick={() => {
-          setSearchParams({filter: "mib"})
-        }}>
-          <div className="icons-text">Subscriptions</div>
-        </div>
-      </div>
-      {!searchParams.get("filter") ? <div>
-
-          <div className="profile-card-grid">{islands.map(bio => {
-            return (<NavLink to={`/island/${bio.name}?view=main`}><IslandCard name={bio.name} tagline={bio.tagline}
-                                                                              image={bio.image} /></NavLink>)
-          })}</div>
-
-
-        </div>
-        : searchParams.get("filter") == "treasure" ? <BountyList islands={islands} />
-          : searchParams.get("filter") == "smokesignals" ? <FundList islands={islands} />
-            : searchParams.get("filter") == "mib" ? <BottleList islands={islands} state={state} />
-              : ""}
-    </div>
+    <FlexBoxRow className='p-8'>
+      <Card side='lg' bordered='true' image-full='false' className='bg-secondary shadow-md w-screen'>
+        <Card.Body className=''>
+          <FlexBoxColumn>
+            <div className='prose'>
+              <Card.Title className='justify-center'>
+                <NavLink to={`/archipelago`} className='no-underline'>
+                  <h1 className='text-center'>The Archipelago</h1>
+                </NavLink>
+              </Card.Title>
+            </div>
+            <FeatureNav setSearchParams={setSearchParams} />
+            <Divider />
+            {!searchParams.get("filter") ?
+              <div>
+                <div className="profile-card-grid">{islands.map(bio => {
+                  return (<NavLink to={`/island/${bio.name}?view=main`} key={bio.name}>
+                    <IslandCard name={bio.name} tagline={bio.tagline} image={bio.image} />
+                  </NavLink>)
+                })}
+                </div>
+              </div>
+              : searchParams.get("filter") === "treasure" ? <BountyList islands={islands} />
+                : searchParams.get("filter") === "smokesignals" ? <FundList islands={islands} />
+                  : searchParams.get("filter") === "mib" ? <BottleList islands={islands} state={state} />
+                    : ""}
+          </FlexBoxColumn>
+        </Card.Body>
+      </Card>
+    </FlexBoxRow>
   )
 }

@@ -1,19 +1,24 @@
-import React from 'react'
+import {Helpers} from '@/utils/helpers.js';
+import {FlexBoxRow} from "@/components/common/FlexBoxRow.jsx";
+import {Button, Card} from "react-daisyui";
+import {FlexBoxColumn} from "@/components/common/FlexBoxColumn.jsx";
 
 export default function FundCard(props) {
 
-    var deadline = new Date(props.deadline*1000)
-    var deadlinestring = (deadline.getMonth()+1).toString()+"/"+deadline.getDate().toString()
-
-    
-    return (
-        <div className="ProfileCard" >
+  return (
+    <FlexBoxRow className='py-8 prose'>
+      <Card side='lg' bordered='true' image-full='false' className='bg-secondary shadow-md'>
+        <Card.Body className=''>
+          <FlexBoxColumn>
             <h1>{props.name}</h1>
             <h3>Initiated by {props.profile}</h3>
-            <img src={props.image}/>
+            <img src={props.image} className='w-1/2 rounded-md' />
             <p>{props.tagline}</p>
-            <p>Goal:{props.goal} Dero by {deadlinestring} </p>
-            <b>Click to See More</b>
-        </div>
-    )
+            <p>Goal: {Helpers.formatNumber(props.goal)} Dero by {Helpers.formattedDate(props.deadline * 1000)} </p>
+            <Button size='md'>Click to See More</Button>
+          </FlexBoxColumn>
+        </Card.Body>
+      </Card>
+    </FlexBoxRow>
+  )
 }

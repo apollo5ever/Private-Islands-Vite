@@ -9,7 +9,16 @@ This is a vite react front end app, utilizing many other software implementation
 - MST 3/28/23
 
   - Using tailwind to style wasm components
-  - Noting common colors in index.css as documentation for now
-  - A future refactor will be to create a theme & see about implementing styled components
-  - Will work on replacing App.css as we go
+  - Defined colors in theme
+  - Working to convert all code to be responsive & based on theme and removing App.css
   - 
+
+### MST Bugs
+
+- bountyList.jsx
+  - filter doesn't work - data doesn't seem to have a status to filter on??
+  - need an option to 'show all', essentially cancelling filter (in drop down)
+
+
+
+### MST TO DO

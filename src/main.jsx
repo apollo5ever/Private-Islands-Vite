@@ -1,8 +1,5 @@
 import React from 'react'
-
-import ReactDOM from 'react-dom'
-
-import {HashRouter, BrowserRouter, Route, Routes} from 'react-router-dom'
+import {HashRouter, Route, Routes} from 'react-router-dom'
 import App from './App'
 import './index.css'
 import {LoginProvider} from './LoginContext'
@@ -22,6 +19,8 @@ import Fundraiser from './components/fundraiser';
 import CreateFund from './components/addFundraiser'
 import BuryTreasure from './components/buryTreasure';
 import Test from './components/simulatorTest'
+import {PageHeader} from "@/components/header/PageHeader.jsx";
+import {createRoot} from 'react-dom/client';
 
 import './polyfills'
 import '@rainbow-me/rainbowkit/styles.css';
@@ -54,31 +53,33 @@ const wagmiClient = createClient({
   provider
 })
 
+const container = document.getElementById('root');
+const root = createRoot(container)
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+root.render(
   <LoginProvider>
     <WagmiConfig client={wagmiClient}>
       <RainbowKitProvider chains={chains}>
     <HashRouter>
+      <PageHeader />
       <Routes>
-        <Route path="/" element={<App />}>
-          <Route path="/about" element={<About />} />
-          <Route path="/island/:island" element={<Island />} />
-          <Route path="/island/:island/smokesignal/:index" element={<Fundraiser />} />
-          <Route path="/island/:island/treasure/:index" element={<Treasure />} />
-          <Route path="/test" element={<Test />} />
-          <Route path="smokesignals" element={<FundList />} />
-          <Route path="treasure" element={<BountyList />} />
-          <Route path="/newsignal/:island/:index" element={<CreateFund />} />
-          <Route path="/burytreasure/:island/:index" element={<BuryTreasure />} />
-          <Route path="/oao" element={<OAO />} />
-          <Route path="/ceo" element={<CEO />} />
-          <Route path="myisland" element={<MyIsland />} />
-          <Route path="claimisland" element={<ClaimIsland />} />
-          <Route path="archipelago" element={<IslandList />} />
-          <Route path="/island/:island/compose" element={<PublishPost />} />
-          <Route path="/island/:island/modifytier/:tier" element={<ModifyTier />} />
-        </Route>
+        <Route path="/" element={<IslandList />} />
+        <Route path="archipelago" element={<IslandList />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/island/:island" element={<Island />} />
+        <Route path="/island/:island/smokesignal/:index" element={<Fundraiser />} />
+        <Route path="/island/:island/treasure/:index" element={<Treasure />} />
+        <Route path="/test" element={<Test />} />
+        <Route path="smokesignals" element={<FundList />} />
+        <Route path="treasure" element={<BountyList />} />
+        <Route path="/newsignal/:island/:index" element={<CreateFund />} />
+        <Route path="/burytreasure/:island/:index" element={<BuryTreasure />} />
+        <Route path="/oao" element={<OAO />} />
+        <Route path="/ceo" element={<CEO />} />
+        <Route path="myisland" element={<MyIsland />} />
+        <Route path="claimisland" element={<ClaimIsland />} />
+        <Route path="/island/:island/compose" element={<PublishPost />} />
+        <Route path="/island/:island/modifytier/:tier" element={<ModifyTier />} />
       </Routes>
     </HashRouter>
     </RainbowKitProvider>

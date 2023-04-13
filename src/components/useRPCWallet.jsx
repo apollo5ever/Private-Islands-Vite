@@ -1,10 +1,10 @@
-import { useState, useEffect,useContext,useRef, useCallback } from 'react';
-import { LoginContext } from '../LoginContext';
+import {useState, useEffect, useContext, useRef, useCallback} from 'react';
+import {LoginContext} from '../LoginContext';
 import DeroBridgeApi from 'dero-rpc-bridge-api';
 import to from 'await-to-js';
 
 export function useRPCWallet() {
-    const [state,setState] = useContext(LoginContext)
+  const [state, setState] = useContext(LoginContext)
   const [walletInfo, setWalletInfo] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -15,14 +15,14 @@ export function useRPCWallet() {
     console.log("FETCH WALLET INFO")
     deroBridgeApiRef.current = new DeroBridgeApi();
     const deroBridgeApi = deroBridgeApiRef.current;
-  
+
     const [err] = await to(deroBridgeApi.init());
     if (err) {
       setError(err)
-      console.log("ERR",err)
+      console.log("ERR", err)
     } else {
-      setState((state) => ({ ...state, deroBridgeApiRef: deroBridgeApiRef})); 
-      console.log("STATE",state)
+      setState((state) => ({...state, deroBridgeApiRef: deroBridgeApiRef}));
+      console.log("STATE", state)
       getRandom()
       getAddress()
       //getSCID()
@@ -58,9 +58,9 @@ export function useRPCWallet() {
       newWalletList[0].address = res0.data.result.address
       setState((state) => ({
         ...state,
-        walletList:newWalletList
+        walletList: newWalletList
       }));
-    }else{
+    } else {
       let newWalletList = state.walletList
       newWalletList[0].address = null
     }
@@ -83,15 +83,13 @@ export function useRPCWallet() {
     );
     let scid = res2.data.result.valuesstring[0];
     let coco = res2.data.result.valuesstring[1];
-    setState((state) => ({ ...state, scid: scid, coco: coco }));
+    setState((state) => ({...state, scid: scid, coco: coco}));
   });
-  
+
   useEffect(() => {
     fetchWalletInfo(); //i feel like this shouldn't be here
   }, []);
-  
 
 
-
-  return [walletInfo, isLoading, error,fetchWalletInfo];
+  return [walletInfo, isLoading, error, fetchWalletInfo];
 }
