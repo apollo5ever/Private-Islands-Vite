@@ -80,11 +80,10 @@ export default function IslandList() {
 
 
         </div>
-        : searchParams.get("filter") == "treasure" ? <BountyList />
-          : searchParams.get("filter") == "smokesignals" ? <FundList />
-            : searchParams.get("filter") == "mib" ? <BottleList state={state} />
+        : searchParams.get("filter") == "treasure" ? <BountyList islands={islands} />
+          : searchParams.get("filter") == "smokesignals" ? <FundList islands={islands} />
+            : searchParams.get("filter") == "mib" ? <BottleList islands={islands} state={state} />
               : ""}
     </div>
   )
-
 }

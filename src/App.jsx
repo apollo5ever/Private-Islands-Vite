@@ -212,9 +212,9 @@ function App() {
             myIslands.push(m);
           } */
       let island = await GI(state,myList[i].name)
-      island[0].j = myList[i].j
+      //island[0].j = myList[i].j
       console.log("geet islands return",island)
-      myIslands.push(island[0])
+      myIslands.push(island)
     }
 
     setState((state) => ({ ...state, myIslands: myIslands, active: 0 }));
@@ -262,6 +262,7 @@ function App() {
 
       <Outlet />
       <h3>Coco Balance: {state.cocoBalance}</h3>
+      <button onClick={()=>{console.log(state)}}>State</button>
 
 
     {/*   {state.activeWallet==0? <small

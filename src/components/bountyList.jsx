@@ -1,11 +1,10 @@
 import React from 'react'
 import TreasureCard from './treasureCard'
 import '../App.css'
-import {useSearchParams, NavLink} from 'react-router-dom'
+import {useSearchParams} from 'react-router-dom'
 import {LoginContext} from '../LoginContext'
-import getBounties from './getBounties'
 
-export default function BountyList() {
+export default function BountyList({islands}) {
   const [state, setState] = React.useContext(LoginContext);
   const [funds, setFunds] = React.useState([])
   let [searchParams, setSearchParams] = useSearchParams();
@@ -17,21 +16,29 @@ export default function BountyList() {
   }
 
   const getFunds = React.useCallback(async () => {
-    setFunds(await getBounties(state))
+    var bounties = []
+    console.log(islands)
+
+    for (var i = 0; i < islands.length; i++) {
+      for (var b = 0; b < islands[i].bounties.length; b++) {
+        bounties.push(islands[i].bounties[b])
+      }
+    }
+    setFunds(bounties)
   })
 
   React.useEffect(() => {
     getFunds();
-  }, [state])
+  }, [state, islands])
 
   React.useEffect(() => {
     console.log("funds??", funds)
   }, [funds])
 
 
-  const fundJSX = funds && funds.map(f => {
-    if (searchParams.get("status") && f.status !== searchParams.get("status")) return
-    if (searchParams.get("island") && f.island !== searchParams.get("island")) return
+  const fundJSX = funds.map(f => {
+    if (searchParams.get("status") && f.status != searchParams.get("status")) return
+    if (searchParams.get("island") && f.island != searchParams.get("island")) return
 
     return (<div className="function"><TreasureCard JN={f.JN} image={f.image} index={f.index} treasure={f.treasure}
                                                     deadline={f.deadline} profile={f.island} name={f.name}
@@ -43,6 +50,7 @@ export default function BountyList() {
   return (
     <div>
       <div>
+
         <h1>Buried Treasure Bounties</h1>
         <div className="status-selector">
           <ul>

@@ -32,6 +32,7 @@ export default function MyIsland(){
   const [judging,setJudging]=React.useState([])
   const [executing,setExecuting] = React.useState([])
   const [getSC] = useGetSC()
+  const [island,setIsland] = React.useState(null)
 
   function hex2a(hex) {
     var str = '';
@@ -75,7 +76,7 @@ var scData = res.stringkeys //.map(x=>x.match(search))
 if(state.myIslands[state.active].tiers){
   for(var t of state.myIslands[state.active].tiers){
    // var supporterSearch = new RegExp(`.*_\\${state.myIslands[state.active].name+t.index}\_E`)
-    var supporterSearch = new RegExp(`_`+state.myIslands[state.active].name+t.index+`_E`)
+   var supporterSearch = new RegExp(`_`+state.myIslands[state.active].name+t.index+`_E`)
     t.subs=Object.keys(scData)
     .filter(key=>supporterSearch.test(key))
     .filter(key=>scData[key]> new Date().getTime()/1000)
@@ -251,7 +252,10 @@ const getTXHistory = React.useCallback(async () => {
 
 
 React.useEffect(()=>{
-  getIslandObjects()
+  //getIslandObjects()
+  if(state.myIslands){
+    setIsland(state.myIslands[state.active])
+  }
 },[post,searchParams,state.active])
 
     const editIsland = async e => {
@@ -490,10 +494,10 @@ React.useEffect(()=>{
           </>
           :view=="treasure"?
           <>
-          <NavLink to={`/burytreasure/${state.myIslands[state.active].name}/${treasures.length}`}>Bury New Treasure</NavLink>
-          {treasures.length>0?<><h3>Bounties You Initiated</h3><div className="card-grid">
+          <NavLink to={`/burytreasure/${island.name}/${island.bounties.length}`}>Bury New Treasure</NavLink>
+          {island.bounties.length>0?<><h3>Bounties You Initiated</h3><div className="card-grid">
             
-            {treasures.map(x=><TreasureCard className="mytreasure" executerList={x.executerList} name={x.name} profile={x.island} tagline={x.tagline} treasure={x.treasure} image={x.image} judgeList={x.judgeList} index={x.index}/>)}
+            {island.bounties.map(x=><TreasureCard className="mytreasure" executerList={x.executerList} name={x.name} profile={x.island} tagline={x.tagline} treasure={x.treasure} image={x.image} judgeList={x.judgeList} index={x.index}/>)}
 </div></>:<p>No Buried Treasures yet</p>}
 {judging.length>0?<><h3>Nominated for Judge</h3><div className="card-grid">
   
@@ -508,9 +512,9 @@ React.useEffect(()=>{
 
             </>
           :view=="signal"?<>
-          <NavLink to={`/newsignal/${state.myIslands[state.active].name}/${signals.length}`}>Start New Smoke Signal</NavLink>
-          {signals.length>0?<>
-            {signals.map(x=><NavLink to={`/island/${x.island}/smokesignal/${x.index}`}><FundCard name={x.name} profile={x.island} tagline={x.tagline} goal={x.goal} image={x.image} deadline={x.deadline}/></NavLink>)}
+          <NavLink to={`/newsignal/${island.name}/${island.fundraisers.length}`}>Start New Smoke Signal</NavLink>
+          {island.fundraisers.length>0?<>
+            {island.fundraisers.map(x=><NavLink to={`/island/${x.island}/smokesignal/${x.index}`}><FundCard name={x.name} profile={x.island} tagline={x.tagline} goal={x.goal} image={x.image} deadline={x.deadline}/></NavLink>)}
 </>:<><p>No Smoke Signals Yet</p>
 </>}
 </>
