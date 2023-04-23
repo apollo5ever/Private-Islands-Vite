@@ -6,6 +6,7 @@ import {FlexBoxColumn} from "@/components/common/FlexBoxColumn.jsx";
 import {FlexBoxRow} from "@/components/common/FlexBoxRow.jsx";
 import {Button, Divider, Modal} from 'react-daisyui';
 import WalletSelectItem from "@/walletSelectItem.jsx";
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 
 const WalletModal = ({handleClose}) => {
@@ -246,6 +247,14 @@ const WalletModal = ({handleClose}) => {
               </FlexBoxRow>
               <Divider />
               <Button color='secondary' onClick={() => handleOptionClick("addWallet")}>Add Wallet</Button>
+            </FlexBoxColumn>
+          </FlexBoxRow>
+          <FlexBoxRow justify='left'>
+            <FlexBoxColumn align='left'>
+              <div className='text-xl pb-2'>Ethereum Wallet</div>
+              <div className='border border-slate-400 rounded-lg px-3 py-1'>
+                <ConnectButton/>
+              </div>
             </FlexBoxColumn>
           </FlexBoxRow>
         </FlexBoxColumn>

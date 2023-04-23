@@ -23,9 +23,42 @@ import CreateFund from './components/addFundraiser'
 import BuryTreasure from './components/buryTreasure';
 import Test from './components/simulatorTest'
 
+import './polyfills'
+import '@rainbow-me/rainbowkit/styles.css';
+import {
+  getDefaultWallets,
+  RainbowKitProvider,
+} from '@rainbow-me/rainbowkit';
+import { configureChains, createClient, WagmiConfig } from 'wagmi';
+import { mainnet, polygon, optimism, arbitrum } from 'wagmi/chains';
+import { alchemyProvider } from 'wagmi/providers/alchemy';
+import { publicProvider } from 'wagmi/providers/public';
+
+const { chains, provider } = configureChains(
+  [mainnet],
+  [
+    alchemyProvider({ apiKey: "EMDm4apXsi2nDwfYW5C9_OI1xUI81YG-" }),
+    publicProvider()
+  ]
+);
+
+const { connectors } = getDefaultWallets({
+  appName: 'Private Islands',
+  projectId: '2b3da2ac8bbb9474e8580033fecfeb75',
+  chains
+});
+
+const wagmiClient = createClient({
+  autoConnect: true,
+  connectors,
+  provider
+})
+
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <LoginProvider>
+    <WagmiConfig client={wagmiClient}>
+      <RainbowKitProvider chains={chains}>
     <HashRouter>
       <Routes>
         <Route path="/" element={<App />}>
@@ -48,5 +81,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         </Route>
       </Routes>
     </HashRouter>
+    </RainbowKitProvider>
+    </WagmiConfig>
   </LoginProvider>
 )
