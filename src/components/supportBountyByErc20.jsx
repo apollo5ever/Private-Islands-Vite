@@ -12,40 +12,6 @@ import getERC20s from './getERC20s'
 
 
 export function SupportBountyByERC20({H,i,amount,erc20addr}) {
-    //get a and b params
-    const [fee,setFee] = React.useState(0.015)
-    const [tokenList,setTokenList] = React.useState([])
-    const [getSC] = useGetSC()
-    const registrySCID="a6b36e8a23d153c5f09683183fc1059285476a1ce3f7f53952ab67b4fa34bcce"
-    const [tokenSymbolToAddress, setTokenSymbolToAddress] = React.useState(null);
-
-    
-
-    const bridgeContract ={
-        address:"0xb6C735bfF2B23f20e2603D4394FE3aF3e2B1EB69",
-        abi: [
-            {
-                "inputs": [
-                    {
-                        "internalType": "string",
-                        "name": "",
-                        "type": "string"
-                    }
-                ],
-                "name": "registeredSymbol",
-                "outputs": [
-                    {
-                        "internalType": "address",
-                        "name": "",
-                        "type": "address"
-                    }
-                ],
-                "stateMutability": "view",
-                "type": "function"
-            }
-        ]
-    }
-
     const privateislandscontract = {
         address:"0x086a2f48CbbD49C45B4197C745d8ACce508016db",
         abi: [{
@@ -88,6 +54,53 @@ export function SupportBountyByERC20({H,i,amount,erc20addr}) {
             "type": "function"
         }]
     }
+    //get a and b params
+    const [fee,setFee] = React.useState(0.015)
+    const [tokenList,setTokenList] = React.useState([])
+    const [getSC] = useGetSC()
+    const registrySCID="a6b36e8a23d153c5f09683183fc1059285476a1ce3f7f53952ab67b4fa34bcce"
+    const [tokenSymbolToAddress, setTokenSymbolToAddress] = React.useState([{
+        ...privateislandscontract,
+        functionName: 'a',
+    },
+    {
+        ...privateislandscontract,
+        functionName: 'b',
+    },
+    {
+        ...privateislandscontract,
+        functionName: 'c',
+    }]);
+    //const {data, isError, isLoading} = getERC20s()
+
+    
+
+    const bridgeContract ={
+        address:"0xb6C735bfF2B23f20e2603D4394FE3aF3e2B1EB69",
+        abi: [
+            {
+                "inputs": [
+                    {
+                        "internalType": "string",
+                        "name": "",
+                        "type": "string"
+                    }
+                ],
+                "name": "registeredSymbol",
+                "outputs": [
+                    {
+                        "internalType": "address",
+                        "name": "",
+                        "type": "address"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            }
+        ]
+    }
+
+    
    
 
     React.useEffect(()=>{
@@ -107,6 +120,18 @@ export function SupportBountyByERC20({H,i,amount,erc20addr}) {
                 args:[y]
         })
         )
+       tokenArray.push({
+        ...privateislandscontract,
+        functionName: 'a',
+    },
+    {
+        ...privateislandscontract,
+        functionName: 'b',
+    },
+    {
+        ...privateislandscontract,
+        functionName: 'c',
+    })
         setTokenSymbolToAddress(tokenArray)
 
         }
@@ -117,32 +142,15 @@ export function SupportBountyByERC20({H,i,amount,erc20addr}) {
     
 
 
-    tokenSymbolToAddress? 
-    console.log("dummy",[...tokenSymbolToAddress,{...privateislandscontract,functionName:'b'}] )&&
-    console.log("TSTA",tokenSymbolToAddress) &&
-    useContractReads({
-        contracts: [...tokenSymbolToAddress,
-           
-           
-            {
-                ...privateislandscontract,
-                functionName: 'a',
-            },
-            {
-                ...privateislandscontract,
-                functionName: 'b',
-            },
-            {
-                ...privateislandscontract,
-                functionName: 'c',
-            }
-           
-        ],
+    
+    
+    const { paramdata, paramisError, paramisLoading } = useContractReads({
+        contracts: tokenSymbolToAddress,
         onSettled(data) {
             
-            console.log('Settled', data)
+            console.log('READS RESULT', data)
         }
-      }) : console.log('okkk')
+      })
 
 
 
