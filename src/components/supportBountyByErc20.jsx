@@ -14,11 +14,51 @@ import getERC20s from './getERC20s'
 
 export function SupportBountyByERC20({H,i}) {
     const [registeredTokens,setRegisteredTokens] = React.useState([])
-    const [erc20,setERC20] = React.useState({address:"0x0000000000000000000000000000000000000000",allowance:ethers.BigNumber.from('0')})
+    const [erc20,setERC20] = React.useState({address:"0x0000000000000000000000000000000000000000",allowance:ethers.BigNumber.from('0'),decimals:ethers.BigNumber.from('0')})
     const [amount,setAmount] = React.useState(0)
     const privateislandsContractAddress = "0x086a2f48CbbD49C45B4197C745d8ACce508016db"
     const [userAddress,setUserAddress] = React.useState("0x0000000000000000000000000000000000000000")
     const [allowanceArray,setAllowanceArray] = React.useState([])
+    const [decimalsArray,setDecimalsArray] = React.useState([])
+    const [contractPrep,setContractPrep] = React.useState(
+        {
+            address: '0x086a2f48CbbD49C45B4197C745d8ACce508016db',
+            abi: [
+            {
+            name: 'BuryTreasure',
+            type: 'function',
+            stateMutability: 'payable',
+            inputs: [{
+               "internalType": "string",
+               "name": "H",
+               "type": "string"
+           },
+           {
+               "internalType": "uint256",
+               "name": "i",
+               "type": "uint256"
+           },
+           {
+               "internalType": "uint256",
+               "name": "amount",
+               "type": "uint256"
+           },
+           {
+               "internalType": "address",
+               "name": "erc20addr",
+               "type": "address"
+           }],
+            outputs: [],
+            },
+            ],
+            functionName: 'BuryTreasure',
+            args: [H,parseInt(i),amount,erc20.address],
+            overrides: {
+               value:ethers.utils.parseEther('0.01')
+            }
+            }
+
+    )
     const privateislandscontract = {
         address:privateislandsContractAddress,
         abi: [{
@@ -136,6 +176,7 @@ export function SupportBountyByERC20({H,i}) {
         })
         ) 
         let newAllowanceArray = []
+        let newDecimalsArray = []
         for(let i=0;i<registeredTokens.length;i++){
             newAllowanceArray.push({
                 address:registeredTokens[i].address,
@@ -167,7 +208,28 @@ export function SupportBountyByERC20({H,i}) {
                 functionName:'allowance',
                 args:[userAddress,privateislandsContractAddress]
             })
+            newDecimalsArray.push({
+                address:registeredTokens[i].address,
+                abi:[
+                    {
+                        "constant": true,
+                        "inputs": [],
+                        "name": "decimals",
+                        "outputs": [
+                            {
+                                "name": "",
+                                "type": "uint256"
+                            }
+                        ],
+                        "payable": false,
+                        "stateMutability": "view",
+                        "type": "function"
+                    }
+                ],
+                functionName:'decimals'
+            })
         }
+        setDecimalsArray(newDecimalsArray)
         setAllowanceArray(newAllowanceArray)
 /*         tokenArray.push({
         ...privateislandscontract,
@@ -194,7 +256,7 @@ export function SupportBountyByERC20({H,i}) {
     
     
     const { paramdata, paramisError, paramisLoading } = useContractReads({
-        contracts: tokenSymbolToAddress.concat(allowanceArray),
+        contracts: tokenSymbolToAddress.concat(allowanceArray).concat(decimalsArray),
         onSettled(data) {
            /*  let result = tokenSymbolToAddress.slice(0, -3).filter((item, index) => data[index] !== '0x0000000000000000000000000000000000000000').map((item, index) => ({
                 symbol: item.args[0],
@@ -208,13 +270,16 @@ export function SupportBountyByERC20({H,i}) {
                 }
               }
               if(data.length>=tokenSymbolToAddress.length){
-                console.log("length comparison",result.length,tokenSymbolToAddress.length)
+               
               for(let i=0;i<result.length;i++){
                 result[i].allowance = data[result.length+i+(tokenSymbolToAddress.length-result.length)]
+                result[i].decimals = data[2*result.length+i+(tokenSymbolToAddress.length-result.length)]
               }
                 
               } 
             setRegisteredTokens(result)
+           
+            
             console.log('READS RESULT', data,result,tokenSymbolToAddress,allowanceArray)
         }
       })
@@ -259,42 +324,7 @@ export function SupportBountyByERC20({H,i}) {
 
     console.log("support bounty ",H,i)
    // const value = ethers.utils.parseEther(fee)
- const { config } = usePrepareContractWrite({
- address: '0x086a2f48CbbD49C45B4197C745d8ACce508016db',
- abi: [
- {
- name: 'BuryTreasure',
- type: 'function',
- stateMutability: 'payable',
- inputs: [{
-    "internalType": "string",
-    "name": "H",
-    "type": "string"
-},
-{
-    "internalType": "uint256",
-    "name": "i",
-    "type": "uint256"
-},
-{
-    "internalType": "uint256",
-    "name": "amount",
-    "type": "uint256"
-},
-{
-    "internalType": "address",
-    "name": "erc20addr",
-    "type": "address"
-}],
- outputs: [],
- },
- ],
- functionName: 'BuryTreasure',
- args: [H,parseInt(i),amount,erc20.address],
- overrides: {
-    value:ethers.utils.parseEther('0.01')
- }
- })
+ const { config } = usePrepareContractWrite(contractPrep)
  const { data, write } = useContractWrite(config)
 
 
@@ -302,25 +332,163 @@ export function SupportBountyByERC20({H,i}) {
  hash: data?.hash,
  })
 
- React.useEffect(()=>{
-    console.log(erc20)
- },[erc20])
+const handleChangeAmount = (event)=>{
+    let newAmount =(event.target.value*10**(erc20.decimals.toNumber())).toString()
+    setAmount(newAmount)
+    if(erc20.allowance.toNumber()<amount){
+        //set to approve else set to support
+        setContractPrep({
+            address: erc20.address,
+            abi: [
+                {
+                    "constant": false,
+                    "inputs": [
+                        {
+                            "name": "_spender",
+                            "type": "address"
+                        },
+                        {
+                            "name": "_value",
+                            "type": "uint256"
+                        }
+                    ],
+                    "name": "approve",
+                    "outputs": [],
+                    "payable": false,
+                    "stateMutability": "nonpayable",
+                    "type": "function"
+                }
+            ],
+            functionName:"approve",
+            args:[privateislandsContractAddress,amount]
+
+        })
+    }else{
+        setContractPrep({
+            address: privateislandsContractAddress,
+            abi: [
+            {
+            name: 'BuryTreasure',
+            type: 'function',
+            stateMutability: 'payable',
+            inputs: [{
+               "internalType": "string",
+               "name": "H",
+               "type": "string"
+           },
+           {
+               "internalType": "uint256",
+               "name": "i",
+               "type": "uint256"
+           },
+           {
+               "internalType": "uint256",
+               "name": "amount",
+               "type": "uint256"
+           },
+           {
+               "internalType": "address",
+               "name": "erc20addr",
+               "type": "address"
+           }],
+            outputs: [],
+            },
+            ],
+            functionName: 'BuryTreasure',
+            args: [H,parseInt(i),amount,erc20.address],
+            overrides: {
+               value:ethers.utils.parseEther('0.01')
+            }
+            })
+    }
+}
+
+const handleChangeToken = (event)=>{
+    let token = JSON.parse(event.target.value)
+        token.allowance = ethers.BigNumber.from(token.allowance.hex)
+        token.decimals = ethers.BigNumber.from(token.decimals.hex)
+        setERC20(token)
+    if(token.allowance.toNumber()<amount){
+        //set to approve else set to support
+        setContractPrep({
+            address: token.address,
+            abi: [
+                {
+                    "constant": false,
+                    "inputs": [
+                        {
+                            "name": "_spender",
+                            "type": "address"
+                        },
+                        {
+                            "name": "_value",
+                            "type": "uint256"
+                        }
+                    ],
+                    "name": "approve",
+                    "outputs": [],
+                    "payable": false,
+                    "stateMutability": "nonpayable",
+                    "type": "function"
+                }
+            ],
+            functionName:"approve",
+            args:[privateislandsContractAddress,amount]
+
+        })
+    }else{
+        setContractPrep({
+            address: privateislandsContractAddress,
+            abi: [
+            {
+            name: 'BuryTreasure',
+            type: 'function',
+            stateMutability: 'payable',
+            inputs: [{
+               "internalType": "string",
+               "name": "H",
+               "type": "string"
+           },
+           {
+               "internalType": "uint256",
+               "name": "i",
+               "type": "uint256"
+           },
+           {
+               "internalType": "uint256",
+               "name": "amount",
+               "type": "uint256"
+           },
+           {
+               "internalType": "address",
+               "name": "erc20addr",
+               "type": "address"
+           }],
+            outputs: [],
+            },
+            ],
+            functionName: 'BuryTreasure',
+            args: [H,parseInt(i),amount,token.address],
+            overrides: {
+               value:ethers.utils.parseEther('0.01')
+            }
+            })
+    }
+}
 
  return (
  <div>
-    
-    <select id="erc20" onChange={(event) => {
-        let token = JSON.parse(event.target.value)
-        token.allowance = ethers.BigNumber.from(token.allowance.hex)
-        setERC20(token)
-    }}>
+    {userAddress!="0x0000000000000000000000000000000000000000"?<div className="ethBountyBox">
+        <h3>Support by ERC-20</h3>
+        
+    <select id="erc20" onChange={handleChangeToken}>
   {registeredTokens.map((token) => (
     <option key={token.address} value={JSON.stringify(token)}>
       {token.symbol}
     </option>
   ))}
 </select>
-<input id="amount" placeholder="amount" onChange={(event)=> setAmount(event.target.value)}/>
+<input id="amount" type="number" min="0.0001" placeholder="amount" step="0.0001" onChange={handleChangeAmount}/>
 
 
   { erc20.allowance.toNumber()>=amount?
@@ -328,18 +496,19 @@ export function SupportBountyByERC20({H,i}) {
  {isLoading ? 'Sending...' : 'Support'}
  </button>
  :
- <button>Approve
+ <button onClick={() => write?.()}>Approve
     </button>}
   
 
  {isSuccess && (
  <div>
- Successfully minted your NFT!
+ Success!
  <div>
- <a href={`https://etherscan.io/tx/${data?.hash}`}>Etherscan</a>
+ <a href={`https://etherscan.io/tx/${data?.hash}`}>View transaction on etherscan</a>
  </div>
  </div>
  )}
+</div>:""}
  </div>
  )
 }
