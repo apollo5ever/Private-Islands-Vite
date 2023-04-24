@@ -11,7 +11,10 @@ import { useGetSC } from '../useGetSC'
 import getERC20s from './getERC20s'
 
 
-export function SupportBountyByERC20({H,i,amount,erc20addr}) {
+export function SupportBountyByERC20({H,i}) {
+    const [registeredTokens,setRegisteredTokens] = React.useState([])
+    const [erc20,setERC20] = React.useState("0x0000000000000000000000000000000000000000")
+    const [amount,setAmount] = React.useState(0)
     const privateislandscontract = {
         address:"0x086a2f48CbbD49C45B4197C745d8ACce508016db",
         abi: [{
@@ -147,7 +150,17 @@ export function SupportBountyByERC20({H,i,amount,erc20addr}) {
     const { paramdata, paramisError, paramisLoading } = useContractReads({
         contracts: tokenSymbolToAddress,
         onSettled(data) {
-            
+           /*  let result = tokenSymbolToAddress.slice(0, -3).filter((item, index) => data[index] !== '0x0000000000000000000000000000000000000000').map((item, index) => ({
+                symbol: item.args[0],
+                address: data[index],
+              })); */
+              let result = []
+              for (let i = 0; i < Math.min(tokenSymbolToAddress.length - 3, data.length - 3); i++) {
+                if (tokenSymbolToAddress[i].args[0] && tokenSymbolToAddress[i].args[0] !== "0x0000000000000000000000000000000000000000") {
+                  result.push({ symbol: tokenSymbolToAddress[i].args[0], address: data[i] });
+                }
+              }
+            setRegisteredTokens(result)
             console.log('READS RESULT', data)
         }
       })
@@ -190,7 +203,7 @@ export function SupportBountyByERC20({H,i,amount,erc20addr}) {
      
 
 
-    console.log("support bounty ",H,i,amount,erc20addr,fee)
+    console.log("support bounty ",H,i)
    // const value = ethers.utils.parseEther(fee)
  const { config } = usePrepareContractWrite({
  address: '0x086a2f48CbbD49C45B4197C745d8ACce508016db',
@@ -223,12 +236,13 @@ export function SupportBountyByERC20({H,i,amount,erc20addr}) {
  },
  ],
  functionName: 'BuryTreasure',
- args: [H,parseInt(i),amount,erc20addr],
+ args: [H,parseInt(i),amount,erc20],
  overrides: {
-    value:fee
+    value:ethers.utils.parseEther('0.01')
  }
  })
  const { data, write } = useContractWrite(config)
+
 
  const { isLoading, isSuccess } = useWaitForTransaction({
  hash: data?.hash,
@@ -236,13 +250,21 @@ export function SupportBountyByERC20({H,i,amount,erc20addr}) {
 
  return (
  <div>
-    <form onSubmit={write}>
-        
+    
+    <select id="erc20" onChange={(event) => setERC20(event.target.value)}>
+  {registeredTokens.map((token) => (
+    <option key={token.address} value={token.address}>
+      {token.symbol}
+    </option>
+  ))}
+</select>
+<input id="amount" placeholder="amount" onChange={(event)=> setAmount(event.target.value)}/>
 
-    </form>
- <button disabled={!write || isLoading} onClick={() => write()}>
+<button onClick={() => write?.()}>
  {isLoading ? 'Sending...' : 'Support'}
  </button>
+    
+
  {isSuccess && (
  <div>
  Successfully minted your NFT!

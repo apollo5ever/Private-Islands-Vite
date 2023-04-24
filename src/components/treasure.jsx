@@ -345,7 +345,7 @@ export default function Treasure() {
             :""}
             
             </>:<p>Loading...</p>}
-            <SupportBountyByERC20 H={island} i={index} amount={1000000000000000} erc20addr={"0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"}/>
+            <SupportBountyByERC20 H={island} i={index}/>
             
 
             
