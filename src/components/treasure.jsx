@@ -13,6 +13,7 @@ import Judge from './Judge';
 import getBounties from './getBounties';
 import { useSendTransaction } from '../useSendTransaction';
 import GI from './getIslands'
+import { SupportBountyByERC20 } from './supportBountyByErc20';
 
 
 export default function Treasure() {
@@ -334,6 +335,7 @@ export default function Treasure() {
               <button type={"submit"}>Add Treasure</button>
               
             </form>
+            
 
             <form onSubmit={ClaimTreasure}>
               <button type={"submit"}>Claim Treasure</button>
@@ -343,6 +345,7 @@ export default function Treasure() {
             :""}
             
             </>:<p>Loading...</p>}
+            <SupportBountyByERC20 H={island} i={index}/>
             
 
             
