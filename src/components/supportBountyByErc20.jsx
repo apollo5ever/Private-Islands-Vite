@@ -14,15 +14,15 @@ import getERC20s from './getERC20s'
 
 export function SupportBountyByERC20({H,i}) {
     const [registeredTokens,setRegisteredTokens] = React.useState([])
-    const [erc20,setERC20] = React.useState({address:"0x0000000000000000000000000000000000000000",allowance:ethers.BigNumber.from('0'),decimals:ethers.BigNumber.from('0')})
-    const [amount,setAmount] = React.useState(0)
-    const privateislandsContractAddress = "0x086a2f48CbbD49C45B4197C745d8ACce508016db"
+    const [erc20,setERC20] = React.useState({address:"0x0000000000000000000000000000000000000000",allowance:ethers.BigNumber.from('0'),decimals:ethers.BigNumber.from('18')})
+    const [amount,setAmount] = React.useState(ethers.BigNumber.from('0'))
+    const privateislandsContractAddress = "0x8C3AfbFBF84A361B38e83966Be1D44AE2C4aC18F"
     const [userAddress,setUserAddress] = React.useState("0x0000000000000000000000000000000000000000")
     const [allowanceArray,setAllowanceArray] = React.useState([])
     const [decimalsArray,setDecimalsArray] = React.useState([])
     const [contractPrep,setContractPrep] = React.useState(
         {
-            address: '0x086a2f48CbbD49C45B4197C745d8ACce508016db',
+            address: privateislandsContractAddress,
             abi: [
             {
             name: 'BuryTreasure',
@@ -54,7 +54,7 @@ export function SupportBountyByERC20({H,i}) {
             functionName: 'BuryTreasure',
             args: [H,parseInt(i),amount,erc20.address],
             overrides: {
-               value:ethers.utils.parseEther('0.01')
+               value:ethers.utils.parseEther('0.04')
             }
             }
 
@@ -247,7 +247,7 @@ export function SupportBountyByERC20({H,i}) {
 
         }
         fetchData()
-    },[registeredTokens])
+    },[registeredTokens,userAddress])
 
 
     
@@ -333,9 +333,11 @@ export function SupportBountyByERC20({H,i}) {
  })
 
 const handleChangeAmount = (event)=>{
-    let newAmount =(event.target.value*10**(erc20.decimals.toNumber())).toString()
+    console.log("decimals",erc20.decimals.toNumber())
+    let newAmount =ethers.utils.parseUnits(event.target.value,erc20.decimals.toNumber())
     setAmount(newAmount)
-    if(erc20.allowance.toNumber()<amount){
+    if(erc20.allowance.lt(newAmount)){
+        console.log("newAmount",newAmount)
         //set to approve else set to support
         setContractPrep({
             address: erc20.address,
@@ -360,7 +362,7 @@ const handleChangeAmount = (event)=>{
                 }
             ],
             functionName:"approve",
-            args:[privateislandsContractAddress,amount]
+            args:[privateislandsContractAddress,newAmount]
 
         })
     }else{
@@ -395,20 +397,25 @@ const handleChangeAmount = (event)=>{
             },
             ],
             functionName: 'BuryTreasure',
-            args: [H,parseInt(i),amount,erc20.address],
+            args: [H,parseInt(i),newAmount,erc20.address],
             overrides: {
-               value:ethers.utils.parseEther('0.01')
+               value:ethers.utils.parseEther('0.04')
             }
             })
     }
 }
 
 const handleChangeToken = (event)=>{
+    console.log("OLD AMOUNT",amount)
     let token = JSON.parse(event.target.value)
         token.allowance = ethers.BigNumber.from(token.allowance.hex)
         token.decimals = ethers.BigNumber.from(token.decimals.hex)
+        let newAmount = amount.mul(ethers.BigNumber.from(10).pow(token.decimals)).div(ethers.BigNumber.from(10).pow(erc20.decimals))
+        console.log("token change decimals: ",amount,newAmount)
+        console.log("token",token)
+        setAmount(newAmount)
         setERC20(token)
-    if(token.allowance.toNumber()<amount){
+    if(token.allowance.lt(newAmount)){
         //set to approve else set to support
         setContractPrep({
             address: token.address,
@@ -433,7 +440,7 @@ const handleChangeToken = (event)=>{
                 }
             ],
             functionName:"approve",
-            args:[privateislandsContractAddress,amount]
+            args:[privateislandsContractAddress,newAmount]
 
         })
     }else{
@@ -468,9 +475,9 @@ const handleChangeToken = (event)=>{
             },
             ],
             functionName: 'BuryTreasure',
-            args: [H,parseInt(i),amount,token.address],
+            args: [H,parseInt(i),newAmount,token.address],
             overrides: {
-               value:ethers.utils.parseEther('0.01')
+               value:ethers.utils.parseEther('0.04')
             }
             })
     }
@@ -491,7 +498,7 @@ const handleChangeToken = (event)=>{
 <input id="amount" type="number" min="0.0001" placeholder="amount" step="0.0001" onChange={handleChangeAmount}/>
 
 
-  { erc20.allowance.toNumber()>=amount?
+  { erc20.allowance.gte(amount)?
    <button onClick={() => write?.()}>
  {isLoading ? 'Sending...' : 'Support'}
  </button>
