@@ -49,5 +49,19 @@ export class Helpers {
         return 'items-center'
     }
   }
+
+  static formattedDate = (timestamp) => {
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const date = new Date(timestamp);
+    const monthIndex = date.getMonth();
+    const year = date.getFullYear();
+    const day = date.getDate();
+    const month = months[monthIndex];
+    return `${month} ${day}, ${year}`;
+  }
+
+  static formatNumber = (number) => {
+    return number.toLocaleString();
+  }
 }
 

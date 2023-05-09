@@ -8,7 +8,6 @@ body,
 #root,
 .app,
 .content {
-  width: 100%;
   font-family: "Roboto Thin", sans-serif;
   margin: 0;
   padding: 0;
@@ -23,13 +22,3 @@ button {
 input {
   color: #c0c0c0;
 }
-
-/*
- Theme documentation for reference now & for when we create a theme
- colors: (from the standard tailwind color palette)
-    primary: sky-900
-    primary-light: cyan-400
-    blue-200 is the light blue background
-    sky-900 is the dark blue
-    cyan-400 is the middle blue
- */

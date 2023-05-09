@@ -1,21 +1,15 @@
-import React from 'react'
+import React, {useEffect, useCallback, useContext, useState} from 'react'
 import TreasureCard from './treasureCard'
-import '../App.css'
 import {useSearchParams} from 'react-router-dom'
 import {LoginContext} from '../LoginContext'
+import {FlexBoxColumn} from "@/components/common/FlexBoxColumn.jsx";
 
 export default function BountyList({islands}) {
-  const [state, setState] = React.useContext(LoginContext);
-  const [funds, setFunds] = React.useState([])
+  const [state, setState] = useContext(LoginContext);
+  const [funds, setFunds] = useState([])
   let [searchParams, setSearchParams] = useSearchParams();
 
-  function hex2a(hex) {
-    var str = '';
-    for (var i = 0; i < hex.length; i += 2) str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
-    return str;
-  }
-
-  const getFunds = React.useCallback(async () => {
+  const getFunds = useCallback(async () => {
     var bounties = []
     console.log(islands)
 
@@ -27,42 +21,48 @@ export default function BountyList({islands}) {
     setFunds(bounties)
   })
 
-  React.useEffect(() => {
+  const handleFilter = (e) => {
+    e.preventDefault();
+    setSearchParams({"filter": "treasure", "status": e.target.value})
+  }
+
+  useEffect(() => {
     getFunds();
   }, [state, islands])
 
-  React.useEffect(() => {
+  useEffect(() => {
     console.log("funds??", funds)
   }, [funds])
 
 
   const fundJSX = funds.map(f => {
-    if (searchParams.get("status") && f.status != searchParams.get("status")) return
-    if (searchParams.get("island") && f.island != searchParams.get("island")) return
+    if (searchParams.get("status") && f.status !== searchParams.get("status")) return
+    if (searchParams.get("island") && f.island !== searchParams.get("island")) return
 
-    return (<div className="function"><TreasureCard JN={f.JN} image={f.image} index={f.index} treasure={f.treasure}
-                                                    deadline={f.deadline} profile={f.island} name={f.name}
-                                                    tagline={f.tagline} /></div>)
-
+    return (
+      <div key={f.name} className='py-4'>
+        <TreasureCard JN={f.JN}
+                      image={f.image}
+                      index={f.index}
+                      treasure={f.treasure}
+                      deadline={f.deadline} profile={f.island} name={f.name}
+                      tagline={f.tagline} />
+      </div>
+    )
   })
 
-
   return (
-    <div>
-      <div>
-
-        <h1>Buried Treasure Bounties</h1>
-        <div className="status-selector">
-          <ul>
-            <li className="status-selector-option"
-                onClick={() => setSearchParams({"filter": "treasure", "status": 0})}>Active
-            </li>
-            <li onClick={() => setSearchParams({"filter": "treasure", "status": 1})}>Successes</li>
-            <li onClick={() => setSearchParams({"filter": "treasure", "status": 2})}>Failures</li>
-          </ul>
-        </div>
+    <div className='prose w-screen'>
+      <FlexBoxColumn>
+        <h2>Buried Treasure Bounties</h2>
+        <select id='treasure-filter' onChange={handleFilter} className='select select-bordered w-full max-w-xs'>
+          <option disabled selected>Filter...</option>
+          <option value='0'>Active</option>
+          <option value='1'>Success</option>
+          <option value='2'>Failures</option>
+        </select>
         {fundJSX && fundJSX}
-      </div>
+      </FlexBoxColumn>
     </div>
   )
 }

@@ -1,100 +1,65 @@
 import React from 'react'
 import FundCard from './fundCard'
-import '../App.css'
-import {useSearchParams,NavLink} from 'react-router-dom'
-import { LoginContext } from '../LoginContext'
-import to from 'await-to-js'
-import sha256 from 'crypto-js/sha256'
-import getFundraisers from './getFundraisers'
+import {useSearchParams, NavLink} from 'react-router-dom'
+import {LoginContext} from '../LoginContext'
 
 
-export default function FundList({islands}){
+export default function FundList({islands}) {
+  const [state, setState] = React.useContext(LoginContext);
+  const [funds, setFunds] = React.useState([])
+  let [searchParams, setSearchParams] = useSearchParams();
 
+  const getFunds = React.useCallback(async () => {
+    let fundraisers = []
+    console.log(islands)
 
-    const [state, setState] = React.useContext(LoginContext);
-
-
-   
-    const [funds,setFunds] = React.useState([])
-    let [searchParams, setSearchParams] = useSearchParams();
-
-    function hex2a(hex) {
-      var str = '';
-      for (var i = 0; i < hex.length; i += 2) str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
-      return str;
-  }
-  
-    const getFunds = React.useCallback(async () => {
-      var fundraisers = []
-      console.log(islands)
-      
-      for(var i=0;i<islands.length;i++){
-          for(var b=0;b<islands[i].fundraisers.length;b++){
-              fundraisers.push(islands[i].fundraisers[b])
-          }
+    for (var i = 0; i < islands.length; i++) {
+      for (var b = 0; b < islands[i].fundraisers.length; b++) {
+        fundraisers.push(islands[i].fundraisers[b])
       }
-      setFunds(fundraisers)
-     
-     //const meta = state.ipfs.get(subList[0].toString())
-    // console.log("meta",meta)
-/*
-     const cid = subList[0].toString()
-     console.log(cid)
+    }
+    setFunds(fundraisers)
+  })
 
-for await (const buf of state.ipfs.cat(cid)) {
- 
-  console.log(JSON.parse(buf.toString()))
- console.log("fundarray",funds)
-  
-}
-*/
-//     console.log(err)
-  //   console.log(res)
-    
-  
-     
-   }) 
-
-    React.useEffect(()=>{
-  //  setFunds(await getFundraisers(state))
-    
+  React.useEffect(() => {
     getFunds();
-  },[islands])
+  }, [islands])
 
+  const handleFilter = (e) => {
+    e.preventDefault();
+    setSearchParams({"filter": "smokesignals", "status": e.target.value})
+  }
 
-     
-     const fundJSX = funds.map(f => {
-        if(searchParams.get("status") && f.status!=searchParams.get("status")) return
-        if(searchParams.get("island") && f.island!=searchParams.get("island")) return
-        
-         return(<div className="function"><NavLink to={`/island/${f.island}/smokesignal/${f.index}`}><FundCard image={f.image} index={f.index} goal={f.goal} deadline={f.deadline} profile={f.island} name={f.name} tagline={f.tagline}/></NavLink></div>)
-        
-        })
+  const fundJSX = funds.map(f => {
+    if (searchParams.get("status") && f.status !== searchParams.get("status")) return
+    if (searchParams.get("island") && f.island !== searchParams.get("island")) return
 
+    return (
+      <NavLink to={`/island/${f.island}/smokesignal/${f.index}`} className='no-underline'>
+        <FundCard image={f.image}
+                  index={f.index}
+                  goal={f.goal}
+                  deadline={f.deadline}
+                  profile={f.island}
+                  name={f.name}
+                  tagline={f.tagline} />
+      </NavLink>)
+  })
 
-
-    
-     
-
-
-
-      return(
-         <div> 
-            <div>
-                
-            <h1>Smoke Signal Fundraisers</h1>
-            <div className="status-selector">
-            <ul>
-                <li className="status-selector-option" onClick={()=>setSearchParams({"filter":"smokesignals","status":0})}>Active</li>
-                <li onClick={()=>setSearchParams({"filter":"smokesignals","status":1})}>Successes</li>
-                <li onClick={()=>setSearchParams({"filter":"smokesignals","status":2})}>Failures</li>
-            </ul>
-            </div>
-            {fundJSX}
-            
-                
-                </div>
-         </div>
-      )
+  return (
+    <div className='prose text-center'>
+      <div>
+        <h1>Smoke Signal Fundraisers</h1>
+        <select onChange={handleFilter} className='select select-bordered w-full max-w-xs'>
+          <option disabled selected>Filter...</option>
+          <option value=''>All</option>
+          <option value='0'>Active</option>
+          <option value='1'>Success</option>
+          <option value='2'>Failures</option>
+        </select>
+        {fundJSX}
+      </div>
+    </div>
+  )
 
 }

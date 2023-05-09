@@ -2,21 +2,20 @@ import React from 'react'
 import {useParams} from 'react-router-dom'
 import {LoginContext} from '../LoginContext';
 import {useSearchParams, NavLink} from 'react-router-dom'
-import to from 'await-to-js';
 import TreasureCard from './treasureCard';
 import FundCard from './fundCard';
 import Subscribe from './subscribe';
 import TrustIsland from './trustIsland';
-import hex2a from './hex2a';
 import getMIB from './getMIB';
 import GI from './getIslands'
 import getBounties from './getBounties';
 import getFundraisers from './getFundraisers';
-
+import {FlexBoxColumn} from "@/components/common/FlexBoxColumn.jsx";
+import {Card} from "react-daisyui";
+import {FlexBoxRow} from "@/components/common/FlexBoxRow.jsx";
+import {FeatureNav} from "@/components/common/FeatureNav.jsx";
 
 export default function Island() {
-
-
   const [post, setPost] = React.useState([])
   const [editing, setEditing] = React.useState("")
   const [tierToModify, setTierToModify] = React.useState(0)
@@ -31,87 +30,27 @@ export default function Island() {
   const [signals, setSignals] = React.useState([])
   const [bottles, setBottles] = React.useState([])
   const [trust, setTrust] = React.useState(0)
-  const [view, setView] = React.useState("main")
   const params = useParams()
-  const [island,setIsland] = React.useState(null)
-
-
-  /* function hex2a(hex) {
-     var str = '';
-     for (var i = 0; i < hex.length; i += 2) str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
-     return str;
- }*/
-
+  const [island, setIsland] = React.useState(null)
 
   const getIslands = React.useCallback(async () => {
     setIsland(await GI(state, params.island))
-    
-
-    //   const deroBridgeApi = state.deroBridgeApiRef.current
-    //   const [err, res] = await to(deroBridgeApi.daemon('get-sc', {
-    //           scid:state.scid,
-    //           code:false,
-    //           variables:true
-    //   }))
-    //   var metaSearch= params.island+"_M"
-    //   const meta = hex2a(res.data.result.stringkeys[metaSearch])
-    //   for await (const buf of state.ipfs.cat(meta.toString())){
-    //     try{
-    //     let island = JSON.parse(buf.toString())
-
-    //   setPost([island])
-    // } catch(error){
-    //   console.log(error)
-    // }
-    //  }
-
-
   })
 
   const getIslandObjects = React.useCallback(async () => {
-
     setTreasures([])
     setSignals([])
     setJudging([])
     setBottles([])
 
-
-    var treasureSearch = new RegExp(`${params.island}[0-9]*_bm`)
-    var signalSearch = new RegExp(`${params.island}[0-9]*_sm`)
-    var judgeSearch = /.*_J\d{1,}/
-    //var bottleSearch = new RegExp(`\\${params.island.toString()}\\d*_Av`)
-    var bottleSearch = new RegExp(params.island + `\\d*_Av`)
-    var trustSearch = new RegExp(`\\${params.island}\_T`)
-
-
-    // console.log("BOTTLETESTRESZZ",newBottleSearch,Object.keys(scData).filter(key=>newBottleSearch.test(key)))
-
-//   let trustList = Object.keys(scData)
-//   .filter(key=>trustSearch.test(key))
-
-//   let trustScore = 0
-//   for (var t=0;t<trustList.length;t++){
-//     trustScore+= scData[trustList[t]]
-//   }
-// setTrust(trustScore/trustList.length)
-
-
+    console.log('GET ISL OBJ', postFiltered[0])
     setBottles(await getMIB(postFiltered[0], -1, state))
     setTreasures(await getBounties(state, params.island))
     setSignals(await getFundraisers(state, params.island))
-
-
   })
-  /*
-  const getTXHistory = React.useCallback(async () => {
-    const deroBridgeApi= state.deroBridgeApiRef.current
-    const [err,res] = await to(deroBridgeApi.wallet('get'))
-  })
-  */
-
 
   React.useEffect(() => {
-   // getIslandObjects()
+    // getIslandObjects()
   }, [post, searchParams, state.ipfs])
 
 
@@ -120,9 +59,6 @@ export default function Island() {
     getIslands()
 
   }, [state.myIslands])
-
-
- 
 
 
   const changeTierToModify = e => {
@@ -147,74 +83,73 @@ export default function Island() {
     setTreasureToClaim(e.target.value)
   }
 
-
   return (
-    <div className="function">
-     {island? <div className="profile">
-        
-            <div>
-              <div className="icons">
-                <img src={island.image} />
-                <h1 onClick={() => setSearchParams({"view": "main"})}>{island.name}</h1>
-              </div>
-              {searchParams.get("view") === "main" ?
-                <>
-                  <p>{island.tagline}</p>
-                  <p>Social Coconut Score:{trust ? trust : "Not trusted by any island operators"}</p>
-                  <p dangerouslySetInnerHTML={{__html: island.bio}} />
-                </>
-                : searchParams.get("view") === "treasure" ?
-                  <>
-                    {island.bounties && island.bounties.length > 0 ?
+    <FlexBoxRow className='p-8'>
+      <Card side='lg' bordered='true' image-full='false' className='bg-secondary shadow-md'>
+        <Card.Body>
+          <FlexBoxColumn className="">
+            {island ? <div className="prose">
+                <div>
+                  <FlexBoxColumn>
+                    <img src={island.image} className='mask mask-decagon h-32' />
+                    <h1 onClick={() => setSearchParams({"view": "main"})}>{island.name}</h1>
+                  </FlexBoxColumn>
+                  {searchParams.get("filter") === "main" ?
                     <>
-                      {island.bounties.map(x => <TreasureCard className="mytreasure" name={x.name} profile={island.name}
-                                                      tagline={x.tagline} treasure={x.treasure} image={x.image}
-                                                      judgeList={x.judgeList} index={x.index} />)}
+                      <p>{island.tagline}</p>
+                      <p>Social Coconut Score:{trust ? trust : "Not trusted by any island operators"}</p>
+                      <p dangerouslySetInnerHTML={{__html: island.bio}} />
                     </>
-                    : <p>No Buried Treasures yet</p>}
-                    {judging.length > 0 ?
+                    : searchParams.get("filter") === "treasure" ?
                       <>
-                        {judging.map(x => <TreasureCard className="mytreasure" name={x.name} profile={x.island}
-                                                      tagline={x.tagline} treasure={x.treasure} image={x.image}
-                                                      judgeList={x.judgeList} index={x.index} />)}
+                        {island.bounties && island.bounties.length > 0 ?
+                          <>
+                            {island.bounties.map(x => <TreasureCard key={x.name} className="mytreasure" name={x.name}
+                                                                    profile={island.name}
+                                                                    tagline={x.tagline} treasure={x.treasure}
+                                                                    image={x.image}
+                                                                    judgeList={x.judgeList} index={x.index} />)}
+                          </>
+                          : <p>No Buried Treasures yet</p>}
+                        {judging.length > 0 ?
+                          <>
+                            {judging.map(x => <TreasureCard key={x.name} className="mytreasure" name={x.name} profile={x.island}
+                                                            tagline={x.tagline} treasure={x.treasure} image={x.image}
+                                                            judgeList={x.judgeList} index={x.index} />)}
+                          </>
+                          : <p>No Judging any treasure</p>}
                       </>
-                      : <p>No Judging any treasure</p>}
-                  </>
-                : searchParams.get("view") === "signal" ?
-                  <>
-                      {island.fundraisers && island.fundraisers.length > 0 ?
+                      : searchParams.get("filter") === "smokesignals" ?
                         <>
-                        {island.fundraisers.map(x => <NavLink to={`/island/${x.island}/smokesignal/${x.index}`}><FundCard
-                          name={x.name} profile={x.island} tagline={x.tagline} goal={x.goal} image={x.image}
-                          deadline={x.deadline} /></NavLink>)}
+                          {island.fundraisers && island.fundraisers.length > 0 ?
+                            <>
+                              {island.fundraisers.map(x => <NavLink
+                                to={`/island/${x.island}/smokesignal/${x.index}`}><FundCard key={x.name}
+                                name={x.name} profile={x.island} tagline={x.tagline} goal={x.goal} image={x.image}
+                                deadline={x.deadline} /></NavLink>)}
+                            </>
+                            : <><p>No Smoke Signals Yet</p></>}
                         </>
-                        : <><p>No Smoke Signals Yet</p></>}
-                  </>
-                : searchParams.get("view") === "mail" ? <>{island.tiers.map(key=><Subscribe profile={island.name} name={key.name} index={key.index} perks={key.perks} amount={key.amount} interval={key.interval} userAddress={state.walletList[state.activeWallet].address} dba={state.deroBridgeApiRef} scid={state.scid} randomAddress={state.randomAddress} available={key.available}/>)}</> : ""}
-
-              <div className="icons">
-                <div className="icons-treasure" onClick={() => setSearchParams({"view": "treasure"})}>
-                  <div className="icons-text">Bounties</div>
+                        : searchParams.get("filter") === "mib" ? <>{island.tiers.map(key => <Subscribe
+                          profile={island.name}
+                          name={key.name}
+                          index={key.index}
+                          perks={key.perks}
+                          amount={key.amount}
+                          interval={key.interval}
+                          userAddress={state.walletList[state.activeWallet].address}
+                          dba={state.deroBridgeApiRef}
+                          scid={state.scid}
+                          randomAddress={state.randomAddress}
+                          available={key.available} />)}</> : ""}
+                  <FeatureNav setSearchParams={setSearchParams} />
                 </div>
-                <div className="icons-signal" onClick={() => setSearchParams({"view": "signal"})}>
-                  <div className="icons-text">Fundraisers</div>
-                </div>
-                <div className="icons-mail" onClick={() => setSearchParams({"view": "mail"})}>
-                  <div className="icons-text">Subscriptions</div>
-                </div>
-
               </div>
-
-
-            </div>
-
-
-         
-
-
-      </div>
-      :""}
-      {state.myIslands && state.myIslands.length > 0 ? <TrustIsland island={params.island} /> : ""}
-    </div>
+              : ""}
+            {state.myIslands && state.myIslands.length > 0 ? <TrustIsland island={params.island} /> : ""}
+          </FlexBoxColumn>
+        </Card.Body>
+      </Card>
+    </FlexBoxRow>
   )
 }

@@ -7,10 +7,10 @@ export const SignalHeader = ({signal, deadline}) => {
 
   return (
     <>
-      <FlexBoxRow justify='between' className='prose pb-2'>
-        <img src={signal.image} className='h-48 rounded-2xl mx-2' />
+      <FlexBoxRow className='prose pb-2'>
+        <img src={signal.image} className='h-48 rounded-2xl mx-2 px-6' />
         <FlexBoxColumn align='start'>
-          <h2 className='text-primary-focus'>{signal.name}</h2>
+          <h2 className='text-accent'>{signal.name}</h2>
           <h4>{signal.tagline}</h4>
           <h4>Goal: {signal.goal} Dero by {deadline}</h4>
           <h4>Progress: {signal.raised} / {signal.goal}</h4>

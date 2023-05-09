@@ -214,12 +214,11 @@ const WalletModal = ({handleClose}) => {
   }
 
 
-  // TODO MTS -- START HERE - style modal
   const renderMainMenu = () => {
     return (
       <>
         <FlexBoxColumn
-          className="absolute top-full left-1/2 flex bg-zinc-800 p-5 w-80 space-y-2 rounded-b-lg text-white min-w-fit">
+          className="z-50 absolute top-32 -right-56 transform -translate-x-1/2 flex bg-zinc-800 p-5 w-80 space-y-2 rounded-b-lg text-white min-w-fit">
           <FlexBoxRow justify='between'>
             <div className='text-slate-300'>Select / Switch Wallet</div>
             <Button size='md' onClick={handleClose}>X</Button>

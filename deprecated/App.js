@@ -206,7 +206,7 @@ function App() {
   }, [state.scid, state.userAddress]);
 
   return (
-    <div className="App">
+    <div className="Ap">
       <div className="navbar">
         <img src={logotransparent} className="nav-logo" />
         <h1 className="nav-header">Old Dero Private Islands</h1>
