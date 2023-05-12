@@ -13,17 +13,38 @@ export function useGetBalance() {
         "scid": scid
       })
     );
-
+      console.log("rpc balance check",scid,res)
     return res.data.result.balance
   });
+
+  const getBalanceWasm = async (scid) => {
+    if (!state.walletList[state.activeWallet].open) return;
+  
+    return new Promise((resolve, reject) => {
+      state.worker.onmessage = (event) => {
+        const tx = event.data;
+        console.log("tx", tx);
+        console.log("it's right here baby",scid,tx[`bal${scid+state.walletList[state.activeWallet].name}`].matureBalance)
+        resolve(tx[`bal${scid+state.walletList[state.activeWallet].name}`].matureBalance);
+      };
+  
+      state.worker.postMessage({
+        functionName: "WalletGetBalance",
+        args: ["bal"+scid+state.walletList[state.activeWallet].name, state.walletList[state.activeWallet].name, scid]
+      });
+    });
+  };
+  
 
   async function getBalance(scid) {
     if (state.activeWallet === 0) {
       let balance = await getBalanceRPC(scid)
       return balance
     } else {
-
-      if (!state.walletList[state.activeWallet].open) return
+      let balance = await getBalanceWasm(scid)
+      return balance
+    }
+     /*  if (!state.walletList[state.activeWallet].open) return
 
       const tx = await new Promise((resolve) => {
         state.worker.onmessage = (event) => {
@@ -36,8 +57,9 @@ export function useGetBalance() {
         });
       });
 
-      console.log('TX', tx)
-      return (tx.key.matureBalance)
+     // console.log(scid,'balance',tx.key.matureBalance)
+     // return (tx.key.matureBalance)
+     //return(69)
 
 
       const interval = setInterval(async () => {
@@ -59,7 +81,7 @@ export function useGetBalance() {
 
         }
       }, 100); // check every 100ms
-    }
+    } */
 
   }
 

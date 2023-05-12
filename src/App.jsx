@@ -81,7 +81,15 @@ function App() {
 
   const getCocoBalance = useCallback(async () => {
     if(!state.coco) return
+    console.log('get coco balance',state.coco)
     let balance = await getBalance(state.coco)
+    console.log('here is balance',balance)
+    if(!balance){
+      console.log('no balance')
+      setTimeout(async ()=>{
+        let balance = await getBalance(state.coco)
+      },15000)
+    }
     setState((state) => ({...state,cocoBalance: balance}))
 
     /*  if(state.activeWallet != 0) return
@@ -97,7 +105,7 @@ function App() {
 
   useEffect(() => {
     getCocoBalance();
-  }, [state.scid, state.activeWallet,state.walletList[state.activeWallet].open]);
+  }, [state.scid, state.activeWallet,state.walletList[state.activeWallet].open,state.walletList[state.activeWallet].address]);
 
 
 
@@ -169,7 +177,38 @@ function App() {
   }, [state.daemon]);
 
 
-  const getIslands = async () => {state
+  const populateMyIslands = async() =>{
+    //okay so we can get array of island objects from backend
+    //user needs to prove ownership...
+    //or maybe they just say they own it and it saves to local storage
+    //weird if they switch wallets but could associate with wallet too
+    //store {name:"apollo","scid":"ddd",owner:"dero23asd"}or I guess do what deronfts does, just search the collection
+    //NEW PLAN
+    //we have list of assets, check wallet balance for each one
+    //duhhhh
+    //ok
+    console.log("get those islands")
+   const fullIslandList = await GI()
+   //perfect now we need to check balance but do we have a wallet agnostic way to do this yet?
+   //looks like we do
+   //first let's make empty array
+   let myIslands =[]
+   for(let i=0;i<fullIslandList.length;i++){
+   let balance = await getBalance(fullIslandList[i].scid)
+   if(balance==1){
+    myIslands.push(fullIslandList[i])
+   }
+   console.log("balance ",fullIslandList[i].scid,balance)
+   }
+   //set state array of myislands and set active island to 0
+   setState((state) => ({ ...state, myIslands: myIslands, active: 0 }));
+   
+   console.log("full island list",fullIslandList)
+  }
+
+
+
+  const getIslands = async () => {
     console.log("GET ISLANDS");
     if(!state.walletList[state.activeWallet].address) return
     console.log("address exists")
@@ -221,7 +260,7 @@ function App() {
   }
 
   useEffect(() => {
-    getIslands();
+    populateMyIslands();
   }, [state.deroBridgeApiRef, state.ipfs, state.activeWallet,state.scid]);
 
 
