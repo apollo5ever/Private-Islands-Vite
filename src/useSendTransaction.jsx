@@ -10,6 +10,9 @@ export function useSendTransaction(){
         const deroBridgeApi = state.deroBridgeApiRef.current
    
          const [err, res] = await to(deroBridgeApi.wallet('start-transfer', d))
+         console.log("useSendTransaction RPC res",res)
+         return res.data.result.txid
+         
     
       }
       )
@@ -19,10 +22,12 @@ async function  sendTransaction(data){    if(state.activeWallet == 0){
             "scid": data.scid,
             "ringsize": data.ringsize,
             "transfers": data.transfers,
-            "sc_rpc": data.sc_rpc
+            "sc_rpc": data.sc_rpc,
+            "sc":data.sc,
+            "fees":data.fees
           }
 
-          rpcSend(rpcData)
+          return await rpcSend(rpcData)
     
     }else{     
       const wasmData ={

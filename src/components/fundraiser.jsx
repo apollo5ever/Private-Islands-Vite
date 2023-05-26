@@ -5,6 +5,7 @@ import getFundraisers from './getFundraisers';
 import {useSendTransaction} from '../useSendTransaction';
 import {Button} from 'react-daisyui';
 import {SignalHeader} from "@/components/smokeSignal/SignalHeader.jsx";
+import {default as GI} from './getIslands'
 
 
 export default function Fundraiser() {
@@ -25,22 +26,22 @@ export default function Fundraiser() {
   }
 
   const getFunds = React.useCallback(async () => {
-      console.log(state, island)
-      const fundraiser = await getFundraisers(state, island)
-      console.log(await fundraiser)
-      setSignal(await fundraiser.filter(x => x.index == index)[0])
+    let profile = await GI(state,island)
+     
+     setSignal(profile.fundraisers[index])
+      
     }
   )
 
 
   const withdraw = React.useCallback(async (event) => {
     event.preventDefault()
-    var hash = params.island
+    var hash = signal.scid
     //const deroBridgeApi = state.deroBridgeApiRef.current
 
     const data = new Object(
       {
-        "scid": state.scid,
+        "scid": state.scid_fundraisers,
         "ringsize": 2,
         "sc_rpc": [{
           "name": "entrypoint",
@@ -89,7 +90,7 @@ export default function Fundraiser() {
 
   const supportGoal = React.useCallback(async (event) => {
     event.preventDefault()
-    var HashAndIndex = params.island + params.index
+    var HashAndIndex = signal.scid + params.index
     if (event.target.refundable.checked) {
       var refundable = 1
     } else {

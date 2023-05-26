@@ -28,11 +28,11 @@ export default function Judge(props) {
 
               {props.solo?
 	<> {props.judge!=props.userIsland?
-		<><AN dba={props.deroBridgeApiRef} scid={props.scid} l="J" JX={props.userIsland} island={props.island} index={props.index}/></>
+		<><AN dba={props.deroBridgeApiRef} randomAddress={props.randomAddress} scid={props.scid} l="J" JX={props.userIsland} island={props.island} index={props.index}/></>
 	:<>
 	{props.JF==1 ||props.JF==2?
 		<><p>Nothing to do.</p> </>
-	:<><ATR dba={props.deroBridgeApiRef} scid={props.scid} island={props.island} index={props.index} recipientList={props.recipientList}/></>
+	:<><ATR dba={props.deroBridgeApiRef} judge={props.userIsland} randomAddress={props.randomAddress}scid={props.scid} island={props.island} index={props.index} recipientList={props.recipientList}/></>
 	}
     </>
 		
@@ -42,7 +42,7 @@ export default function Judge(props) {
 		<>
 		{props.JF==1 || props.JF==2?
 			<><p>Nothing to do</p></>
-		:<><AN dba={props.deroBridgeApiRef} scid={props.scid} l="J" JX={props.userIsland} island={props.island} index={props.index}/><ATR dba={props.deroBridgeApiRef} scid={props.scid} island={props.island} index={props.index} recipientList={props.recipientList}/></>}
+		:<><AN dba={props.deroBridgeApiRef} randomAddress={props.randomAddress} scid={props.scid} l="J" JX={props.userIsland} island={props.island} index={props.index}/><ATR dba={props.deroBridgeApiRef} judge={props.userIsland} scid={props.scid} island={props.island} index={props.index} recipientList={props.recipientList}/></>}
 		</>
 	:	<><p>Nothing to do</p></>}
 	</>}

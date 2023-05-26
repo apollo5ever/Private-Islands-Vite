@@ -66,6 +66,10 @@ export default function Subscribe(props) {
       }
 
     }
+    else{
+      setSubbed(false)
+    }
+    
 
 
   })
@@ -214,7 +218,7 @@ export default function Subscribe(props) {
             console.log("executed only once!");
             //checkAvailability();
             checkSubbed();
-          }, []);
+          }, [props]);
 
     return(
         <div className="subscribe">

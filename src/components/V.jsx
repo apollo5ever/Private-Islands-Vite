@@ -13,6 +13,13 @@ export default function V(props){
       {
         "scid": props.scid,
         "ringsize": 2,
+        "transfers":[
+          {
+            "destination":props.randomAddress,
+            "burn":1,
+            "scid":props.executer
+          }
+        ],
          "sc_rpc": [{
             "name": "entrypoint",
             "datatype": "S",

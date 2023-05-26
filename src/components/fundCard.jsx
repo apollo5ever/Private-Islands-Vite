@@ -12,7 +12,7 @@ export default function FundCard(props) {
             <h3>Initiated by {props.profile}</h3>
             <img src={props.image}/>
             <p>{props.tagline}</p>
-            <p>Goal:{props.goal} Dero by {deadlinestring} </p>
+            <p>Goal:{props.goal/100000} Dero by {deadlinestring} </p>
             <b>Click to See More</b>
         </div>
     )

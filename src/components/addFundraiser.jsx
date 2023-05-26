@@ -23,6 +23,7 @@ const island=params.island
 const index = params.index
 
 
+
  
 
 
@@ -101,11 +102,17 @@ const index = params.index
      console.log(addObj)
      console.log(metadata)
 
-     let j=state.myIslands.filter(x=>x.name=island)[0].j
+    // let j=state.myIslands.filter(x=>x.name=island)[0].j
  
     
-
-     var transfers = []
+    const transfers = [
+      {
+        "destination":state.randomAddress,
+        "scid":island,
+        "burn":1
+      }
+    ]
+/*      var transfers = []
      if(state.cocoBalance<burn){
        transfers.push({
          "destination":state.randomAddress,
@@ -118,13 +125,13 @@ const index = params.index
          "scid": state.coco,
          "burn": burn
        })
-     }
+     } */
 
    
   
     const txData = new Object(
       {
-        "scid": state.scid,
+        "scid": state.scid_fundraisers,
       "ringsize": 2,
       "transfers": transfers,
       "sc_rpc": [{
@@ -171,7 +178,12 @@ const index = params.index
       {
         "name":"j",
         "datatype":"U",
-        "value":j
+        "value":0
+      },
+      {
+        "name":"t",
+        "datatype":"S",
+        "value":""
       }
       ]
       }
@@ -250,8 +262,8 @@ const index = params.index
       
       
       
-      <h3>Add a Smoke Signal</h3>
-      <p>This will cost 100 coco. If you don't have enough coco you will be charged 0.1 Dero instead.</p>
+      <h3>Launch a Fundraiser</h3>
+      
       <form onSubmit={DoIt}>
         
         <input placeholder="Name" id="fundName" type="text" />
@@ -264,7 +276,7 @@ const index = params.index
         <input placeholder="Goal" id="goal" type="text" />
         <input placeholder="Address" id="address" type="text" />
        
-        <button type={"submit"}>Create</button>
+        <button type={"submit"}>Launch</button>
       </form>
     </div>}
     </div>

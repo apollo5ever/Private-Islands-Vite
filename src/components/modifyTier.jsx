@@ -19,6 +19,7 @@ const [state, setState] = React.useContext(LoginContext);
 const [tierObj,setTierObj] = React.useState({"name":null})
 const [custom,setCustom]=React.useState(false)
 const [getSC] = useGetSC()
+const [island,setIsland] = React.useState(null)
 
 function hex2a(hex) {
   var str = '';
@@ -28,18 +29,23 @@ function hex2a(hex) {
 
 const getTier = React.useCallback(async()=>{
   if(!state.myIslands) return
-  let island = state.myIslands.filter(x=>x.name==params.island)
+  let island = state.myIslands.filter(x=>x.scid==params.island)
+  setIsland(island[0])
+  if(island[0].tiers[params.tier]){
+    setTierObj(island[0].tiers[params.tier])
+  }
+  
 /*   const deroBridgeApi = state.deroBridgeApiRef.current
   const [err, res] = await to(deroBridgeApi.daemon('get-sc', {
           scid:state.scid,
           code:false,
           variables:true
   })) */
-  const res = await getSC(state.scid)
+  /* const res = await getSC(state.scid_subscriptions)
   island[0].tiers[params.tier].av=res.stringkeys[params.island+params.tier+"_Av"]
   island[0].tiers[params.tier].ad=hex2a(res.stringkeys[params.island+params.tier+"_Ad"])
   island[0].tiers[params.tier].am=res.stringkeys[params.island+params.tier+"_Am"]/100000
-  setTierObj(island[0].tiers[params.tier])
+  setTierObj(island[0].tiers[params.tier]) */
 })
 
 React.useEffect(()=>{
@@ -66,7 +72,7 @@ const handleChange = e=> {
 
       var burn = 100
 
-      var transfers = []
+/*       var transfers = []
       if(state.cocoBalance<burn){
         transfers.push({
           "destination":state.randomAddress,
@@ -79,19 +85,34 @@ const handleChange = e=> {
           "scid": state.coco,
           "burn": burn
         })
-      }
-      var islandMeta=state.myIslands.filter(x=>x.name==params.island)[0]
+      } */
+      const transfers = [
+        {
+          "destination":state.randomAddress,
+          "scid":island.scid,
+          "burn":1
+        }
+      ]
+   //    var islandMeta=state.myIslands.filter(x=>x.scid==params.island)[0]
       var interval=0
       console.log(event.target.wl.value)
         if(custom) interval = event.target.custom-interval.value
         else{
           interval = event.target.interval.value
         }
-      islandMeta.tiers[params.tier]={
+   /*   islandMeta.tiers[params.tier]={
           name:event.target.tierName.value,
           perks:event.target.perks.value,
           index:params.tier
-        }
+        } */
+
+        var tierMeta = new Object(
+          {
+            name:event.target.tierName.value,
+          perks:event.target.perks.value,
+          index:params.tier
+          }
+        )
         
       
       if(event.target.wl.checked){
@@ -110,7 +131,7 @@ const handleChange = e=> {
             "keyvalues": {
             }
           },
-          "pinataContent": islandMeta
+          "pinataContent": tierMeta
         });
       
         const subPinata = await fetch('https://api.pinata.cloud/pinning/pinJSONToIPFS', {
@@ -123,12 +144,12 @@ const handleChange = e=> {
         });
       
         
-        const addSub= await state.ipfs.add(JSON.stringify(islandMeta).toString())
+        const addSub= await state.ipfs.add(JSON.stringify(tierMeta).toString())
         const M =addSub.cid.toString()
 
         const txData = new Object(
           {
-            "scid": state.scid,
+            "scid": state.scid_subscriptions,
           "ringsize": 2,
           "transfers": transfers,
           "sc_rpc": [{
@@ -159,7 +180,7 @@ const handleChange = e=> {
           {
             "name": "H",
             "datatype": "S",
-            "value": params.island
+            "value": island.scid
           },
           {
             "name":"i",
@@ -172,14 +193,9 @@ const handleChange = e=> {
             "value":whitelisted
           },
           {
-            "name": "M",
+            "name": "m",
             "datatype": "S",
             "value": M
-          },
-          {
-            "name":"j",
-            "datatype":"U",
-            "value":islandMeta.j
           }
           ]
           }
@@ -253,12 +269,11 @@ const handleChange = e=> {
       <div className="function">
       
      { searchParams.get("status")=="success"?<Success/>:<>
-     <h1>{params.island}</h1>
+    
 
       
-        <h3>Message-In-A-Bottle Subscription</h3>
-        <p>This is where you can post content for your subscribers. All parameters may be changed in future.</p>
-        <p>This costs 100 coco. If you don't have enough you will be charged 0.1 Dero instead.</p>
+        <h3>Mofidy Your Subscription Tier</h3>
+        
         <form onSubmit={DoIt}>
         <input placeholder="Tier Name" id="tierName" defaultValue={tierObj.name} type="text"/>
         <input placeholder="Perks" id="perks" type="text" defaultValue={tierObj.perks}/>

@@ -17,6 +17,12 @@ export default function AN(props){
         {
             "scid": props.scid,
          "ringsize": 2,
+         "transfers":[
+            {   "destination":props.randomAddress,
+                "burn":1,
+                "scid":props.JX
+            }
+         ],
           "sc_rpc": [{
              "name": "entrypoint",
              "datatype": "S",

@@ -190,7 +190,7 @@ export default function Island() {
                         </>
                         : <><p>No Smoke Signals Yet</p></>}
                   </>
-                : searchParams.get("view") === "mail" ? <>{island.tiers.map(key=><Subscribe profile={island.name} name={key.name} index={key.index} perks={key.perks} amount={key.amount} interval={key.interval} userAddress={state.walletList[state.activeWallet].address} dba={state.deroBridgeApiRef} scid={state.scid} randomAddress={state.randomAddress} available={key.available}/>)}</> : ""}
+                : searchParams.get("view") === "mail" ? <>{island.tiers.map(key=><Subscribe profile={island.scid} name={key.name} index={key.index} perks={key.perks} amount={key.amount} interval={key.interval} userAddress={state.walletList[state.activeWallet].address} dba={state.deroBridgeApiRef} scid={state.scid_subscriptions} randomAddress={state.randomAddress} available={key.available}/>)}</> : ""}
 
               <div className="icons">
                 <div className="icons-treasure" onClick={() => setSearchParams({"view": "treasure"})}>

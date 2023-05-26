@@ -494,7 +494,7 @@ React.useEffect(()=>{
           </>
           :view=="treasure"?
           <>
-          <NavLink to={`/burytreasure/${island.name}/${island.bounties.length}`}>Bury New Treasure</NavLink>
+          <NavLink to={`/burytreasure/${island.scid}/${island.bounties.length}`}>Bury New Treasure</NavLink>
           {island.bounties.length>0?<><h3>Bounties You Initiated</h3><div className="card-grid">
             
             {island.bounties.map(x=><TreasureCard className="mytreasure" executerList={x.executerList} name={x.name} profile={x.island} tagline={x.tagline} treasure={x.treasure} image={x.image} judgeList={x.judgeList} index={x.index}/>)}
@@ -512,7 +512,7 @@ React.useEffect(()=>{
 
             </>
           :view=="signal"?<>
-          <NavLink to={`/newsignal/${island.name}/${island.fundraisers.length}`}>Start New Smoke Signal</NavLink>
+          <NavLink to={`/newsignal/${island.scid}/${island.fundraisers.length}`}>Start New Smoke Signal</NavLink>
           {island.fundraisers.length>0?<>
             {island.fundraisers.map(x=><NavLink to={`/island/${x.island}/smokesignal/${x.index}`}><FundCard name={x.name} profile={x.island} tagline={x.tagline} goal={x.goal} image={x.image} deadline={x.deadline}/></NavLink>)}
 </>:<><p>No Smoke Signals Yet</p>
@@ -527,7 +527,7 @@ React.useEffect(()=>{
           :view=="mail-out"?<>
           <Button size='sm' onClick={()=>{setView("mail-in")}}>Incoming</Button><Button size='sm' onClick={()=>{setView("mail-out")}}>Outgoing</Button>
           <h3>Your Subscription Tiers</h3>
-          {state.myIslands[state.active].tiers.map(t=><p>{t.name}, subs:{t.subs.length}<NavLink to={`/island/${state.myIslands[state.active].name}/modifytier/${t.index}`}>Edit</NavLink></p>)}
+          {state.myIslands[state.active].tiers.map(t=><p>{t.name}, subs:{t.subs.length}<NavLink to={`/island/${state.myIslands[state.active].scid}/modifytier/${t.index}`}>Edit</NavLink></p>)}
           <NavLink to={`/island/${state.myIslands[state.active].name}/compose`}>Put a Message in a Bottle</NavLink>
           <Button size='sm' onClick={()=>{setView("compose");setEditing("posts")}}>Compose Message</Button>
           <NavLink to={`/island/${state.myIslands[state.active].name}/modifytier/${state.myIslands[state.active].tiers.length}`}>New Subscription Tier</NavLink>

@@ -20,25 +20,26 @@ export default function BuryTreasure() {
   const [getSC] = useGetSC()
 
   const getJudges = React.useCallback(async () => {
-    const res = await getSC(state.scid)
-
-    var search = new RegExp(`.*_j`)
+    const res = await getSC(state.scid_registry)
+    console.log("get judges res",res)
+    var search = new RegExp(`N::PRIVATE-ISLANDS::*`)
     var scData = res.stringkeys //.map(x=>x.match(search))
+
+
 
 
     const judgeList = Object.keys(scData)
       .filter(key => search.test(key))
-      .filter(key => scData[key] == 1 || scData[key] == 3)
-      .map(key => <option value={key.substring(0, key.length - 2)}>{key.substring(0, key.length - 2)}</option>)
+      .map(key => <option value={key.substring(20,)}>{hex2a(scData[key])}</option>)
 
     setJudges(judgeList)
 
-    const execList = Object.keys(scData)
+  /*   const execList = Object.keys(scData)
       .filter(key => search.test(key))
       .filter(key => scData[key] == 2 || scData[key] == 3)
       .map(key => <option value={key.substring(0, key.length - 2)}>{key.substring(0, key.length - 2)}</option>)
 
-    setExecs(execList)
+    setExecs(execList) */
 
   })
 
@@ -60,7 +61,7 @@ export default function BuryTreasure() {
       return
     }
 
-    const res0 = await getSC(state.scid)
+    const res0 = await getSC(state.scid_registry)
     var executer = event.target.executer.value
 
     if (executer === "self") executer = event.target.island.value
@@ -116,7 +117,19 @@ export default function BuryTreasure() {
     console.log(addObj)
     console.log(metadata)
 
-    var transfers = []
+    const transfers = [
+      {
+        "destination":state.randomAddress,
+        "scid":island,
+        "burn":1
+      }, {
+        "destination": state.randomAddress,
+        "burn": parseInt(event.target.treasure.value * 100000)
+
+      }
+    ]
+
+ /*    var transfers = []
     if (state.cocoBalance < burn) {
       transfers.push({
         "destination": state.randomAddress,
@@ -132,14 +145,14 @@ export default function BuryTreasure() {
         "burn": parseInt(event.target.treasure.value * 100000)
 
       })
-    }
+    } */
 
 
-    let j = parseInt(state.myIslands.filter(x => x.name = island)[0].j)
+    //let j = parseInt(state.myIslands.filter(x => x.name = island)[0].j)
 
     const txData = new Object(
       {
-        "scid": state.scid,
+        "scid": state.scid_bounties,
         "ringsize": 2,
         "transfers": transfers,
         "sc_rpc": [{
@@ -173,11 +186,6 @@ export default function BuryTreasure() {
             "datatype": "U",
             "value": expiry
           },
-          {
-            "name": "M",
-            "datatype": "S",
-            "value": "M"
-          },
 
           {
             "name": "m",
@@ -187,7 +195,7 @@ export default function BuryTreasure() {
           {
             "name": "j",
             "datatype": "U",
-            "value": j
+            "value": 0
           }
         ]
       }
@@ -252,8 +260,8 @@ export default function BuryTreasure() {
         console.log(err)
         console.log(res)
     */
-
-    const judgeAddress = hex2a(res0.stringkeys[`${event.target.judge.value}_O`])
+        //gonna have to search registry for islands instead
+   /*  const judgeAddress = hex2a(res0.stringkeys[`${event.target.judge.value}_O`])
     const executerAddress = hex2a(res0.stringkeys[`${event.target.executer.value}_O`])
 
     const data2 = new Object({
@@ -283,7 +291,7 @@ export default function BuryTreasure() {
             }]
         }]
     })
-    sendTransaction(data2)
+    sendTransaction(data2) */
     /*     const [err3,res3] =await to(deroBridgeApi.wallet('start-transfer',{
           "ringsize":2,
           "transfers":[
@@ -326,7 +334,7 @@ export default function BuryTreasure() {
           <p>When you bury treasure on your private island, you are creating a bounty for some specific goal. Specify
             the criteria for release of treasure, and appoint a judge (it can be you) to decide when that criteria has
             been met.</p>
-          <p>This will cost 100 coco. If you don't have enough coco you will be charged 0.1 Dero instead,</p>
+          
 
           <form onSubmit={DoIt}>
             <input placeholder="Buried Treasure Name" id="bountyName" />
@@ -343,7 +351,7 @@ export default function BuryTreasure() {
             <p>Nominate an Executer. This person releases the treasure according to the judge's judgement, or he may
               veto the decision if he believes it to be in error. He is not paid. Backup executers can be nominated
               later.</p>
-            <select id="executer">{execs}</select>
+            <select id="executer">{judges}</select>
 
             <Button size='small' type={"submit"}>Create</Button>
           </form>
