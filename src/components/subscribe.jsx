@@ -224,7 +224,7 @@ export default function Subscribe(props) {
         <div className="subscribe">
             <h3>{props.name}</h3>
             <p>{props.amount/100000} Dero per {Math.round(props.interval/(60*60*24))} days</p>
-            <p>Perks: {props.perks}</p>
+            <p>{props.tagline}</p>
             <p>Available Spots: {props.available}
              </p>
            { subbed?<form onSubmit={topUp}>

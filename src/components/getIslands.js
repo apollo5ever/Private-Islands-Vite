@@ -6,6 +6,7 @@ import callApi from "./APITest";
 
 
 export default async function getIslands(state,i){
+  console.log("get islands ",i)
 
  try{
 

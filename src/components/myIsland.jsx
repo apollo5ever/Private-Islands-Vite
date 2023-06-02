@@ -258,6 +258,43 @@ React.useEffect(()=>{
   }
 },[post,searchParams,state.active])
 
+    const SetMetadata = async event =>{
+      event.preventDefault()
+
+      let island = state.myIslands[state.active]
+      //island[editing]=event.target.edit.value
+      let fee
+      if(event.target.edit.value.length>380) fee = 10000
+
+      const metaDataData = {
+        "scid": island.scid,
+        "ringsize": 2,
+        "fees":fee,
+        "transfers": [
+          {
+            "destination": state.randomAddress,
+            "burn": 1,
+            "scid": island.scid
+          }
+        ],
+        "sc_rpc": [
+          {
+            "name": "entrypoint",
+            "datatype": "S",
+            "value": `Set${editing}`
+          },
+          {
+            "name": editing,
+            "datatype": "S",
+            "value": event.target.edit.value
+          }
+        ]
+      };
+      
+      sendTransaction(metaDataData)
+      setEditing("")
+    }
+
     const editIsland = async e => {
      
       e.preventDefault()
@@ -451,9 +488,9 @@ React.useEffect(()=>{
 
           <div>
             <div className="icons">
-           {editing==="image"?
+           {editing==="Image"?
            <>
-            <form onSubmit={editIsland}>
+            <form onSubmit={SetMetadata}>
             <input id="edit" defaultValue={state.myIslands[state.active].image} />
            
             <Button size='sm' type="submit">Submit</Button>
@@ -462,33 +499,33 @@ React.useEffect(()=>{
             :
             <>
             <img src={state.myIslands[state.active].image}/>
-            <small onClick={()=>setEditing("image")}>edit</small>
+            <small onClick={()=>setEditing("Image")}>edit</small>
             </>} <h1 onClick={()=>{setView("main")}}>{state.myIslands[state.active].name}</h1></div>
            
          
           {view=="main"?<>
           
 
-          <>{editing==="tagline"?
+          <>{editing==="Tagline"?
           <>
-          <form onSubmit={editIsland}>
+          <form onSubmit={SetMetadata}>
           <input id="edit" defaultValue={state.myIslands[state.active].tagline} />
           <Button size='sm' type="submit">Submit</Button>
           </form>
           <small onClick={()=>setEditing("")}>cancel</small></>
           :<><p>{state.myIslands[state.active].tagline}</p>
-          <small onClick={()=>setEditing("tagline")}>edit</small>
+          <small onClick={()=>setEditing("Tagline")}>edit</small>
           </>
           }</>
-          <>{editing==="bio"?
+          <>{editing==="Bio"?
           <>
-          <form onSubmit={editIsland}>
+          <form onSubmit={SetMetadata}>
           <textarea rows="44" cols="80" id="edit" defaultValue={state.myIslands[state.active].bio} />
           <Button size='' type="submit">Submit</Button>
           </form>
           <small onClick={()=>setEditing("")}>cancel</small></>
           :<><p dangerouslySetInnerHTML={{__html: state.myIslands[state.active].bio}} />
-          <small onClick={()=>setEditing("bio")}>edit</small>
+          <small onClick={()=>setEditing("Bio")}>edit</small>
           </>
           }</>
           </>
@@ -527,7 +564,7 @@ React.useEffect(()=>{
           :view=="mail-out"?<>
           <Button size='sm' onClick={()=>{setView("mail-in")}}>Incoming</Button><Button size='sm' onClick={()=>{setView("mail-out")}}>Outgoing</Button>
           <h3>Your Subscription Tiers</h3>
-          {state.myIslands[state.active].tiers.map(t=><p>{t.name}, subs:{t.subs.length}<NavLink to={`/island/${state.myIslands[state.active].scid}/modifytier/${t.index}`}>Edit</NavLink></p>)}
+          {state.myIslands[state.active].tiers.map(t=><p>{t.name}, subs:{t.subs.length}<NavLink to={`/island/${state.myIslands[state.active].name}/modifytier/${t.index}`}>Edit</NavLink></p>)}
           <NavLink to={`/island/${state.myIslands[state.active].name}/compose`}>Put a Message in a Bottle</NavLink>
           <Button size='sm' onClick={()=>{setView("compose");setEditing("posts")}}>Compose Message</Button>
           <NavLink to={`/island/${state.myIslands[state.active].name}/modifytier/${state.myIslands[state.active].tiers.length}`}>New Subscription Tier</NavLink>

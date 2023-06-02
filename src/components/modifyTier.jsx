@@ -29,23 +29,13 @@ function hex2a(hex) {
 
 const getTier = React.useCallback(async()=>{
   if(!state.myIslands) return
-  let island = state.myIslands.filter(x=>x.scid==params.island)
+  let island = state.myIslands.filter(x=>x.name==params.island)
   setIsland(island[0])
   if(island[0].tiers[params.tier]){
     setTierObj(island[0].tiers[params.tier])
   }
   
-/*   const deroBridgeApi = state.deroBridgeApiRef.current
-  const [err, res] = await to(deroBridgeApi.daemon('get-sc', {
-          scid:state.scid,
-          code:false,
-          variables:true
-  })) */
-  /* const res = await getSC(state.scid_subscriptions)
-  island[0].tiers[params.tier].av=res.stringkeys[params.island+params.tier+"_Av"]
-  island[0].tiers[params.tier].ad=hex2a(res.stringkeys[params.island+params.tier+"_Ad"])
-  island[0].tiers[params.tier].am=res.stringkeys[params.island+params.tier+"_Am"]/100000
-  setTierObj(island[0].tiers[params.tier]) */
+
 })
 
 React.useEffect(()=>{
@@ -64,28 +54,10 @@ const handleChange = e=> {
 
 
 
-
-
-
     const DoIt = React.useCallback(async (event) => {
       event.preventDefault();
 
-      var burn = 100
 
-/*       var transfers = []
-      if(state.cocoBalance<burn){
-        transfers.push({
-          "destination":state.randomAddress,
-          "burn":burn*100
-  
-        })
-      }else{
-        transfers.push( {
-         "destination":state.randomAddress,
-          "scid": state.coco,
-          "burn": burn
-        })
-      } */
       const transfers = [
         {
           "destination":state.randomAddress,
@@ -93,26 +65,14 @@ const handleChange = e=> {
           "burn":1
         }
       ]
-   //    var islandMeta=state.myIslands.filter(x=>x.scid==params.island)[0]
+  
       var interval=0
       console.log(event.target.wl.value)
         if(custom) interval = event.target.custom-interval.value
         else{
           interval = event.target.interval.value
         }
-   /*   islandMeta.tiers[params.tier]={
-          name:event.target.tierName.value,
-          perks:event.target.perks.value,
-          index:params.tier
-        } */
-
-        var tierMeta = new Object(
-          {
-            name:event.target.tierName.value,
-          perks:event.target.perks.value,
-          index:params.tier
-          }
-        )
+ 
         
       
       if(event.target.wl.checked){
@@ -121,31 +81,6 @@ const handleChange = e=> {
         var whitelisted =0
       }
        
-      
-        var subData = JSON.stringify({
-          "pinataOptions": {
-            "cidVersion": 0
-          },
-          "pinataMetadata": {
-            "name": params.island,
-            "keyvalues": {
-            }
-          },
-          "pinataContent": tierMeta
-        });
-      
-        const subPinata = await fetch('https://api.pinata.cloud/pinning/pinJSONToIPFS', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json','authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiJhNjc5NzU5MS02OGUxLTQyNzAtYjZhMy01NjBjN2Y3M2IwYTMiLCJlbWFpbCI6ImJhY2tlbmRAYW1icm9zaWEubW9uZXkiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwicGluX3BvbGljeSI6eyJyZWdpb25zIjpbeyJpZCI6IkZSQTEiLCJkZXNpcmVkUmVwbGljYXRpb25Db3VudCI6MX0seyJpZCI6Ik5ZQzEiLCJkZXNpcmVkUmVwbGljYXRpb25Db3VudCI6MX1dLCJ2ZXJzaW9uIjoxfSwibWZhX2VuYWJsZWQiOmZhbHNlLCJzdGF0dXMiOiJBQ1RJVkUifSwiYXV0aGVudGljYXRpb25UeXBlIjoic2NvcGVkS2V5Iiwic2NvcGVkS2V5S2V5IjoiMDgzZTJkMGQ2Yzg2YTBhNjlkY2YiLCJzY29wZWRLZXlTZWNyZXQiOiJlN2VlMTE4MWM2YTBlN2FmNjQ0YmUzZmEyYmU1ZWY5ZWFmMmNmMmYyYzc0NWQzZGIxNDdiMThhOTU5NWMwZDNlIiwiaWF0IjoxNjYxMTk1NjUxfQ.9Pz2W_h7zCiYyuRuVySKcDwA2fl_Jbm6QDulihAIpmo`
-         },
-          
-                body:  subData
-        });
-      
-        
-        const addSub= await state.ipfs.add(JSON.stringify(tierMeta).toString())
-        const M =addSub.cid.toString()
 
         const txData = new Object(
           {
@@ -193,72 +128,81 @@ const handleChange = e=> {
             "value":whitelisted
           },
           {
-            "name": "m",
+            "name": "name",
             "datatype": "S",
-            "value": M
+            "value": event.target.tierName.value
           }
           ]
           }
         )
         sendTransaction(txData)
         
-      /* const deroBridgeApi=state.deroBridgeApiRef.current
-        const [err, res] = await to(deroBridgeApi.wallet('start-transfer', {
-          "scid": state.scid,
+      
+      
+      setSearchParams({"status":"metadata","name":event.target.tierName.value})
+    })
+
+    const SetMetadata = React.useCallback(async (event) => {
+      event.preventDefault();
+
+
+      const transfers = [
+        {
+          "destination":state.randomAddress,
+          "scid":island.scid,
+          "burn":1
+        }
+      ]
+  
+     
+       
+
+        const txData = new Object(
+          {
+            "scid": state.scid_subscriptions,
           "ringsize": 2,
           "transfers": transfers,
           "sc_rpc": [{
             "name": "entrypoint",
             "datatype": "S",
-            "value": "AOMT"
-          },
-          {
-            "name": "Am",
-            "datatype": "U",
-            "value":parseInt(event.target.amount.value*100000)
-          },
-          {
-            "name": "I",
-            "datatype": "U",
-            "value":parseInt(interval)
-          },
-          {
-            "name":"L",
-            "datatype":"U",
-            "value":parseInt(event.target.limit.value)
-          },
-          {
-            "name":"Ad",
-            "datatype": "S",
-            "value": event.target.address.value
+            "value": "SetMetadata"
           },
           {
             "name": "H",
             "datatype": "S",
-            "value": params.island
+            "value":island.scid
           },
           {
-            "name":"i",
-            "datatype":"U",
+            "name": "i",
+            "datatype": "U",
             "value":parseInt(params.tier)
           },
           {
-            "name":"W",
-            "datatype":"U",
-            "value":whitelisted
+            "name":"name",
+            "datatype":"S",
+            "value":event.target.tierName.value
           },
           {
-            "name": "M",
+            "name":"url",
             "datatype": "S",
-            "value": M
+            "value": event.target.image.value
           },
           {
-            "name":"j",
-            "datatype":"U",
-            "value":islandMeta.j
+            "name": "tagline",
+            "datatype": "S",
+            "value": event.target.tagline.value
+          },
+          {
+            "name":"desc",
+            "datatype":"S",
+            "value":event.target.description.value
           }
           ]
-        })) */
+          }
+        )
+        sendTransaction(txData)
+        
+      
       
       setSearchParams({"status":"success"})
     })
@@ -268,7 +212,17 @@ const handleChange = e=> {
     return(
       <div className="function">
       
-     { searchParams.get("status")=="success"?<Success/>:<>
+     { searchParams.get("status")=="metadata"?
+     <form onSubmit={SetMetadata}>
+     <input placeholder="Tier Name" id="tierName" defaultValue={tierObj.name} type="text"/>
+     <input placeholder="image url" id="image" defaultValue={tierObj.image} type="text"/>
+     <input placeholder="Tagline" id="tagline" type="text" defaultValue={tierObj.tagline}/>
+     <textarea placeholder="Description" rows="44" cols="80" id="description" defaultValue={tierObj.description} />
+ {custom?<input placeholder = "Subscription Interval in Seconds" id="custom-interval" type="text" />:""}
+ <button type={"submit"}>Submit</button>
+ </form>
+
+     :searchParams.get("status")=="success"?<Success/>:<>
     
 
       
@@ -276,7 +230,6 @@ const handleChange = e=> {
         
         <form onSubmit={DoIt}>
         <input placeholder="Tier Name" id="tierName" defaultValue={tierObj.name} type="text"/>
-        <input placeholder="Perks" id="perks" type="text" defaultValue={tierObj.perks}/>
         <input placeholder="address" id="address" type="text" defaultValue={tierObj.ad}/>
         <input placeholder="max number of subscribers" id="limit" defaultValue={tierObj.av} type="text"/>
         <p>Can anybody subscribe or will there be a whitelist?</p>
