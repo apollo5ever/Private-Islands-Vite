@@ -274,6 +274,9 @@ function App() {
 
         <h1 className="nav-header">Dero Private Islands</h1>
         <WalletSelectButton />
+        {state.myIslands && state.myIslands.length>1 ?
+        <ul>{state.myIslands.map((x,i)=><li onClick={()=>{setState({...state,active:i})}}><small>{state.active==i?<b>{x.name}</b>:<>{x.name}</>}</small></li>)}</ul>
+      :""}
         <div className="menu-bars" onClick={() => toggleMenuActive()}>
           <FaIcons.FaBars size={40} />
         </div>
