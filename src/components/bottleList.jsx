@@ -24,7 +24,7 @@ export default  function BottleList({islands,state}){
       tierList=tierList.concat(islands[i].tiers)
     }
     console.log("BOTTLELIST",tierList)
-    setTiers(tierList.map(key=><Subscribe profile={key.scid} name={key.name} index={key.index} perks={key.perks} amount={key.amount} interval={key.interval} userAddress={state.walletList[state.activeWallet].address} dba={state.deroBridgeApiRef} scid={state.scid_subscriptions} randomAddress={state.randomAddress} available={key.available}/>))
+    setTiers(tierList.map(key=><Subscribe profile={key.scid} image={key.image} name={key.name} index={key.index} tagline={key.tagline} description={key.description} amount={key.amount} interval={key.interval} userAddress={state.walletList[state.activeWallet].address} dba={state.deroBridgeApiRef} scid={state.scid_subscriptions} randomAddress={state.randomAddress} available={key.available}/>))
 
     }
 
