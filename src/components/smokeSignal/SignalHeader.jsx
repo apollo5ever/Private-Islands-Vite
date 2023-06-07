@@ -15,7 +15,7 @@ export const SignalHeader = ({signal, deadline}) => {
           <h4>Goal: {signal.goal/100000} Dero by {deadline}</h4>
           <h4>Progress: {signal.raised/100000} / {signal.goal/100000}</h4>
           <h4>Funds go to:</h4>
-          <p className='prose-sm'>{signal.fundee}</p>
+          <p className='prose-sm'>{signal.address}</p>
           <Divider />
         </FlexBoxColumn>
       </FlexBoxRow>

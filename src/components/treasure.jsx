@@ -30,6 +30,7 @@ export default function Treasure() {
   const [nameLookup] = useNameLookup()
   const [islandSCID,setIslandSCID] = React.useState("")
   const [recipients,setRecipients] = React.useState([])
+  const [editing,setEditing] = React.useState(false)
   
 
   const getJudging = ()=>{
@@ -91,7 +92,7 @@ export default function Treasure() {
       {
         "name": "H",
         "datatype": "S",
-        "value": island
+        "value": islandSCID
       },
       {
         "name": "i",
@@ -293,6 +294,74 @@ export default function Treasure() {
   })) */
 
   })
+
+  const SetMetaData = React.useCallback(async (event) =>{
+    event.preventDefault()
+    const transfers = [
+      {
+        "destination":state.randomAddress,
+        "scid":islandSCID,
+        "burn":1
+      }
+    ]
+
+    let fee
+    if(event.target.Description.value.length>360) fee = 10000
+
+
+    const txData = new Object(
+      {
+        "scid": state.scid_bounties,
+        "ringsize": 2,
+        "fees":fee,
+        "transfers": transfers,
+        "sc_rpc": [{
+          "name": "entrypoint",
+          "datatype": "S",
+          "value": "SetMetadata"
+        },
+
+          {
+            "name": "H",
+            "datatype": "S",
+            "value": islandSCID
+          },
+          {
+            "name": "i",
+            "datatype": "U",
+            "value": parseInt(index)
+          },
+          {
+            "name": "Name",
+            "datatype": "S",
+            "value": event.target.Name.value
+          },
+          {
+            "name": "Image",
+            "datatype": "S",
+            "value": event.target.Image.value
+          },
+          {
+            "name": "Tagline",
+            "datatype": "S",
+            "value": event.target.Tagline.value
+          },
+
+          {
+            "name": "Description",
+            "datatype": "S",
+            "value": event.target.Description.value
+          }
+        ]
+      }
+    )
+    sendTransaction(txData)
+
+  
+
+    setSearchParams({"status": "success"})
+
+  })
    
   
 
@@ -308,6 +377,18 @@ export default function Treasure() {
     
     return (<div className="function">
         <div className="profile" >
+          {!editing && state.myIslands && state.myIslands.length>0 && island==state.myIslands[state.active].name?
+          <small onClick={()=>{setEditing(true)}}>edit</small>
+          :<></>
+          }
+          {editing?<form onSubmit={SetMetaData}>
+            <small onClick={()=>{setEditing(false)}}>cancel</small>
+            <input placeholder="name" defaultValue={treasure.name} id="Name"/>
+          <input placeholder="image url" defaultValue={treasure.image} id="Image" />
+          <input placeholder="tagline" defaultValue={treasure.tagline} id="Tagline" />
+          <textarea placeholder="description" rows="44" cols="80" defaultValue={treasure.description} id="Description"/>
+          <button type={"submit"}>Submit</button>
+          </form>:<></>}
           
          { treasure.name? <><img src={treasure.image}/>
             <h1>{treasure.name}</h1>
@@ -340,12 +421,12 @@ export default function Treasure() {
          
          
 {treasure.status==0 && state.myIslands && state.myIslands.length>0 && judging?
-<Judge active={treasure.judgeList[treasure.JN]} userIsland={state.myIslands[state.active].scid} island={islandSCID} index={index} judge={treasure.judge.scid} JF={treasure.JF} deroBridgeApiRef={state.deroBridgeApiRef} randomAddress={state.randomAddress} scid={state.scid_bounties} XE={treasure.JE} solo={treasure.judgeList.length==1} recipientList={treasure.recipientList}/>
+<Judge active={treasure.judgeList[treasure.JN]} userIsland={state.myIslands[state.active].scid} island={islandSCID} index={index} judge={treasure.judge && treasure.judge.scid} JF={treasure.JF} deroBridgeApiRef={state.deroBridgeApiRef} randomAddress={state.randomAddress} scid={state.scid_bounties} XE={treasure.JE} solo={treasure.judgeList.length==1} recipientList={treasure.recipientList}/>
 :""}  
 
 
 {treasure.status==0 && state.myIslands && state.myIslands.length>0 && executing?
-            <Executer active={treasure.execList[treasure.XN]} userIsland={state.myIslands[state.active].scid} island={islandSCID} index={index} executer={treasure.executer.scid} JF={treasure.JF} deroBridgeApiRef={state.deroBridgeApiRef} randomAddress={state.randomAddress} scid={state.scid_bounties} XE={treasure.XE} solo={treasure.execList.length==1}/>:""}
+            <Executer active={treasure.execList[treasure.XN]} userIsland={state.myIslands[state.active].scid} island={islandSCID} index={index} executer={treasure.executer && treasure.executer.scid} JF={treasure.JF} deroBridgeApiRef={state.deroBridgeApiRef} randomAddress={state.randomAddress} scid={state.scid_bounties} XE={treasure.XE} solo={treasure.execList.length==1}/>:""}
 
             
             <p dangerouslySetInnerHTML={{__html: treasure.description}} />

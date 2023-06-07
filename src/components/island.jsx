@@ -30,7 +30,6 @@ export default function Island() {
   const [judging, setJudging] = React.useState([])
   const [signals, setSignals] = React.useState([])
   const [bottles, setBottles] = React.useState([])
-  const [trust, setTrust] = React.useState(0)
   const [view, setView] = React.useState("main")
   const params = useParams()
   const [island,setIsland] = React.useState(null)
@@ -44,6 +43,7 @@ export default function Island() {
 
 
   const getIslands = React.useCallback(async () => {
+    console.log("client get island ",params.island)
     setIsland(await GI(state, params.island))
     
 
@@ -160,7 +160,7 @@ export default function Island() {
               {searchParams.get("view") === "main" ?
                 <>
                   <p>{island.tagline}</p>
-                  <p>Social Coconut Score:{trust ? trust : "Not trusted by any island operators"}</p>
+                  <p>Social Coconut Score: {island.score}</p>
                   <p dangerouslySetInnerHTML={{__html: island.bio}} />
                 </>
                 : searchParams.get("view") === "treasure" ?
@@ -190,7 +190,7 @@ export default function Island() {
                         </>
                         : <><p>No Smoke Signals Yet</p></>}
                   </>
-                : searchParams.get("view") === "mail" ? <>{island.tiers.map(key=><Subscribe profile={island.scid} name={key.name} index={key.index} perks={key.perks} amount={key.amount} interval={key.interval} userAddress={state.walletList[state.activeWallet].address} dba={state.deroBridgeApiRef} scid={state.scid_subscriptions} randomAddress={state.randomAddress} available={key.available}/>)}</> : ""}
+                : searchParams.get("view") === "mail" ? <>{island.tiers.map(key=><Subscribe profile={island.scid} name={key.name} image={key.image} index={key.index} tagline={key.tagline} description={key.description} amount={key.amount} interval={key.interval} userAddress={state.walletList[state.activeWallet].address} dba={state.deroBridgeApiRef} scid={state.scid_subscriptions} randomAddress={state.randomAddress} available={key.available}/>)}</> : ""}
 
               <div className="icons">
                 <div className="icons-treasure" onClick={() => setSearchParams({"view": "treasure"})}>
@@ -214,7 +214,7 @@ export default function Island() {
 
       </div>
       :""}
-      {state.myIslands && state.myIslands.length > 0 ? <TrustIsland island={params.island} /> : ""}
+      {island && state.myIslands && state.myIslands.length > 0 ? <TrustIsland island={island.scid} /> : ""}
     </div>
   )
 }

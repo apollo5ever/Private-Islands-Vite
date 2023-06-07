@@ -15,27 +15,38 @@ const [state, setState] = React.useContext(LoginContext);
 let island=state.myIslands[state.active].name
 
 const data = new Object({
-    "scid": state.scid,
+    "scid": state.scid_registry,
     "ringsize": 2,
+    "transfers":[
+        {
+            "destination":state.randomAddress,
+            "burn":10000
+        }
+    ],
      "sc_rpc": [{
         "name": "entrypoint",
         "datatype": "S",
-        "value": "TI"
+        "value": "RateAsset"
     },
     {
-        "name": "H",
-        "datatype": "S",
-        "value": island
-    },
-    {
-        "name": "I",
+        "name": "scid",
         "datatype": "S",
         "value": props.island
     },
     {
-     "name":"T",
+        "name": "collection",
+        "datatype": "S",
+        "value": "PRIVATE-ISLANDS"
+    },
+    {
+     "name":"rating",
      "datatype":"U",
      "value":parseInt(e.target.trust.value)
+    },
+    {
+        "name":"comment",
+        "datatype":"S",
+        "value":e.target.comment.value
     }
 ]
 })
@@ -89,10 +100,14 @@ sendTransaction(data)
 
     return(<>
         <div>
-{state.myIslands?<form onSubmit={TI}>
+{state.myIslands?
+<div><h3>Rate Island (0.1 Dero fee)</h3>
+<form onSubmit={TI}>
           <select id="trust"><option value="0">Distrust Completely</option><option value="25">Somewhat Distrust</option><option value="50">Neutral</option><option value="75">Somewhat Trust</option><option value="100">Trust Completely</option></select>
+          <input id="comment" placeholder='comment'/>
           <button type="submit">Select</button>
-           </form> :""}
+           </form> 
+           </div>:""}
             </div>
        
         </>
