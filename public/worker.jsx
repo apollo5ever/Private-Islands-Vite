@@ -60,7 +60,20 @@ self.onmessage = async (event) => {
             self[key] = null
           }
         }, 1000);
-      } else {
+      } else if(key.substring(0,3)=="bal"){
+        const intervalId = setInterval(() => {
+          console.log('waiting for key',key)
+          console.log("wasm self",self)
+          if (self[key]) {
+            let msg = new Object()
+            msg[`${key}`] = self[key]
+            clearInterval(intervalId);
+            self.postMessage(msg);
+            //self[key] = null
+          }
+        }, 1000);
+      }
+      else {
         self.postMessage({ result });
       }
 

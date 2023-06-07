@@ -258,6 +258,43 @@ React.useEffect(()=>{
   }
 },[post,searchParams,state.active])
 
+    const SetMetadata = async event =>{
+      event.preventDefault()
+
+      let island = state.myIslands[state.active]
+      //island[editing]=event.target.edit.value
+      let fee
+      if(event.target.edit.value.length>380) fee = 10000
+
+      const metaDataData = {
+        "scid": island.scid,
+        "ringsize": 2,
+        "fees":fee,
+        "transfers": [
+          {
+            "destination": state.randomAddress,
+            "burn": 1,
+            "scid": island.scid
+          }
+        ],
+        "sc_rpc": [
+          {
+            "name": "entrypoint",
+            "datatype": "S",
+            "value": `Set${editing}`
+          },
+          {
+            "name": editing,
+            "datatype": "S",
+            "value": event.target.edit.value
+          }
+        ]
+      };
+      
+      sendTransaction(metaDataData)
+      setEditing("")
+    }
+
     const editIsland = async e => {
      
       e.preventDefault()
@@ -451,9 +488,9 @@ React.useEffect(()=>{
 
           <div>
             <div className="icons">
-           {editing==="image"?
+           {editing==="Image"?
            <>
-            <form onSubmit={editIsland}>
+            <form onSubmit={SetMetadata}>
             <input id="edit" defaultValue={state.myIslands[state.active].image} />
            
             <Button size='sm' type="submit">Submit</Button>
@@ -462,39 +499,39 @@ React.useEffect(()=>{
             :
             <>
             <img src={state.myIslands[state.active].image}/>
-            <small onClick={()=>setEditing("image")}>edit</small>
+            <small onClick={()=>setEditing("Image")}>edit</small>
             </>} <h1 onClick={()=>{setView("main")}}>{state.myIslands[state.active].name}</h1></div>
            
          
           {view=="main"?<>
           
 
-          <>{editing==="tagline"?
+          <>{editing==="Tagline"?
           <>
-          <form onSubmit={editIsland}>
+          <form onSubmit={SetMetadata}>
           <input id="edit" defaultValue={state.myIslands[state.active].tagline} />
           <Button size='sm' type="submit">Submit</Button>
           </form>
           <small onClick={()=>setEditing("")}>cancel</small></>
           :<><p>{state.myIslands[state.active].tagline}</p>
-          <small onClick={()=>setEditing("tagline")}>edit</small>
+          <small onClick={()=>setEditing("Tagline")}>edit</small>
           </>
           }</>
-          <>{editing==="bio"?
+          <>{editing==="Bio"?
           <>
-          <form onSubmit={editIsland}>
+          <form onSubmit={SetMetadata}>
           <textarea rows="44" cols="80" id="edit" defaultValue={state.myIslands[state.active].bio} />
           <Button size='' type="submit">Submit</Button>
           </form>
           <small onClick={()=>setEditing("")}>cancel</small></>
           :<><p dangerouslySetInnerHTML={{__html: state.myIslands[state.active].bio}} />
-          <small onClick={()=>setEditing("bio")}>edit</small>
+          <small onClick={()=>setEditing("Bio")}>edit</small>
           </>
           }</>
           </>
           :view=="treasure"?
           <>
-          <NavLink to={`/burytreasure/${island.name}/${island.bounties.length}`}>Bury New Treasure</NavLink>
+          <NavLink to={`/burytreasure/${island.scid}/${island.bounties.length}`}>Bury New Treasure</NavLink>
           {island.bounties.length>0?<><h3>Bounties You Initiated</h3><div className="card-grid">
             
             {island.bounties.map(x=><TreasureCard className="mytreasure" executerList={x.executerList} name={x.name} profile={x.island} tagline={x.tagline} treasure={x.treasure} image={x.image} judgeList={x.judgeList} index={x.index}/>)}
@@ -512,7 +549,7 @@ React.useEffect(()=>{
 
             </>
           :view=="signal"?<>
-          <NavLink to={`/newsignal/${island.name}/${island.fundraisers.length}`}>Start New Smoke Signal</NavLink>
+          <NavLink to={`/newsignal/${island.scid}/${island.fundraisers.length}`}>Start New Smoke Signal</NavLink>
           {island.fundraisers.length>0?<>
             {island.fundraisers.map(x=><NavLink to={`/island/${x.island}/smokesignal/${x.index}`}><FundCard name={x.name} profile={x.island} tagline={x.tagline} goal={x.goal} image={x.image} deadline={x.deadline}/></NavLink>)}
 </>:<><p>No Smoke Signals Yet</p>

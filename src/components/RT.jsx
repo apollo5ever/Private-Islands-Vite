@@ -9,22 +9,54 @@ export default function RT(props){
   const [sendTransaction] = useSendTransaction()
   const accept=React.useCallback(async () => {
 
-    const data = new Object({
-      "scid": props.scid,
-      "ringsize": 2,
-       "sc_rpc": [{
-          "name": "entrypoint",
-          "datatype": "S",
-          "value": "RT"
-      },
-      {
-          "name": "H",
-          "datatype": "S",
-          "value": props.island+props.index
-      }
-  ]
+    let data
 
-    })
+    if(props.refund){
+      data = new Object({
+        "scid": props.scid,
+        "ringsize": 2,
+         "sc_rpc": [{
+            "name": "entrypoint",
+            "datatype": "S",
+            "value": "RT"
+        },
+        {
+            "name": "H",
+            "datatype": "S",
+            "value": props.island+props.index
+        }
+    ]
+  
+      })
+
+    }else{
+      data = new Object({
+        "scid": props.scid,
+        "ringsize": 2,
+        "transfers":[
+          {
+            "destination":props.randomAddress,
+            "burn":1,
+            "scid":props.executer
+          }
+        ],
+         "sc_rpc": [{
+            "name": "entrypoint",
+            "datatype": "S",
+            "value": "RT"
+        },
+        {
+            "name": "H",
+            "datatype": "S",
+            "value": props.island+props.index
+        }
+    ]
+  
+      })
+
+    }
+
+     
     sendTransaction(data)
 
 /*     const deroBridgeApi = props.dba.current

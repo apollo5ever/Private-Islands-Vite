@@ -41,8 +41,8 @@ for(var i=0;i<state.myIslands.length;i++){
             <h3>Initiated by {props.profile}</h3>
             <img src={props.image}/>
             <p>{props.tagline}</p>
-            <p>Treasure:{props.treasure} Dero</p>
-            <p>Judges: {props.judgeList?props.judgeList.map(x=><>{x}, </>):""}</p>
+            <p>Treasure:{props.treasure/100000} Dero</p>
+            <p>Judges: {props.judgeList?props.judgeList.map(x=><>{x.name}, </>):""}</p>
             <b>Click to See More</b>
         </div>
         </NavLink>

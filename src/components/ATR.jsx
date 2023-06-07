@@ -20,6 +20,13 @@ if(e.target.final.checked) f=1
         {
             "scid": props.scid,
             "ringsize": 2,
+            "transfers":[
+                {
+                    "destination":props.randomAddress,
+                    "burn":1,
+                    "scid":props.judge
+                }
+            ],
              "sc_rpc": [{
                 "name": "entrypoint",
                 "datatype": "S",
@@ -110,7 +117,7 @@ if(e.target.final.checked) f=1
     return(<>
         <div>
         <form onSubmit={addRecipient}>
-            <select id="index">{props.recipientList.map((x,i)=><option value={i}>Modify {x}</option>)}<option value={props.recipientList.length}>Add New</option></select>
+            <select id="index">{props.recipientList.map((x,i)=><option value={i}>Modify {x.address}</option>)}<option value={props.recipientList.length}>Add New</option></select>
             <input id="recipient" placeholder='recipient dero address' type="text"/>
             <input id="weight" placeholder="weight" type="text"/>
             <p>Check Box if this is final recipient and treasure is ready to be released.</p>

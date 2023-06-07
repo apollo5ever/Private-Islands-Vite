@@ -28,10 +28,10 @@ export default function Executer(props) {
 
               {props.solo?
 	<> {props.executer!=props.userIsland?
-		<><AN dba={props.deroBridgeApiRef} scid={props.scid} l="X" JX={props.userIsland} island={props.island} index={props.index}/></>
+		<><AN dba={props.deroBridgeApiRef} randomAddress={props.randomAddress} scid={props.scid} l="X" JX={props.userIsland} island={props.island} index={props.index}/></>
 	:<>
 	{props.JF==1?
-		<> <RT dba={props.deroBridgeApiRef} scid={props.scid} island={props.island} index={props.index}/><V dba={props.deroBridgeApiRef} scid={props.scid} island={props.island} index={props.index}/></>
+		<> <RT dba={props.deroBridgeApiRef} randomAddress={props.randomAddress} executer={props.userIsland} scid={props.scid} island={props.island} index={props.index}/><V dba={props.deroBridgeApiRef} scid={props.scid} island={props.island} index={props.index}/></>
 	:<><p>Nothing to do.</p></>
 	}
     </>
@@ -41,8 +41,8 @@ export default function Executer(props) {
 	<>{props.active==props.userIsland?
 		<>
 		{props.JF==1?
-			<><AN dba={props.deroBridgeApiRef} scid={props.scid} l="X" JX={props.userIsland} island={props.island} index={props.index}/><RT dba={props.deroBridgeApiRef} scid={props.scid} island={props.island} index={props.index}/><V dba={props.deroBridgeApiRef} scid={props.scid} island={props.island} index={props.index}/></>
-		:<><AN dba={props.deroBridgeApiRef} scid={props.scid} l="X" JX={props.userIsland} island={props.island} index={props.index}/></>}
+			<><AN dba={props.deroBridgeApiRef} randomAddress={props.randomAddress} scid={props.scid} l="X" JX={props.userIsland} island={props.island} index={props.index}/><RT dba={props.deroBridgeApiRef} scid={props.scid} island={props.island} index={props.index}/><V dba={props.deroBridgeApiRef} randomAddress={props.randomAddress} scid={props.scid} island={props.island} index={props.index} executer={props.userIsland}/></>
+		:<><AN dba={props.deroBridgeApiRef} randomAddress={props.randomAddress} scid={props.scid} l="X" JX={props.userIsland} island={props.island} index={props.index}/></>}
 		</>
 	:	<><p>Nothing to do</p></>}
 	</>}

@@ -5,6 +5,7 @@ import getFundraisers from './getFundraisers';
 import {useSendTransaction} from '../useSendTransaction';
 import {Button} from 'react-daisyui';
 import {SignalHeader} from "@/components/smokeSignal/SignalHeader.jsx";
+import {default as GI} from './getIslands'
 
 
 export default function Fundraiser() {
@@ -14,7 +15,7 @@ export default function Fundraiser() {
   const island = params.island
   const index = params.index
   const [state, setState] = React.useContext(LoginContext);
-
+  const [editing, setEditing] = React.useState(false)
   const [raised, setRaised] = React.useState(-1)
   const [sendTransaction] = useSendTransaction()
 
@@ -25,22 +26,22 @@ export default function Fundraiser() {
   }
 
   const getFunds = React.useCallback(async () => {
-      console.log(state, island)
-      const fundraiser = await getFundraisers(state, island)
-      console.log(await fundraiser)
-      setSignal(await fundraiser.filter(x => x.index == index)[0])
+    let profile = await GI(state,island)
+     
+     setSignal(profile.fundraisers[index])
+      
     }
   )
 
 
   const withdraw = React.useCallback(async (event) => {
     event.preventDefault()
-    var hash = params.island
+    var hash = signal.scid
     //const deroBridgeApi = state.deroBridgeApiRef.current
 
     const data = new Object(
       {
-        "scid": state.scid,
+        "scid": state.scid_fundraisers,
         "ringsize": 2,
         "sc_rpc": [{
           "name": "entrypoint",
@@ -89,7 +90,7 @@ export default function Fundraiser() {
 
   const supportGoal = React.useCallback(async (event) => {
     event.preventDefault()
-    var HashAndIndex = params.island + params.index
+    var HashAndIndex = signal.scid + params.index
     if (event.target.refundable.checked) {
       var refundable = 1
     } else {
@@ -161,6 +162,74 @@ export default function Fundraiser() {
     var deadlinestring = (deadline.getMonth() + 1).toString() + "/" + deadline.getDate().toString() + "/" + deadline.getUTCFullYear().toString()
   }
 
+  const SetMetaData = React.useCallback(async (event) =>{
+    event.preventDefault()
+    const transfers = [
+      {
+        "destination":state.randomAddress,
+        "scid":signal.scid,
+        "burn":1
+      }
+    ]
+
+    let fee
+    if(event.target.Description.value.length>360) fee = 10000
+
+
+    const txData = new Object(
+      {
+        "scid": state.scid_fundraisers,
+        "ringsize": 2,
+        "fees":fee,
+        "transfers": transfers,
+        "sc_rpc": [{
+          "name": "entrypoint",
+          "datatype": "S",
+          "value": "SetMetadata"
+        },
+
+          {
+            "name": "H",
+            "datatype": "S",
+            "value": signal.scid
+          },
+          {
+            "name": "i",
+            "datatype": "U",
+            "value": parseInt(index)
+          },
+          {
+            "name": "Name",
+            "datatype": "S",
+            "value": event.target.Name.value
+          },
+          {
+            "name": "Image",
+            "datatype": "S",
+            "value": event.target.Image.value
+          },
+          {
+            "name": "Tagline",
+            "datatype": "S",
+            "value": event.target.Tagline.value
+          },
+
+          {
+            "name": "Description",
+            "datatype": "S",
+            "value": event.target.Description.value
+          }
+        ]
+      }
+    )
+    sendTransaction(txData)
+
+  
+
+    setSearchParams({"status": "success"})
+
+  })
+
   React.useEffect(() => {
     console.log("executed only once!");
     //checkRaised();
@@ -168,6 +237,18 @@ export default function Fundraiser() {
   }, [state.ipfs]);
 
   return (<div className="function">
+      {!editing && state.myIslands && state.myIslands.length>0 && island==state.myIslands[state.active].name?
+          <small onClick={()=>{setEditing(true)}}>edit</small>
+          :<></>
+          }
+          {signal && editing?<form onSubmit={SetMetaData}>
+            <small onClick={()=>{setEditing(false)}}>cancel</small>
+            <input placeholder="name" defaultValue={signal.name} id="Name"/>
+          <input placeholder="image url" defaultValue={signal.image} id="Image" />
+          <input placeholder="tagline" defaultValue={signal.tagline} id="Tagline" />
+          <textarea placeholder="description" rows="44" cols="80" defaultValue={signal.description} id="Description"/>
+          <button type={"submit"}>Submit</button>
+          </form>:<></>}
       {signal ? <>
         <SignalHeader signal={signal} deadline={deadlinestring} />
         <p dangerouslySetInnerHTML={{__html: signal.description}} />

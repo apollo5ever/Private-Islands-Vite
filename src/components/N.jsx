@@ -14,32 +14,17 @@ export default function N(props){
 
 
     const getJudges = React.useCallback(async () =>{
-        //const deroBridgeApi = props.dba.current
-       /*    const [err, res] = await to(deroBridgeApi.daemon('get-sc', {
-                  scid:props.scid,
-                  code:false,
-                  variables:true
-          })) */
-          const res = await getSC(props.scid)
-    
-          var search= new RegExp(`.*_j`)  
-         
-          var scData = res.stringkeys //.map(x=>x.match(search))
-        
-        
-        const judgeList=Object.keys(scData)
-          .filter(key => search.test(key))
-          .filter(key=>scData[key]==1||scData[key]==3)
-          .map(key=><option value={key.substring(0,key.length-2)}>{key.substring(0,key.length-2)}</option>)
-          
-        setJudges(judgeList)
-          
-        const execList=Object.keys(scData)
+      const res = await getSC(props.scid_registry)
+      console.log("get judges res",res)
+      var search = new RegExp(`N::PRIVATE-ISLANDS::*`)
+      var scData = res.stringkeys //.map(x=>x.match(search))
+  
+  
+      const judgeList = Object.keys(scData)
         .filter(key => search.test(key))
-        .filter(key=>scData[key]==2||scData[key]==3)
-        .map(key=><option value={key.substring(0,key.length-2)}>{key.substring(0,key.length-2)}</option>)
-        
-      setExecs(execList)
+        .map(key => <option value={key.substring(20,)}>{hex2a(scData[key])}</option>)
+  
+      setJudges(judgeList)
     
       })
 
@@ -48,8 +33,15 @@ export default function N(props){
 
     const data = new Object(
       {
-        "scid": props.scid,
+        "scid": props.scid_bounties,
          "ringsize": 2,
+         "transfers":[
+          {
+            "destination":props.randomAddress,
+            "burn":1,
+            "scid":props.island
+          }
+         ],
           "sc_rpc": [{
              "name": "entrypoint",
              "datatype": "S",
@@ -79,7 +71,7 @@ export default function N(props){
       }
     )
 
-
+      sendTransaction(data)
 
 
      const deroBridgeApi = props.dba.current
@@ -122,7 +114,7 @@ export default function N(props){
         code:false,
         variables:true
 })) */
-
+/* 
 const res = await getSC(props.scid)
 
      const Address=hex2a(res.stringkeys[`${e.target.JX.value}_O`])
@@ -142,7 +134,7 @@ const res = await getSC(props.scid)
                 }]
       }
      )
-     sendTransaction(data2)
+     sendTransaction(data2) */
 
 
 /*      const [err3,res3] =await to(deroBridgeApi.wallet('start-transfer',{
@@ -173,7 +165,7 @@ const res = await getSC(props.scid)
         <div>
             <form onSubmit={nominate}>
                 {props.l=="X"?
-                <select id="JX">{execs}</select>:
+                <select id="JX">{judges}</select>:
                 props.l=="J"?
             <select id="JX">{judges}</select>
         :""}

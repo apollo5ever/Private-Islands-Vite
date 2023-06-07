@@ -6,6 +6,8 @@ import { useGetSC } from '../useGetSC'
 import { LoginContext } from '../LoginContext';
 import Success from './success'
 import {Button} from 'react-daisyui'
+import hex2a from './hex2a';
+import { useGetBalance } from '../useGetBalance';
 
 
 export default function ClaimIsland() {
@@ -19,866 +21,303 @@ export default function ClaimIsland() {
     const [error,setError] = React.useState("")
     const [sendTransaction] = useSendTransaction()
     const [getSC] = useGetSC()
+    const [getBalance] = useGetBalance()
+    const [islandSCID,setIslandSCID] = React.useState(searchParams.get("scid"))
+    const [islandName,setIslandName] = React.useState(searchParams.get("name"))
+    const [islandInWallet,setIslandInWallet] = React.useState(0)
 
-    const handleChange = e=> {
-      if(e.target.value==="custom") setCustom(true)
-      else{
-        setCustom(false)
-      }
-      
-    }
-
-    function hex2a(hex) {
-      var str = '';
-      for (var i = 0; i < hex.length; i += 2) str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
-      return str;
-  }
-
-
-  const getJudges = React.useCallback(async () =>{
-   /*  const deroBridgeApi = state.deroBridgeApiRef.current
-      const [err, res] = await to(deroBridgeApi.daemon('get-sc', {
-              scid:state.scid,
-              code:false,
-              variables:true
-      })) */
-      const res = await getSC(state.scid)
-
-      var search= new RegExp(`.*_j`)  
-     
-      var scData = res.stringkeys //.map(x=>x.match(search))
-    
-    
-    const judgeList=Object.keys(scData)
-      .filter(key => search.test(key))
-      .filter(key=>scData[key]==1||scData[key]==3)
-      .map(key=><option value={key.substring(0,key.length-2)}>{key.substring(0,key.length-2)}</option>)
-      
-    setJudges(judgeList)
-      
-    const execList=Object.keys(scData)
-    .filter(key => search.test(key))
-    .filter(key=>scData[key]==2||scData[key]==3)
-    .map(key=><option value={key.substring(0,key.length-2)}>{key.substring(0,key.length-2)}</option>)
-    
-  setExecs(execList)
-
-  })
- 
-
-
-
-  const DoIt = React.useCallback(async (event) => {
+  const Mint = React.useCallback(async (event) => {
     event.preventDefault();
-    
-     /*  const deroBridgeApi = state.deroBridgeApiRef.current
-      const [err0, res0] = await to(deroBridgeApi.daemon('get-sc', {
-              scid:state.scid,
-              code:false,
-              variables:true
-      })) */
-      const res0 = await getSC(state.scid)
-      var search= event.target.island.value+"_O"
-      var owner = res0.stringkeys[search]
-
-
-    var index = 0
-    var burn = 1000
-
-    var transfers = []
-    if(state.cocoBalance>=burn){
-      transfers.push({
-        "destination":state.randomAddress,
-         "scid": state.coco,
-         "burn": burn
-       })
-    }else{
-      transfers.push( {
-        "destination":state.randomAddress,
-        "burn":burn*100
-
-      })
-    }
-
-    //----------Errors--------------------------
-    if(owner){
+    //check registry to see if name is taken
+      const res0 = await getSC(state.scid_registry)
+      var search= `S::PRIVATE-ISLANDS::${event.target.island.value}`
+      var island_scid = res0.stringkeys[search]
+       //----------Errors--------------------------
+    if(island_scid){
       setError("this island is taken")
       return
     }
 
-
-    //-----------------Basic Island------------------------------
-    var M = "M"
-    var islandMeta = {
-      name:event.target.island.value,
-      image:event.target.image.value,
-      tagline:event.target.tagline.value,
-      bio:event.target.bio.value,
-      tiers:[]
-    }
-if(addition!="sub"){ 
-  var islandData = JSON.stringify({
-      "pinataOptions": {
-        "cidVersion": 0
-      },
-      "pinataMetadata": {
-        "name": event.target.island.value,
-        "keyvalues": {
-        }
-      },
-      "pinataContent": islandMeta
-    });
-
-    const islandPinata = await fetch('https://api.pinata.cloud/pinning/pinJSONToIPFS', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json','authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiJhNjc5NzU5MS02OGUxLTQyNzAtYjZhMy01NjBjN2Y3M2IwYTMiLCJlbWFpbCI6ImJhY2tlbmRAYW1icm9zaWEubW9uZXkiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwicGluX3BvbGljeSI6eyJyZWdpb25zIjpbeyJpZCI6IkZSQTEiLCJkZXNpcmVkUmVwbGljYXRpb25Db3VudCI6MX0seyJpZCI6Ik5ZQzEiLCJkZXNpcmVkUmVwbGljYXRpb25Db3VudCI6MX1dLCJ2ZXJzaW9uIjoxfSwibWZhX2VuYWJsZWQiOmZhbHNlLCJzdGF0dXMiOiJBQ1RJVkUifSwiYXV0aGVudGljYXRpb25UeXBlIjoic2NvcGVkS2V5Iiwic2NvcGVkS2V5S2V5IjoiMDgzZTJkMGQ2Yzg2YTBhNjlkY2YiLCJzY29wZWRLZXlTZWNyZXQiOiJlN2VlMTE4MWM2YTBlN2FmNjQ0YmUzZmEyYmU1ZWY5ZWFmMmNmMmYyYzc0NWQzZGIxNDdiMThhOTU5NWMwZDNlIiwiaWF0IjoxNjYxMTk1NjUxfQ.9Pz2W_h7zCiYyuRuVySKcDwA2fl_Jbm6QDulihAIpmo`
-     },
-      
-            body:  islandData
-    });
-
-    
-    const addIsland= await state.ipfs.add(JSON.stringify(islandMeta).toString())
-     M =addIsland.cid.toString()
-  }
-    
-    if(addition==""){
-      const txData = new Object(
-        {
-          "scid":state.scid,
-          "ringsize":2,
-          "transfers":transfers,
-          "sc_rpc":[{
-            "name": "entrypoint",
-            "datatype": "S",
-            "value": "IVU"
+    //-----------------MINT----------------------------------
+    const mintData = new Object(
+      {
+        "ringsize":2,
+        "sc_rpc":[
+          {
+            "name":"entrypoint",
+            "datatype":"S",
+            "value":"InitializePrivate"
           },
           {
-            "name": "H",
-            "datatype": "S",
-            "value": event.target.island.value
-          },
-          {
-            "name": "M",
-            "datatype": "S",
-            "value": M
-          },
-          {
-            "name": "j",
-            "datatype": "U",
-            "value": parseInt(event.target.j.value)
+            "name":"name",
+            "datatype":"S",
+            "value":event.target.island.value
           }
-          ]
-        }
-      )
-        sendTransaction(txData)
-
-      /* const [err, res] = await to(deroBridgeApi.wallet('start-transfer', {
-        "scid": state.scid,
-        "ringsize": 2,
-        "transfers": transfers,
-        "sc_rpc": [{
-          "name": "entrypoint",
-          "datatype": "S",
-          "value": "IVU"
-        },
-        {
-          "name": "H",
-          "datatype": "S",
-          "value": event.target.island.value
-        },
-        {
-          "name": "M",
-          "datatype": "S",
-          "value": M
-        },
-        {
-          "name": "j",
-          "datatype": "U",
-          "value": parseInt(event.target.j.value)
-        }
-        ]
-      })) */
-
-    }
-
-    //---------------MESSAGE IN BOTTLE Subscriptions---------------------------------
-else if(addition=="sub"){
-var interval=0
-console.log(event.target.wl.value)
-  if(custom) interval = event.target.custom-interval.value
-  else{
-    interval = event.target.interval.value
-  }
-islandMeta.tiers=[
-  
-    {
-    name:event.target.tierName.value,
-    perks:event.target.perks.value,
-    index:0
-  }
-  
-]
-if(event.target.wl.checked){
-  var whitelisted =1
-}else {
-  var whitelisted =0
-}
- 
-
-  var subData = JSON.stringify({
-    "pinataOptions": {
-      "cidVersion": 0
-    },
-    "pinataMetadata": {
-      "name": event.target.island.value,
-      "keyvalues": {
+        ],
+        "sc":"RnVuY3Rpb24gSW5pdGlhbGl6ZVByaXZhdGUobmFtZSBTdHJpbmcpIFVpbnQ2NAoxMCBJRiBFWElTVFMoIm5hbWUiKSBUSEVOIEdPVE8gMTAwCjIwIFNUT1JFKCJuYW1lIixuYW1lKQozMCBTRU5EX0FTU0VUX1RPX0FERFJFU1MoU0lHTkVSKCksMSxTQ0lEKCkpCjQwIFNUT1JFKCJvd25lciIsIiIpCjk5IFJFVFVSTiAwCjEwMCBSRVRVUk4gMQpFbmQgRnVuY3Rpb24KCkZ1bmN0aW9uIFNldEltYWdlKEltYWdlIFN0cmluZykgVWludDY0CjEwIElGIEFERFJFU1NfU1RSSU5HKFNJR05FUigpKSAhPSBMT0FEKCJvd25lciIpICYmIEFTU0VUVkFMVUUoU0NJRCgpKSAhPSAxIFRIRU4gR09UTyAxMDAKMjAgU1RPUkUoImltYWdlIixJbWFnZSkKMzAgU0VORF9BU1NFVF9UT19BRERSRVNTKFNJR05FUigpLEFTU0VUVkFMVUUoU0NJRCgpKSxTQ0lEKCkpCjk5IFJFVFVSTiAwCjEwMCBSRVRVUk4gMQpFbmQgRnVuY3Rpb24KCkZ1bmN0aW9uIFNldFRhZ2xpbmUoVGFnbGluZSBTdHJpbmcpIFVpbnQ2NAoxMCBJRiBBRERSRVNTX1NUUklORyhTSUdORVIoKSkgIT0gTE9BRCgib3duZXIiKSAmJiBBU1NFVFZBTFVFKFNDSUQoKSkgIT0gMSBUSEVOIEdPVE8gMTAwCjIwIFNUT1JFKCJ0YWdsaW5lIixUYWdsaW5lKQo0MCBTRU5EX0FTU0VUX1RPX0FERFJFU1MoU0lHTkVSKCksQVNTRVRWQUxVRShTQ0lEKCkpLFNDSUQoKSkKOTkgUkVUVVJOIDAKMTAwIFJFVFVSTiAxCkVuZCBGdW5jdGlvbgoKRnVuY3Rpb24gU2V0QmlvKEJpbyBTdHJpbmcpIFVpbnQ2NAoxMCBJRiBBRERSRVNTX1NUUklORyhTSUdORVIoKSkgIT0gTE9BRCgib3duZXIiKSAmJiBBU1NFVFZBTFVFKFNDSUQoKSkgIT0gMSBUSEVOIEdPVE8gMTAwCjIwIFNUT1JFKCJiaW8iLEJpbykKNDAgU0VORF9BU1NFVF9UT19BRERSRVNTKFNJR05FUigpLEFTU0VUVkFMVUUoU0NJRCgpKSxTQ0lEKCkpCjk5IFJFVFVSTiAwCjEwMCBSRVRVUk4gMQpFbmQgRnVuY3Rpb24KCkZ1bmN0aW9uIFNldE1ldGFkYXRhKEltYWdlIFN0cmluZywgVGFnbGluZSBTdHJpbmcsIEJpbyBTdHJpbmcpIFVpbnQ2NAoxMCBJRiBBRERSRVNTX1NUUklORyhTSUdORVIoKSkgIT0gTE9BRCgib3duZXIiKSAmJiBBU1NFVFZBTFVFKFNDSUQoKSkgIT0gMSBUSEVOIEdPVE8gMTAwCjIwIFNUT1JFKCJpbWFnZSIsSW1hZ2UpCjMwIFNUT1JFKCJ0YWdsaW5lIixUYWdsaW5lKQo0MCBTVE9SRSgiYmlvIixCaW8pCjUwIFNFTkRfQVNTRVRfVE9fQUREUkVTUyhTSUdORVIoKSxBU1NFVFZBTFVFKFNDSUQoKSksU0NJRCgpKQo5OSBSRVRVUk4gMAoxMDAgUkVUVVJOIDEKRW5kIEZ1bmN0aW9uCgpGdW5jdGlvbiBTZXRJUEZTKGNpZCBTdHJpbmcpIFVpbnQ2NAoxMCBJRiBBRERSRVNTX1NUUklORyhTSUdORVIoKSkgIT0gTE9BRCgib3duZXIiKSAmJiBBU1NFVFZBTFVFKFNDSUQoKSkgIT0gMSBUSEVOIEdPVE8gMTAwCjIwIFNUT1JFKCJpcGZzIixjaWQpCjUwIFNFTkRfQVNTRVRfVE9fQUREUkVTUyhTSUdORVIoKSxBU1NFVFZBTFVFKFNDSUQoKSksU0NJRCgpKQo5OSBSRVRVUk4gMAoxMDAgUkVUVVJOIDEKRW5kIEZ1bmN0aW9uCgpGdW5jdGlvbiBEaXNwbGF5KCkgVWludDY0CjEwIElGIEFTU0VUVkFMVUUoU0NJRCgpKSAhPSAxIFRIRU4gR09UTyAxMDAKMjAgU1RPUkUoIm93bmVyIixBRERSRVNTX1NUUklORyhTSUdORVIoKSkpCjk5IFJFVFVSTiAwCjEwMCBSRVRVUk4gMQpFbmQgRnVuY3Rpb24KCkZ1bmN0aW9uIFJldHJpZXZlKCkgVWludDY0CjEwIElGIFNJR05FUigpICE9IEFERFJFU1NfUkFXKExPQUQoIm93bmVyIikpIFRIRU4gR09UTyAxMDAKMjAgU0VORF9BU1NFVF9UT19BRERSRVNTKFNJR05FUigpLDEsU0NJRCgpKQozMCBTVE9SRSgib3duZXIiLCIiKQo5OSBSRVRVUk4gMAoxMDAgUkVUVVJOIDEKRW5kIEZ1bmN0aW9uCg=="
       }
-    },
-    "pinataContent": islandMeta
-  });
-
-  const subPinata = await fetch('https://api.pinata.cloud/pinning/pinJSONToIPFS', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json','authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiJhNjc5NzU5MS02OGUxLTQyNzAtYjZhMy01NjBjN2Y3M2IwYTMiLCJlbWFpbCI6ImJhY2tlbmRAYW1icm9zaWEubW9uZXkiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwicGluX3BvbGljeSI6eyJyZWdpb25zIjpbeyJpZCI6IkZSQTEiLCJkZXNpcmVkUmVwbGljYXRpb25Db3VudCI6MX0seyJpZCI6Ik5ZQzEiLCJkZXNpcmVkUmVwbGljYXRpb25Db3VudCI6MX1dLCJ2ZXJzaW9uIjoxfSwibWZhX2VuYWJsZWQiOmZhbHNlLCJzdGF0dXMiOiJBQ1RJVkUifSwiYXV0aGVudGljYXRpb25UeXBlIjoic2NvcGVkS2V5Iiwic2NvcGVkS2V5S2V5IjoiMDgzZTJkMGQ2Yzg2YTBhNjlkY2YiLCJzY29wZWRLZXlTZWNyZXQiOiJlN2VlMTE4MWM2YTBlN2FmNjQ0YmUzZmEyYmU1ZWY5ZWFmMmNmMmYyYzc0NWQzZGIxNDdiMThhOTU5NWMwZDNlIiwiaWF0IjoxNjYxMTk1NjUxfQ.9Pz2W_h7zCiYyuRuVySKcDwA2fl_Jbm6QDulihAIpmo`
-   },
-    
-          body:  subData
-  });
-
-  
-  const addSub= await state.ipfs.add(JSON.stringify(islandMeta).toString())
-  const M =addSub.cid.toString()
-
-  const txData = new Object(
-    {
-      "scid": state.scid,
-    "ringsize": 2,
-    "transfers": transfers,
-    "sc_rpc": [{
-      "name": "entrypoint",
-      "datatype": "S",
-      "value": "AOMT"
-    },
-    {
-      "name": "Am",
-      "datatype": "U",
-      "value":parseInt(event.target.amount.value*100000)
-    },
-    {
-      "name": "I",
-      "datatype": "U",
-      "value":parseInt(interval)
-    },
-    {
-      "name":"L",
-      "datatype":"U",
-      "value":parseInt(event.target.limit.value)
-    },
-    {
-      "name":"Ad",
-      "datatype": "S",
-      "value": event.target.address.value
-    },
-    {
-      "name": "H",
-      "datatype": "S",
-      "value": event.target.island.value
-    },
-    {
-      "name":"i",
-      "datatype":"U",
-      "value":0
-    },
-    {
-      "name":"W",
-      "datatype":"U",
-      "value":whitelisted
-    },
-    {
-      "name": "M",
-      "datatype": "S",
-      "value": M
-    },
-    {
-      "name":"j",
-      "datatype":"U",
-      "value":parseInt(event.target.j.value)
-    }
-    ]
-    }
-  )
-  sendTransaction(txData)
- /*  const [err, res] = await to(deroBridgeApi.wallet('start-transfer', {
-    "scid": state.scid,
-    "ringsize": 2,
-    "transfers": transfers,
-    "sc_rpc": [{
-      "name": "entrypoint",
-      "datatype": "S",
-      "value": "AOMT"
-    },
-    {
-      "name": "Am",
-      "datatype": "U",
-      "value":parseInt(event.target.amount.value*100000)
-    },
-    {
-      "name": "I",
-      "datatype": "U",
-      "value":parseInt(interval)
-    },
-    {
-      "name":"L",
-      "datatype":"U",
-      "value":parseInt(event.target.limit.value)
-    },
-    {
-      "name":"Ad",
-      "datatype": "S",
-      "value": event.target.address.value
-    },
-    {
-      "name": "H",
-      "datatype": "S",
-      "value": event.target.island.value
-    },
-    {
-      "name":"i",
-      "datatype":"U",
-      "value":0
-    },
-    {
-      "name":"W",
-      "datatype":"U",
-      "value":whitelisted
-    },
-    {
-      "name": "M",
-      "datatype": "S",
-      "value": M
-    },
-    {
-      "name":"j",
-      "datatype":"U",
-      "value":parseInt(event.target.j.value)
-    }
-    ]
-  })) */
-  
-//------------------SMOKE SIGNALS-------------------------------------
-}else if(addition=="ss"){
-
-  var signalMeta = {
-    name:event.target.fundName.value,
-    image:event.target.fundPhoto.value,
-    tagline:event.target.fundTagline.value,
-    description:event.target.description.value
-    
-  }
-
-  var signalData = JSON.stringify({
-    "pinataOptions": {
-      "cidVersion": 0
-    },
-    "pinataMetadata": {
-      "name": event.target.island.value+"_SmokeSignal_0_"+event.target.fundName.value,
-      "keyvalues": {
-      }
-    },
-    "pinataContent": signalMeta
-  });
-
-  const signalPinata = await fetch('https://api.pinata.cloud/pinning/pinJSONToIPFS', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json','authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiJhNjc5NzU5MS02OGUxLTQyNzAtYjZhMy01NjBjN2Y3M2IwYTMiLCJlbWFpbCI6ImJhY2tlbmRAYW1icm9zaWEubW9uZXkiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwicGluX3BvbGljeSI6eyJyZWdpb25zIjpbeyJpZCI6IkZSQTEiLCJkZXNpcmVkUmVwbGljYXRpb25Db3VudCI6MX0seyJpZCI6Ik5ZQzEiLCJkZXNpcmVkUmVwbGljYXRpb25Db3VudCI6MX1dLCJ2ZXJzaW9uIjoxfSwibWZhX2VuYWJsZWQiOmZhbHNlLCJzdGF0dXMiOiJBQ1RJVkUifSwiYXV0aGVudGljYXRpb25UeXBlIjoic2NvcGVkS2V5Iiwic2NvcGVkS2V5S2V5IjoiMDgzZTJkMGQ2Yzg2YTBhNjlkY2YiLCJzY29wZWRLZXlTZWNyZXQiOiJlN2VlMTE4MWM2YTBlN2FmNjQ0YmUzZmEyYmU1ZWY5ZWFmMmNmMmYyYzc0NWQzZGIxNDdiMThhOTU5NWMwZDNlIiwiaWF0IjoxNjYxMTk1NjUxfQ.9Pz2W_h7zCiYyuRuVySKcDwA2fl_Jbm6QDulihAIpmo`
-   },
-    
-          body:  signalData
-  });
-
-  
-  const addSignal= await state.ipfs.add(JSON.stringify(signalMeta).toString())
-  const m =addSignal.cid.toString()
-  var deadline = new Date(event.target.deadline.value).getTime()/1000
-
-  const txData = new Object(
-    {
-      "scid": state.scid,
-    "ringsize": 2,
-    "transfers": transfers,
-    "sc_rpc": [{
-      "name": "entrypoint",
-      "datatype": "S",
-      "value": "NF"
-    },
-    {
-      "name": "G",
-      "datatype": "U",
-      "value": parseInt(event.target.goal.value*100000)
-    },
-    {
-      "name":"D",
-      "datatype":"U",
-      "value":deadline
-    },
-    {
-      "name":"A",
-      "datatype":"S",
-      "value":event.target.address.value
-    },
-    {
-      "name": "H",
-      "datatype": "S",
-      "value": event.target.island.value
-    },
-    {
-      "name": "i",
-      "datatype": "U",
-      "value": 0
-    },
-    {
-      "name":"M",
-      "datatype":"S",
-      "value":M
-    },
-    {
-      "name":"m",
-      "datatype":"S",
-      "value":m
-    },
-    {
-      "name":"j",
-      "datatype":"U",
-      "value":parseInt(event.target.j.value)
-    }
-    ]
-    }
-  )
-  sendTransaction(txData)
-
- /*  const [err, res] = await to(deroBridgeApi.wallet('start-transfer', {
-    "scid": state.scid,
-    "ringsize": 2,
-    "transfers": transfers,
-    "sc_rpc": [{
-      "name": "entrypoint",
-      "datatype": "S",
-      "value": "NF"
-    },
-    {
-      "name": "G",
-      "datatype": "U",
-      "value": parseInt(event.target.goal.value*100000)
-    },
-    {
-      "name":"D",
-      "datatype":"U",
-      "value":deadline
-    },
-    {
-      "name":"A",
-      "datatype":"S",
-      "value":event.target.address.value
-    },
-    {
-      "name": "H",
-      "datatype": "S",
-      "value": event.target.island.value
-    },
-    {
-      "name": "i",
-      "datatype": "U",
-      "value": 0
-    },
-    {
-      "name":"M",
-      "datatype":"S",
-      "value":M
-    },
-    {
-      "name":"m",
-      "datatype":"S",
-      "value":m
-    },
-    {
-      "name":"j",
-      "datatype":"U",
-      "value":parseInt(event.target.j.value)
-    }
-    ]
-  })) */
-//----------------------BURIED TREASURES-------------------------------
-}else{
-
- 
-/*   const [err0, res0] = await to(deroBridgeApi.daemon('get-sc', {
-          scid:state.scid,
-          code:false,
-          variables:true
-  })) */
-
-  const res0 = await getSC(state.scid)
-  
-
-var executer = event.target.executer.value
-if(executer=="self")executer=event.target.island.value
-
-var judge = event.target.judge.value
-if(judge=="self")judge=event.target.island.value
-
-    var expiry = new Date(event.target.expiry.value).getTime()/1000 + new Date().getTimezoneOffset()*60
-    
-
-    var treasureMeta = {
-      "name": event.target.bountyName.value,
-      "image": event.target.bountyPhoto.value,
-      "expiry": expiry,
-      "tagline": event.target.tagline.value,
-      "description": event.target.description.value,
-      "judges":[judge],
-      "executers":[executer],
-      "island":event.target.island.value
-    }
-
-
-  
-
-    var treasureData = JSON.stringify({
-      "pinataOptions": {
-        "cidVersion": 0
-      },
-      "pinataMetadata": {
-        "name": event.target.island.value+"_Buried Treasure_0_"+event.target.bountyName.value,
-        "keyvalues": {
-        }
-      },
-      "pinataContent": treasureMeta
-    });
-
-
- 
-
-    const treasurePinata = await fetch('https://api.pinata.cloud/pinning/pinJSONToIPFS', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json','authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiJhNjc5NzU5MS02OGUxLTQyNzAtYjZhMy01NjBjN2Y3M2IwYTMiLCJlbWFpbCI6ImJhY2tlbmRAYW1icm9zaWEubW9uZXkiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwicGluX3BvbGljeSI6eyJyZWdpb25zIjpbeyJpZCI6IkZSQTEiLCJkZXNpcmVkUmVwbGljYXRpb25Db3VudCI6MX0seyJpZCI6Ik5ZQzEiLCJkZXNpcmVkUmVwbGljYXRpb25Db3VudCI6MX1dLCJ2ZXJzaW9uIjoxfSwibWZhX2VuYWJsZWQiOmZhbHNlLCJzdGF0dXMiOiJBQ1RJVkUifSwiYXV0aGVudGljYXRpb25UeXBlIjoic2NvcGVkS2V5Iiwic2NvcGVkS2V5S2V5IjoiMDgzZTJkMGQ2Yzg2YTBhNjlkY2YiLCJzY29wZWRLZXlTZWNyZXQiOiJlN2VlMTE4MWM2YTBlN2FmNjQ0YmUzZmEyYmU1ZWY5ZWFmMmNmMmYyYzc0NWQzZGIxNDdiMThhOTU5NWMwZDNlIiwiaWF0IjoxNjYxMTk1NjUxfQ.9Pz2W_h7zCiYyuRuVySKcDwA2fl_Jbm6QDulihAIpmo`
-     },
-      
-            body:  treasureData
-    });
+     )
 
    
- 
     
-      
-     const addTreasure= await state.ipfs.add(JSON.stringify(treasureMeta).toString())
-     const m =addTreasure.cid.toString()
 
-     transfers=[]
+    let newIslandSCID = await sendTransaction(mintData)
+    setIslandSCID(newIslandSCID)
+    setSearchParams({"status":"minted","scid":newIslandSCID,"name":event.target.island.value})
 
-     if(state.cocoBalance<burn){
-      transfers.push({
-        "destination":state.randomAddress,
-        "burn":burn*100 +parseInt(event.target.treasure.value)*100000
+    setIslandName(event.target.island.value)
 
+
+
+    //-----------------Basic Island------------------------------
+    
+
+   
+
+
+    /*  .then(new async function getIslandBalance(newIslandSCID){
+      let balance = await getBalance(newIslandSCID)
+      if(balance==0){
+        setTimeout(getIslandBalance(newIslandSCID),1000)
+      }else return(newIslandSCID)
       })
-    }else{
-      transfers.push( {
+      .then((newIslandSCID)=>{
+        const registrationData = {
+         "scid": state.scid_registry,
+         "ringsize": 2,
+         "transfers": [
+           {
+             "destination": state.randomAddress,
+             "burn": 10000
+           },
+           {
+             "destination": state.randomAddress,
+             "burn": 1,
+             "scid": newIslandSCID
+           }
+         ],
+         "sc_rpc": [
+           {
+             "name": "entrypoint",
+             "datatype": "S",
+             "value": "RegisterAsset"
+           },
+           {
+             "name": "name",
+             "datatype": "S",
+             "value": event.target.island.value
+           },
+           {
+             "name": "collection",
+             "datatype": "S",
+             "value": "PRIVATE-ISLANDS"
+           },
+           {
+             "name": "scid",
+             "datatype": "S",
+             "value": newIslandSCID
+           }
+         ]
+       };
+   
+       return sendTransaction(registrationData);
+      }) */
        
-        "scid": state.coco,
-        "burn": burn
-      },
-    {
-      "destination":state.randomAddress,
-      "burn":parseInt(event.target.treasure.value)*100000
-    })
-    }
-    if(event.target.judge.value!="self"){
-
-      const judgeAddress=hex2a(res0.stringkeys[`${event.target.judge.value}_O`])
-      const judgeMsg = new Object(
-        {
-          "ringsize":2,
-          "transfers":[
-          {"destination":judgeAddress,
-          "amount":1,
-              
-          "payload_rpc":[
-                  {
-                          "name": "C",
-                          "datatype": "S",
-                          "value": "You have been nominated for bounty judge by: " +event.target.island.value
-                  }]
-                  }]
-        }
-      )
-      sendTransaction(judgeMsg)
-
-/*     const [err3,res3] =await to(deroBridgeApi.wallet('start-transfer',{
-      "ringsize":2,
-      "transfers":[
-      {"destination":judgeAddress,
-      "amount":1,
-          
-      "payload_rpc":[
-              {
-                      "name": "C",
-                      "datatype": "S",
-                      "value": "You have been nominated for bounty judge by: " +event.target.island.value
-              }]
-              }]
-    })) */
-}
-if(event.target.executer.value!="self"){
-
-  const execAddress=hex2a(res0.stringkeys[`${event.target.executer.value}_O`])
-  const execMsg = new Object(
-    {
-      "ringsize":2,
-      "transfers":[
-      {"destination":execAddress,
-      "amount":1,
-          
-      "payload_rpc":[
-              {
-                      "name": "C",
-                      "datatype": "S",
-                      "value": "You have been nominated for bounty executer by: " +event.target.island.value
-              }]
-              }]
-    }
-  )
-  sendTransaction(execMsg)
-
-/* const [err3,res3] =await to(deroBridgeApi.wallet('start-transfer',{
-  "ringsize":2,
-  "transfers":[
-  {"destination":execAddress,
-  "amount":1,
-      
-  "payload_rpc":[
-          {
-                  "name": "C",
-                  "datatype": "S",
-                  "value": "You have been nominated for bounty executer by: " +event.target.island.value
-          }]
-          }]
-})) */
-}
-    const btTX = new Object(
-      {
-        "scid": state.scid,
-      "ringsize": 2,
-      "transfers": transfers,
-      "sc_rpc": [{
-        "name": "entrypoint",
-        "datatype": "S",
-        "value": "BT"
-      },
-
-      {
-        "name": "H",
-        "datatype": "S",
-        "value": event.target.island.value
-      },
-      {
-        "name": "i",
-        "datatype": "U",
-        "value": 0
-      },
-      {
-        "name": "J",
-        "datatype": "S",
-        "value": judge
-      },
-      {
-        "name": "X",
-        "datatype": "S",
-        "value": executer
-      },
-      {
-        "name": "E",
-        "datatype": "U",
-        "value": expiry
-      },
-      {
-        "name": "M",
-        "datatype" : "S",
-        "value": M
-      },
-      {
-        "name": "m",
-        "datatype" : "S",
-        "value": m
-      },
-      {
-        "name":"j",
-        "datatype":"U",
-        "value":parseInt(event.target.j.value)
-      }
-      ]
-      }
-    )
-    sendTransaction(btTX)
-
-    /* const [err, res] = await to(deroBridgeApi.wallet('start-transfer', {
-      "scid": state.scid,
-      "ringsize": 2,
-      "transfers": transfers,
-      "sc_rpc": [{
-        "name": "entrypoint",
-        "datatype": "S",
-        "value": "BT"
-      },
-
-      {
-        "name": "H",
-        "datatype": "S",
-        "value": event.target.island.value
-      },
-      {
-        "name": "i",
-        "datatype": "U",
-        "value": 0
-      },
-      {
-        "name": "J",
-        "datatype": "S",
-        "value": judge
-      },
-      {
-        "name": "X",
-        "datatype": "S",
-        "value": executer
-      },
-      {
-        "name": "E",
-        "datatype": "U",
-        "value": expiry
-      },
-      {
-        "name": "M",
-        "datatype" : "S",
-        "value": M
-      },
-      {
-        "name": "m",
-        "datatype" : "S",
-        "value": m
-      },
-      {
-        "name":"j",
-        "datatype":"U",
-        "value":parseInt(event.target.j.value)
-      }
-      ]
-    }))
-
-
-    console.log(err)
-    console.log(res)
- */
+     
     
 
-  
-    
-
-  
+   
 
 
-
-}
-setSearchParams({"status":"success"})
 
   })
+
+  const checkWalletForIsland = async ()=>{
+    if(!islandSCID) return
+    console.log("checkwalletforisland")
+    const islandBalance = await getBalance(islandSCID)
+
+    setIslandInWallet(islandBalance)
+    if(islandBalance==1){
+      setSearchParams({"status":"inWallet","name":islandName,"scid":islandSCID})
+    }
+    
+  }
+
+  const registerIsland = async ()=>{
+    
+    //check registry to see if name is taken
+      const res0 = await getSC(state.scid_registry)
+      var search= `S::PRIVATE-ISLANDS::${islandName}`
+      var island_scid = res0.stringkeys[search]
+       //----------Errors--------------------------
+    if(island_scid){
+      setError("this island is taken")
+      return
+    }
+
+    const registrationData = {
+      "scid": state.scid_registry,
+      "ringsize": 2,
+      "transfers": [
+        {
+          "destination": state.randomAddress,
+          "burn": 10000
+        },
+        {
+          "destination": state.randomAddress,
+          "burn": 1,
+          "scid": islandSCID
+        }
+      ],
+      "sc_rpc": [
+        {
+          "name": "entrypoint",
+          "datatype": "S",
+          "value": "RegisterAsset"
+        },
+        {
+          "name": "name",
+          "datatype": "S",
+          "value": islandName
+        },
+        {
+          "name": "collection",
+          "datatype": "S",
+          "value": "PRIVATE-ISLANDS"
+        },
+        {
+          "name": "scid",
+          "datatype": "S",
+          "value": islandSCID
+        }
+      ]
+    };
+
+   sendTransaction(registrationData);
+   setSearchParams({"status":"registered","name":islandName,"scid":islandSCID})
+
+     
+
+
+
+
+  }
+  const updateMetaData = async (event) =>{
+    event.preventDefault()
+     
+    let fee
+    if(event.target.bio.value.length>380) fee = 10000
+
+     const metaDataData = {
+      "scid": islandSCID,
+      "ringsize": 2,
+      "fees":fee,
+      "transfers": [
+        {
+          "destination": state.randomAddress,
+          "burn": 1,
+          "scid": islandSCID
+        }
+      ],
+      "sc_rpc": [
+        {
+          "name": "entrypoint",
+          "datatype": "S",
+          "value": "SetMetadata"
+        },
+        {
+          "name": "Image",
+          "datatype": "S",
+          "value": event.target.image.value
+        },
+        {
+          "name": "Tagline",
+          "datatype": "S",
+          "value": event.target.tagline.value
+        },
+        {
+          "name": "Bio",
+          "datatype": "S",
+          "value":event.target.bio.value
+        }
+      ]
+    };
+    
+    sendTransaction(metaDataData)
+    setSearchParams({"status":"success","name":islandName,"scid":islandSCID})
+
+
+  }
+
+
   const selectAddition = e=>{
     e.preventDefault();
     setAddition(e.target.value)
    }
 
-   React.useEffect(() => {
-    getJudges()
-      
-    },[state])
+ 
 
 
   return (
     <div className="function">
       {searchParams.get("status")=="success"?
       <Success/>
+      :searchParams.get("status")=="minted"?
+      <div className="profile">
+      
+      
+      
+      <h3>Wait For Asset to Appear in Your Wallet</h3>
+      <p>Wait a block or two and check your wallet for the newly minted Island asset.</p>
+      <button onClick={()=>checkWalletForIsland()}>Check Wallet</button>
+      
+    </div>
+      :searchParams.get("status")=="inWallet"?
+      <div className="profile">
+      
+      
+      
+      <h3>Register your Island to the Private Islands Archipelago</h3>
+      <p>This will register your island to the Private Islands Archipelago. Registration costs 0.1 Dero.</p>
+      
+      <button onClick={()=>registerIsland()}>Register</button>
+      {error}
+    </div>
+      :searchParams.get("status")=="registered"?
+      <div className="profile">
+      
+      
+      
+      <h3>Update Your Private Island Metadata</h3>
+      <p>This will create a native Dero asset and send it to your wallet. This asset is the key to your Private Island.</p>
+      <form onSubmit={updateMetaData}>
+        <input placeholder="Image URL" id="image" type="text"/>
+        <input placeholder="Tagline" id="tagline" type="text" />
+        <textarea placeholder="Description" rows="44" cols="80" id="bio"/>
+        
+        
+        
+        <p>&nbsp;</p>
+        <Button size='sm' type={"submit"}>Create</Button>
+      </form>
+      {islandSCID && "here's the scid for your island "+islandSCID}
+      {error}
+    </div>
       :<div className="profile">
       
       
       
-      <h3>Claim Your Private Island</h3>
-      <p>Claiming a new island will cost 1000 coco. If you don't have enough coco it will instead cost 1 Dero.</p>
-      <form onSubmit={DoIt}>
+      <h3>Mint Your Private Island</h3>
+      <p>This will create a native Dero asset and send it to your wallet. This asset is the key to your Private Island.</p>
+      <form onSubmit={Mint}>
         <input placeholder="Island Name" id="island" type="text" />
-        <input placeholder="Image URL" id="image" type="text"/>
-        <input placeholder="Tagline" id="tagline" type="text" />
-        <textarea placeholder="Description" rows="44" cols="80" id="bio"/>
-        <p>Would you like to make yourself available as judge or executer for Buried Treasure Bounties?</p>
-        <select id="j"><option value="0">Neither</option><option value="1">Judge</option><option value="2">Executer</option><option value="3">Both</option></select>
-        <p>You can add either a subscription tier, a smoke signal fundraiser, or a buried treasure bounty for no additional cost.</p>
-        <select id="addition" onChange={selectAddition}><option value="">Just the Island for Now</option><option value="sub">Subscription</option><option value="ss">Fundraiser</option><option value="bt">Bounty</option></select>
-        {addition=="sub"?<>
-        <h3>Message-In-A-Bottle Subscription</h3>
-        <p>This is where you can post content for your subscribers. All parameters may be changed in future.</p>
-        <input placeholder="Tier Name" id="tierName" type="text"/>
-        <input placeholder="Perks" id="perks" type="text"/>
-        <input placeholder="address" id="address" type="text"/>
-        <input placeholder="max number of subscribers" id="limit" type="text"/>
-        <p>Can anybody subscribe or will there be a whitelist?</p>
-        <p>whitelisted<input id="wl" type="checkbox"/></p>
-        <input placeholder="Amount(Dero)" id="amount" type="text" />
-        <select onChange={handleChange} id="interval">
-      <option value="2629800">Monthly</option>
-      <option value="7889400">Quarterly</option>
-      <option value="31557600">Anual</option>
-      <option value="custom">Custom</option>
-    </select>
-    {custom?<input placeholder = "Subscription Interval in Seconds" id="custom-interval" type="text" />:""}
+  
         
-        </>:
-        addition=="ss"?<>
-        <h3>Smoke Signal Fundraiser</h3>
-        <p>Set a fundraising goal and a deadline. If your goal is met before the deadline, funds can be withdrawn to the specified address. Otherwise, funds are returned to supporters. All parameters are immutable.</p>
-        <input placeholder="Smoke Signal Name" id="fundName"/>
-        <input placeholder="Image URL" id="fundPhoto"/>
-        <input placeholder="Tagline" id="fundTagline"/>
-        <p>Deadline</p>
-        <input type="date" id="deadline" name="deadline"></input>
-        
-        <textarea placeholder="Description" rows="44" cols="80" id="description"/>
-        <input placeholder="Goal" id="goal" type="text" />
-        <input placeholder="Address" id="address" type="text" />
-        
-        </>:
-        addition=="bt"?
-        <>
-        <h3>Buried Treasure Bounty</h3>
-        <p>Bury some treasure on your private island. Others can add to the treasure, and it will only be released once the task has been accomplished. Here you must nominate an existing island operator to act as judge, and another to act as executer. All parameters are immutable.</p>
-        <input placeholder="Buried Treasure Name" id="bountyName"/>
-        <input placeholder="Image URL" id="bountyPhoto"/>
-        <input placeholder="Tagline" id="bountyTagline"/>
-        <p>Expiry (if the task isn't complete before this date, supporters can retrieve their funds)</p>
-        <input type="date" id="expiry" name="expiry"></input>
-        
-        <textarea placeholder="Description" rows="44" cols="80" id="description"/>
-        <input placeholder="Initial Treasure (Dero Amount)" id="treasure" type="text" />
-        <p>Nominate a Judge. This person sorts through treasure claims and chooses who is entitled to the funds. The judge is paid 10% of the treasure for this work. Backup judges can be nominated later.</p>
-        <select id="judge"><option value="self">Nominate this Island</option>{judges}</select>
-        <p>Nominate an Executer. This person releases the treasure according to the judge's judgement, or he may veto the decision if he believes it to be in error. He is not paid. Backup executers can be nominated later.</p>
-        <select id="executer"><option value="self">Nominate this Island</option>{execs}</select>
-        
-        </>:""}
         <p>&nbsp;</p>
         <Button size='sm' type={"submit"}>Create</Button>
       </form>
+      {islandSCID && "here's the scid for your island "+islandSCID}
       {error}
     </div>}
     </div>
