@@ -178,7 +178,7 @@ export default function Fundraiser() {
 
     const txData = new Object(
       {
-        "scid": state.scid_bounties,
+        "scid": state.scid_fundraisers,
         "ringsize": 2,
         "fees":fee,
         "transfers": transfers,
