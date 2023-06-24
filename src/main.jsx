@@ -1,48 +1,47 @@
-import React from "react";
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import { HashRouter, BrowserRouter, Route, Routes } from 'react-router-dom';
+import App from './App';
+import './index.css';
+import { LoginProvider } from './LoginContext';
+import OAO from './components/oao';
+import CEO from './components/ceo';
+import BountyList from './components/bountyList';
+import Treasure from './components/treasure';
+import MyIsland from './components/myIsland';
+import ClaimIsland from './components/claimIsland';
+import IslandList from './components/islandList';
+import Island from './components/island';
+import PublishPost from './components/publishPost';
+import ModifyTier from './components/modifyTier';
+import About from './components/about';
+import FundList from './components/fundList';
+import Fundraiser from './components/fundraiser';
+import CreateFund from './components/addFundraiser';
+import BuryTreasure from './components/buryTreasure';
+import Test from './components/simulatorTest';
+import { PageHeader } from '@/components/header/PageHeader.jsx';
 
-import ReactDOM from "react-dom";
-
-import { HashRouter, BrowserRouter, Route, Routes } from "react-router-dom";
-import App from "./App";
-import "./index.css";
-import { LoginProvider } from "./LoginContext";
-import OAO from "./components/oao";
-import CEO from "./components/ceo";
-import BountyList from "./components/bountyList";
-import Treasure from "./components/treasure";
-import MyIsland from "./components/myIsland";
-import ClaimIsland from "./components/claimIsland";
-import IslandList from "./components/islandList";
-import Island from "./components/island";
-import PublishPost from "./components/publishPost";
-import ModifyTier from "./components/modifyTier";
-import About from "./components/about";
-import FundList from "./components/fundList";
-import Fundraiser from "./components/fundraiser";
-import CreateFund from "./components/addFundraiser";
-import BuryTreasure from "./components/buryTreasure";
-import Test from "./components/simulatorTest";
-
-import "./polyfills";
-import "@rainbow-me/rainbowkit/styles.css";
-import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
-import { configureChains, createClient, WagmiConfig } from "wagmi";
-import { mainnet, polygon, optimism, arbitrum } from "wagmi/chains";
-import { alchemyProvider } from "wagmi/providers/alchemy";
-import { publicProvider } from "wagmi/providers/public";
-import RevenueShare from "./components/revenueShare";
+import './polyfills';
+import '@rainbow-me/rainbowkit/styles.css';
+import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
+import { configureChains, createClient, WagmiConfig } from 'wagmi';
+import { mainnet, polygon, optimism, arbitrum } from 'wagmi/chains';
+import { alchemyProvider } from 'wagmi/providers/alchemy';
+import { publicProvider } from 'wagmi/providers/public';
+import RevenueShare from './components/revenueShare';
 
 const { chains, provider } = configureChains(
   [mainnet],
   [
-    alchemyProvider({ apiKey: "EMDm4apXsi2nDwfYW5C9_OI1xUI81YG-" }),
+    alchemyProvider({ apiKey: 'EMDm4apXsi2nDwfYW5C9_OI1xUI81YG-' }),
     publicProvider(),
   ]
 );
 
 const { connectors } = getDefaultWallets({
-  appName: "Private Islands",
-  projectId: "2b3da2ac8bbb9474e8580033fecfeb75",
+  appName: 'Private Islands',
+  projectId: '2b3da2ac8bbb9474e8580033fecfeb75',
   chains,
 });
 
@@ -52,11 +51,12 @@ const wagmiClient = createClient({
   provider,
 });
 
-ReactDOM.createRoot(document.getElementById("root")).render(
+createRoot(document.getElementById('root')).render(
   <LoginProvider>
     <WagmiConfig client={wagmiClient}>
       <RainbowKitProvider chains={chains}>
         <HashRouter>
+          <PageHeader />
           <Routes>
             <Route path="/" element={<App />}>
               <Route path="/about" element={<About />} />

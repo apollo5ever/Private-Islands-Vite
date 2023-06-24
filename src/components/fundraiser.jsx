@@ -3,13 +3,11 @@ import {useParams} from 'react-router-dom';
 import {LoginContext} from '../LoginContext';
 import getFundraisers from './getFundraisers';
 import {useSendTransaction} from '../useSendTransaction';
-import {Button} from 'react-daisyui';
+import {Button} from '@/components/common/Button.jsx';
 import {SignalHeader} from "@/components/smokeSignal/SignalHeader.jsx";
 import {default as GI} from './getIslands'
 
-
 export default function Fundraiser() {
-
   const [signal, setSignal] = React.useState({})
   const params = useParams()
   const island = params.island
@@ -26,18 +24,14 @@ export default function Fundraiser() {
   }
 
   const getFunds = React.useCallback(async () => {
-    let profile = await GI(state,island)
-     
-     setSignal(profile.fundraisers[index])
-      
+      let profile = await GI(state, island)
+      setSignal(profile.fundraisers[index])
     }
   )
-
 
   const withdraw = React.useCallback(async (event) => {
     event.preventDefault()
     var hash = signal.scid
-    //const deroBridgeApi = state.deroBridgeApiRef.current
 
     const data = new Object(
       {
@@ -59,34 +53,11 @@ export default function Fundraiser() {
             "value": parseInt(params.index)
           }
         ]
-
       }
     )
 
     sendTransaction(data)
-    /*     const [err, res] = await to(deroBridgeApi.wallet('start-transfer', {
-          "scid": state.scid,
-          "ringsize": 2,
-          "sc_rpc": [{
-              "name": "entrypoint",
-              "datatype": "S",
-              "value": "WFF"
-          },
-          {
-              "name": "H",
-              "datatype": "S",
-              "value": hash
-          },
-          {
-            "name":"i",
-            "datatype": "U",
-            "value" : parseInt(params.index)
-          }
-      ]
-      })) */
-
   })
-
 
   const supportGoal = React.useCallback(async (event) => {
     event.preventDefault()
@@ -96,11 +67,7 @@ export default function Fundraiser() {
     } else {
       var refundable = 0
     }
-//console.log(HashAndIndex,refundable,state.scid,state.randomAddress)
 
-
-    // const deroBridgeApi = state.deroBridgeApiRef.current
-//console.log('STATE',state)
     const data = new Object(
       {
         "scid": state.scid,
@@ -129,58 +96,32 @@ export default function Fundraiser() {
     )
 
     sendTransaction(data)
-
-    /*     const [err, res] = await to(deroBridgeApi.wallet('start-transfer', {
-          "scid": state.scid,
-          "ringsize": 2,
-          "transfers": [{
-             "burn": (parseInt((event.target.amount.value)*100000)),
-             "destination":state.randomAddress
-           }],
-          "sc_rpc": [{
-              "name": "entrypoint",
-              "datatype": "S",
-              "value": "SG"
-          },
-          {
-              "name": "H",
-              "datatype": "S",
-              "value": HashAndIndex
-          },
-          {
-            "name":"R",
-            "datatype": "U",
-            "value" : refundable
-          }
-      ]
-      })) */
   })
-
 
   if (signal) {
     var deadline = new Date(signal.deadline * 1000)
     var deadlinestring = (deadline.getMonth() + 1).toString() + "/" + deadline.getDate().toString() + "/" + deadline.getUTCFullYear().toString()
   }
 
-  const SetMetaData = React.useCallback(async (event) =>{
+  const SetMetaData = React.useCallback(async (event) => {
     event.preventDefault()
     const transfers = [
       {
-        "destination":state.randomAddress,
-        "scid":signal.scid,
-        "burn":1
+        "destination": state.randomAddress,
+        "scid": signal.scid,
+        "burn": 1
       }
     ]
 
     let fee
-    if(event.target.Description.value.length>360) fee = 10000
+    if (event.target.Description.value.length > 360) fee = 10000
 
 
     const txData = new Object(
       {
         "scid": state.scid_fundraisers,
         "ringsize": 2,
-        "fees":fee,
+        "fees": fee,
         "transfers": transfers,
         "sc_rpc": [{
           "name": "entrypoint",
@@ -224,7 +165,6 @@ export default function Fundraiser() {
     )
     sendTransaction(txData)
 
-  
 
     setSearchParams({"status": "success"})
 
@@ -232,23 +172,26 @@ export default function Fundraiser() {
 
   React.useEffect(() => {
     console.log("executed only once!");
-    //checkRaised();
     getFunds();
   }, [state.ipfs]);
 
   return (<div className="function">
-      {!editing && state.myIslands && state.myIslands.length>0 && island==state.myIslands[state.active].name?
-          <small onClick={()=>{setEditing(true)}}>edit</small>
-          :<></>
-          }
-          {signal && editing?<form onSubmit={SetMetaData}>
-            <small onClick={()=>{setEditing(false)}}>cancel</small>
-            <input placeholder="name" defaultValue={signal.name} id="Name"/>
-          <input placeholder="image url" defaultValue={signal.image} id="Image" />
-          <input placeholder="tagline" defaultValue={signal.tagline} id="Tagline" />
-          <textarea placeholder="description" rows="44" cols="80" defaultValue={signal.description} id="Description"/>
-          <button type={"submit"}>Submit</button>
-          </form>:<></>}
+      {!editing && state.myIslands && state.myIslands.length > 0 && island == state.myIslands[state.active].name ?
+        <small onClick={() => {
+          setEditing(true)
+        }}>edit</small>
+        : <></>
+      }
+      {signal && editing ? <form onSubmit={SetMetaData}>
+        <small onClick={() => {
+          setEditing(false)
+        }}>cancel</small>
+        <input placeholder="name" defaultValue={signal.name} id="Name" />
+        <input placeholder="image url" defaultValue={signal.image} id="Image" />
+        <input placeholder="tagline" defaultValue={signal.tagline} id="Tagline" />
+        <textarea placeholder="description" rows="44" cols="80" defaultValue={signal.description} id="Description" />
+        <button type={"submit"}>Submit</button>
+      </form> : <></>}
       {signal ? <>
         <SignalHeader signal={signal} deadline={deadlinestring} />
         <p dangerouslySetInnerHTML={{__html: signal.description}} />
@@ -280,7 +223,7 @@ export default function Fundraiser() {
                   </form>
                 </> : ""}
         </div>
-        </> : <p>Loading...</p>}
+      </> : <p>Loading...</p>}
     </div>
   )
 }

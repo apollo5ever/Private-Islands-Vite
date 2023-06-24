@@ -4,20 +4,20 @@ import React, {
   useContext,
   useRef,
   useCallback,
-} from "react";
-import PopUpMenu from "./popup";
-import { Outlet, NavLink, Link } from "react-router-dom";
-import * as FaIcons from "react-icons/fa";
-import "./App.css";
-import { LoginContext } from "./LoginContext";
-import { useGetSC } from "./useGetSC";
-import { default as GI } from "./components/getIslands";
-import hex2a from "./components/hex2a";
-import { useGetBalance } from "./useGetBalance";
-import WalletSelectButton from "@/components/wallet/WalletSelectButton.jsx";
+} from 'react';
+import PopUpMenu from './popup';
+import { Outlet, NavLink, Link } from 'react-router-dom';
+import * as FaIcons from 'react-icons/fa';
+import './App.css';
+import { LoginContext } from './LoginContext';
+import { useGetSC } from './useGetSC';
+import { default as GI } from './components/getIslands';
+import hex2a from './components/hex2a';
+import { useGetBalance } from './useGetBalance';
+import WalletSelectButton from '@/components/wallet/WalletSelectButton.jsx';
 
 function App() {
-  console.log("app rendered");
+  console.log('app rendered');
   const [menuActive, setMenuActive] = useState(false);
   const [state, setState] = useContext(LoginContext);
   const deroBridgeApiRef = useRef();
@@ -58,7 +58,7 @@ function App() {
    }, []); */
 
   const getSCID = async () => {
-    console.log("getting scid");
+    console.log('getting scid');
     /*     const deroBridgeApi = deroBridgeApiRef.current;
         const [err, res] = await to(
           deroBridgeApi.daemon("get-sc", {
@@ -67,10 +67,10 @@ function App() {
           })
         ); */
     let res = await getSC(
-      "0000000000000000000000000000000000000000000000000000000000000001",
-      ["keystore"]
+      '0000000000000000000000000000000000000000000000000000000000000001',
+      ['keystore']
     );
-    let keystore_scid = "80" + res.valuesstring[0].substring(2, 64);
+    let keystore_scid = '80' + res.valuesstring[0].substring(2, 64);
     /*     const [err2, res2] = await to(
           deroBridgeApi.daemon("get-sc", {
             scid: keystore_scid,
@@ -78,22 +78,22 @@ function App() {
           })
         ); */
     let res2 = await getSC(keystore_scid, [
-      "k:private.islands.scid",
-      "k:private.islands.coco",
+      'k:private.islands.scid',
+      'k:private.islands.coco',
     ]);
     let scid = res2.valuesstring[0];
     let coco = res2.valuesstring[1];
-    console.log("get scid results", scid, coco);
+    console.log('get scid results', scid, coco);
     setState((state) => ({ ...state, scid: scid, coco: coco }));
   };
 
   const getCocoBalance = useCallback(async () => {
     if (!state.coco) return;
-    console.log("get coco balance", state.coco);
+    console.log('get coco balance', state.coco);
     let balance = await getBalance(state.coco);
-    console.log("here is balance", balance);
+    console.log('here is balance', balance);
     if (!balance) {
-      console.log("no balance");
+      console.log('no balance');
       setTimeout(async () => {
         let balance = await getBalance(state.coco);
       }, 15000);
@@ -126,9 +126,9 @@ function App() {
      console.log(wasm)
      const { instance } = await WebAssembly.instantiateStreaming(wasm,GO.importObject);
      GO.run(instance) */
-    console.log("create worker");
-    const worker = new Worker("worker.jsx");
-    worker.postMessage({ type: "initialize" });
+    console.log('create worker');
+    const worker = new Worker('worker.jsx');
+    worker.postMessage({ type: 'initialize' });
     setState((state) => ({ ...state, worker: worker }));
 
     //  initialize()
@@ -147,7 +147,7 @@ function App() {
     //   let wallet = walletInfo.value
   }
   useEffect(() => {
-    console.log("worker", workerActive);
+    console.log('worker', workerActive);
     if (!workerActive) {
       run();
     }
@@ -155,9 +155,9 @@ function App() {
 
   async function createIPFSNode() {
     const node = await window.Ipfs.create();
-    console.log("IPFS node created:", node);
+    console.log('IPFS node created:', node);
     const validIp4 =
-      "/ip4/64.225.105.42/tcp/4001/p2p/QmPo1ygpngghu5it8u4Mr3ym6SEU2Wp2wA66Z91Y1S1g29";
+      '/ip4/64.225.105.42/tcp/4001/p2p/QmPo1ygpngghu5it8u4Mr3ym6SEU2Wp2wA66Z91Y1S1g29';
 
     const rez = await node.bootstrap.add(validIp4);
     console.log(rez.Peers);
@@ -170,7 +170,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    console.log("using effect");
+    console.log('using effect');
     async function fetchData() {
       const result = await getSCID();
       // do something with the result
@@ -188,7 +188,7 @@ function App() {
     //we have list of assets, check wallet balance for each one
     //duhhhh
     //ok
-    console.log("get those islands");
+    console.log('get those islands');
     const fullIslandList = await GI();
     //perfect now we need to check balance but do we have a wallet agnostic way to do this yet?
     //looks like we do
@@ -199,18 +199,18 @@ function App() {
       if (balance > 0) {
         myIslands.push(fullIslandList[i]);
       }
-      console.log("balance ", fullIslandList[i].scid, balance);
+      console.log('balance ', fullIslandList[i].scid, balance);
     }
     //set state array of myislands and set active island to 0
     setState((state) => ({ ...state, myIslands: myIslands, active: 0 }));
 
-    console.log("full island list", fullIslandList);
+    console.log('full island list', fullIslandList);
   };
 
   const getIslands = async () => {
-    console.log("GET ISLANDS");
+    console.log('GET ISLANDS');
     if (!state.walletList[state.activeWallet].address) return;
-    console.log("address exists");
+    console.log('address exists');
     let res = await getSC(state.scid);
     /*   const deroBridgeApi = state.deroBridgeApiRef.current;
       const [err, res] = await to(
@@ -220,12 +220,12 @@ function App() {
         })
       ); */
 
-    console.log("res", res);
+    console.log('res', res);
 
     var search = new RegExp(`.*_O`);
-    console.log("search", search);
+    console.log('search', search);
     var scData = res.stringkeys; //.map(x=>x.match(search))
-    console.log("scData", scData);
+    console.log('scData', scData);
     var myIslands = [];
 
     const myList = Object.keys(scData)
@@ -242,7 +242,7 @@ function App() {
             j: scData[`${key.substring(0, key.length - 2)}_j`],
           })
       );
-    console.log("MY LIST", myList);
+    console.log('MY LIST', myList);
     for (var i = 0; i < myList.length; i++) {
       /*     let k = myList[i].meta;
           let j = myList[i].j;
@@ -254,7 +254,7 @@ function App() {
           } */
       let island = await GI(state, myList[i].name);
       //island[0].j = myList[i].j
-      console.log("geet islands return", island);
+      console.log('geet islands return', island);
       myIslands.push(island);
     }
 
@@ -267,52 +267,52 @@ function App() {
 
   return (
     <div className="App">
-      <div className="navbar">
-        <h1 className="nav-header">Dero Private Islands</h1>
-        <WalletSelectButton />
-        {state.myIslands && state.myIslands.length > 1 ? (
-          <ul>
-            {state.myIslands.map((x, i) => (
-              <li
-                onClick={() => {
-                  setState({ ...state, active: i });
-                }}
-              >
-                <small>
-                  {state.active == i ? <b>{x.name}</b> : <>{x.name}</>}
-                </small>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          ""
-        )}
-        <div className="menu-bars" onClick={() => toggleMenuActive()}>
-          <FaIcons.FaBars size={40} />
-        </div>
-      </div>
-      <div className={menuActive ? "dropdown-menu" : "dropdown-menu inactive"}>
-        <NavLink className="navlink" to="archipelago">
-          <div className="navlink-text">Explore Archipelago</div>
-        </NavLink>
-        <NavLink className="navlink" to="claimisland">
-          <div className="navlink-text">Claim Your Private Island</div>
-        </NavLink>
-        <NavLink className="navlink" to="myisland">
-          <div className="navlink-text">My Island</div>
-        </NavLink>
-        <NavLink className="navlink" to="revenueshare">
-          <div className="navlink-text">COCO Revenue Share</div>
-        </NavLink>
-        <NavLink className="navlink" to="about?view=features">
-          <div className="navlink-text">About</div>
-        </NavLink>
-        <NavLink className="navlink" to="oao">
-          <div className="navlink-text">OAO</div>
-        </NavLink>
-      </div>
+      {/*<div className="navbar">*/}
+      {/*  <h1 className="nav-header">Dero Private Islands</h1>*/}
+      {/*  <WalletSelectButton />*/}
+      {/*  {state.myIslands && state.myIslands.length > 1 ? (*/}
+      {/*    <ul>*/}
+      {/*      {state.myIslands.map((x, i) => (*/}
+      {/*        <li*/}
+      {/*          onClick={() => {*/}
+      {/*            setState({ ...state, active: i });*/}
+      {/*          }}*/}
+      {/*        >*/}
+      {/*          <small>*/}
+      {/*            {state.active == i ? <b>{x.name}</b> : <>{x.name}</>}*/}
+      {/*          </small>*/}
+      {/*        </li>*/}
+      {/*      ))}*/}
+      {/*    </ul>*/}
+      {/*  ) : (*/}
+      {/*    ""*/}
+      {/*  )}*/}
+      {/*  <div className="menu-bars" onClick={() => toggleMenuActive()}>*/}
+      {/*    <FaIcons.FaBars size={40} />*/}
+      {/*  </div>*/}
+      {/*</div>*/}
+      {/*<div className={menuActive ? "dropdown-menu" : "dropdown-menu inactive"}>*/}
+      {/*  <NavLink className="navlink" to="archipelago">*/}
+      {/*    <div className="navlink-text">Explore Archipelago</div>*/}
+      {/*  </NavLink>*/}
+      {/*  <NavLink className="navlink" to="claimisland">*/}
+      {/*    <div className="navlink-text">Claim Your Private Island</div>*/}
+      {/*  </NavLink>*/}
+      {/*  <NavLink className="navlink" to="myisland">*/}
+      {/*    <div className="navlink-text">My Island</div>*/}
+      {/*  </NavLink>*/}
+      {/*  <NavLink className="navlink" to="revenueshare">*/}
+      {/*    <div className="navlink-text">COCO Revenue Share</div>*/}
+      {/*  </NavLink>*/}
+      {/*  <NavLink className="navlink" to="about?view=features">*/}
+      {/*    <div className="navlink-text">About</div>*/}
+      {/*  </NavLink>*/}
+      {/*  <NavLink className="navlink" to="oao">*/}
+      {/*    <div className="navlink-text">OAO</div>*/}
+      {/*  </NavLink>*/}
+      {/*</div>*/}
 
-      <div className="rpc-bridge-data"></div>
+      {/*  <div className="rpc-bridge-data"></div>*/}
 
       <Outlet />
       <h3>Coco Balance: {state.cocoBalance}</h3>
@@ -323,15 +323,6 @@ function App() {
       >
         State
       </button>
-
-      {/*   {state.activeWallet==0? <small
-          onClick={() => {
-            getAddress();
-          }}
-        >
-          Refresh Wallet
-        </small>
-        :""} */}
     </div>
   );
 }

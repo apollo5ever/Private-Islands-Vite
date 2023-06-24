@@ -1,21 +1,19 @@
-import React from 'react'
-import {NavLink} from 'react-router-dom';
+import React from 'react';
+import { NavLink } from 'react-router-dom';
 import IslandCard from './islandCard';
-import {LoginContext} from '../LoginContext';
-import to from 'await-to-js';
-import {useSearchParams} from 'react-router-dom';
+import { LoginContext } from '../LoginContext';
+import { useSearchParams } from 'react-router-dom';
 import BountyList from './bountyList';
 import FundList from './fundList';
-import {default as GI} from './getIslands'
+import { default as GI } from './getIslands';
 import BottleList from './bottleList';
-
+import { FeatureNav } from '@/components/common/FeatureNav.jsx';
 
 export default function IslandList() {
-
-  const [islands, setIslands] = React.useState([])
+  const [islands, setIslands] = React.useState([]);
   const [shuffledIslands, setShuffledIslands] = React.useState([]);
   const [state, setState] = React.useContext(LoginContext);
-  const [view, setView] = React.useState("");
+  const [view, setView] = React.useState('');
   let [searchParams, setSearchParams] = useSearchParams();
 
   function shuffleArray(array) {
@@ -23,67 +21,53 @@ export default function IslandList() {
       const j = Math.floor(Math.random() * (i + 1));
       [array[i], array[j]] = [array[j], array[i]];
     }
-    return array
-  }
-
-
-  function hex2a(hex) {
-    var str = '';
-    for (var i = 0; i < hex.length; i += 2) str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
-    return str;
+    return array;
   }
 
   const getIslands = React.useCallback(async () => {
-    setIslands(await GI(state))
-  })
-
+    setIslands(await GI(state));
+  });
 
   React.useEffect(() => {
-    getIslands()
-  }, [])
+    getIslands();
+  }, []);
 
   React.useEffect(() => {
     // shuffle the array and update the state
     setShuffledIslands(shuffleArray(islands));
   }, [islands]); // specify an empty array as the dependencies to run the effect only when the component mounts or updates
 
-
-//     const islandJSX = shuffleArray(islands).map(bio => {
-  //       return( <NavLink to={`/island/${bio.name}?view=main`}><IslandCard  name={bio.name} tagline={bio.tagline} image={bio.image} /></NavLink> )
-  // })
   return (
     <div className="function">
-      <NavLink to={`/archipelago`}><h1>The Archipelago</h1></NavLink>
-      <div className="icons">
-        <div className="icons-treasure" onClick={() => {
-          setSearchParams({filter: "treasure"})
-        }}>
-          <div className="icons-text">Bounties</div>
+      <NavLink to={`/archipelago`}>
+        <h1>The Archipelago</h1>
+      </NavLink>
+      <FeatureNav setSearchParams={setSearchParams} />
+      {!searchParams.get('filter') ? (
+        <div>
+          <div className="profile-card-grid">
+            {islands.map((bio) => {
+              return (
+                <NavLink to={`/island/${bio.name}?view=main`} key={bio.name}>
+                  <IslandCard
+                    name={bio.name}
+                    tagline={bio.tagline}
+                    image={bio.image}
+                  />
+                </NavLink>
+              );
+            })}
+          </div>
         </div>
-        <div className="icons-signal" onClick={() => {
-          setSearchParams({filter: "smokesignals"})
-        }}>
-          <div className="icons-text">Fundraisers</div>
-        </div>
-        <div className="icons-mail" onClick={() => {
-          setSearchParams({filter: "mib"})
-        }}>
-          <div className="icons-text">Subscriptions</div>
-        </div>
-      </div>
-      {!searchParams.get("filter") ? <div>
-
-          <div className="profile-card-grid">{islands.map(bio => {
-            return (<NavLink to={`/island/${bio.name}?view=main`}><IslandCard name={bio.name} tagline={bio.tagline}
-                                                                              image={bio.image} /></NavLink>)
-          })}</div>
-
-
-        </div>
-        : searchParams.get("filter") == "treasure" ? <BountyList islands={islands} />
-          : searchParams.get("filter") == "smokesignals" ? <FundList islands={islands} />
-            : searchParams.get("filter") == "mib" ? <BottleList islands={islands} state={state} />
-              : ""}
+      ) : searchParams.get('filter') == 'treasure' ? (
+        <BountyList islands={islands} />
+      ) : searchParams.get('filter') == 'smokesignals' ? (
+        <FundList islands={islands} />
+      ) : searchParams.get('filter') == 'mib' ? (
+        <BottleList islands={islands} state={state} />
+      ) : (
+        ''
+      )}
     </div>
-  )
+  );
 }
