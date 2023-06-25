@@ -1,16 +1,20 @@
-import {Helpers, MOBILE_BREAKPOINT} from "@/utils/helpers.js";
-import {useMediaQuery} from "react-responsive";
+import { Helpers } from '@/utils/helpers.js';
 
-export const FlexBoxColumn = ({className, justify='center', align='center', children}) => {
-  const isMobile = useMediaQuery({query: `(max-width: ${MOBILE_BREAKPOINT})`})
+export const FlexBoxColumn = ({
+  className,
+  justify = 'center',
+  align = 'center',
+  children,
+}) => {
   const Justify = Helpers.twFlexJustify(justify);
-  const Align = isMobile ? 'center' : Helpers.twFlexAlignItems(align);
+  const Align = Helpers.twFlexAlignItems(align);
 
-  const classNames = Helpers.formatClasses(className, 'flex flex-col justify-center align-center', Justify, Align)
+  const classNames = Helpers.formatClasses(
+    className,
+    'flex flex-col justify-center align-center',
+    Justify,
+    Align
+  );
 
-  return (
-    <div className={classNames}>
-      {children}
-    </div>
-  )
-}
+  return <div className={classNames}>{children}</div>;
+};

@@ -1,7 +1,7 @@
 import React from "react";
-import { useSendTransaction } from "../useSendTransaction";
-import { useGetSC } from "../useGetSC";
-import { Button } from "react-daisyui";
+import {useSendTransaction} from "../useSendTransaction";
+import {useGetSC} from "../useGetSC";
+import {Button} from '@/components/common/Button.jsx';
 
 export default function Subscribe(props) {
   const [sendTransaction] = useSendTransaction();
@@ -13,12 +13,6 @@ export default function Subscribe(props) {
   const [getSC] = useGetSC();
 
   const checkAvailability = React.useCallback(async () => {
-    /*   const deroBridgeApi = props.dba.current
-      const [err, res] = await to(deroBridgeApi.daemon('get-sc', {
-          scid: props.scid,
-          code: false,
-          variables: true
-      })) */
     const res = await getSC(props.scid);
     const obj = res.stringkeys;
     let search = props.profile + props.index + "_Av";
@@ -42,14 +36,6 @@ export default function Subscribe(props) {
   };
 
   const checkSubbed = React.useCallback(async () => {
-    /*  const deroBridgeApi = props.dba.current
-
-
-     const [err0, res0] = await to(deroBridgeApi.daemon('get-sc', {
-             scid:props.scid,
-             code:false,
-             variables:true
-     })) */
     const res0 = await getSC(props.scid);
     var scData = res0.stringkeys;
     var supporterSearch = `${props.userAddress}_${
@@ -75,14 +61,10 @@ export default function Subscribe(props) {
 
   const topUp = React.useCallback(async (event) => {
     event.preventDefault();
-
     setError("");
-
-    //  const deroBridgeApi = props.dba.current
 
     const TierHash = props.profile + props.index.toString();
     const SupporterHash = props.userAddress;
-
     const data = new Object({
       scid: props.scid,
       ringsize: 2,
@@ -111,43 +93,14 @@ export default function Subscribe(props) {
       ],
     });
     sendTransaction(data);
-
-    /*          const [err0, res0] = await to(deroBridgeApi.wallet('start-transfer', {
-             "scid": props.scid,
-             "ringsize": 2,
-             "transfers": [{
-                "burn": (parseInt((event.target.amount.value)*100000)),
-                "destination":props.randomAddress
-              }],
-             "sc_rpc": [{
-                 "name": "entrypoint",
-                 "datatype": "S",
-                 "value": "TU"
-             },
-             {
-                 "name": "T",
-                 "datatype": "S",
-                 "value": TierHash
-             },
-             {
-                 "name": "S",
-                 "datatype": "S",
-                 "value": SupporterHash
-             }
-         ]
-         })) */
   });
 
   const subscribe = React.useCallback(async (event) => {
     event.preventDefault();
-
     setError("");
-
-    //  const deroBridgeApi = props.dba.current
 
     const TierHash = props.profile + props.index.toString();
     const SupporterHash = props.userAddress;
-
     const data = new Object({
       scid: props.scid,
       ringsize: 2,
@@ -177,31 +130,6 @@ export default function Subscribe(props) {
     });
     sendTransaction(data);
 
-    /*          const [err0, res0] = await to(deroBridgeApi.wallet('start-transfer', {
-             "scid": props.scid,
-             "ringsize": 2,
-             "transfers": [{
-                "burn": (parseInt((event.target.amount.value)*100000)),
-                "destination":props.randomAddress
-              }],
-             "sc_rpc": [{
-                 "name": "entrypoint",
-                 "datatype": "S",
-                 "value": "AS"
-             },
-             {
-                 "name": "T",
-                 "datatype": "S",
-                 "value": TierHash
-             },
-             {
-                 "name": "S",
-                 "datatype": "S",
-                 "value": SupporterHash
-             }
-         ]
-         })) */
-
     setTimeout(() => {
       checkAvailability();
     }, 10000);
@@ -221,7 +149,7 @@ export default function Subscribe(props) {
         {Math.round(props.interval / (60 * 60 * 24))} days
       </p>
       <p>{props.tagline}</p>
-      <p dangerouslySetInnerHTML={{ __html: props.description }} />
+      <p dangerouslySetInnerHTML={{__html: props.description}} />
 
       <p>Available Spots: {props.available}</p>
       {subbed ? (
@@ -235,14 +163,14 @@ export default function Subscribe(props) {
             </p>
           )}
           <input placeholder="Dero Amount" id="amount" type="text" />
-          <Button size="sm" type={"submit"}>
+          <Button size="small" type={"submit"}>
             Top Up
           </Button>
         </form>
       ) : (
         <form onSubmit={subscribe}>
           <input placeholder="Dero Amount" id="amount" type="text" />
-          <Button size="sm" type={"submit"}>
+          <Button size="small" type={"submit"}>
             Subscribe
           </Button>
         </form>
@@ -258,7 +186,7 @@ export default function Subscribe(props) {
             type="text"
             placeholder="Subscriber's Dero Address"
           />
-          <Button size="sm" type={"submit"}>
+          <Button size="small" type={"submit"}>
             Get
           </Button>
         </form>

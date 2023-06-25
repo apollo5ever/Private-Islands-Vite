@@ -1,29 +1,41 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./src/**/*.{js,jsx,ts,tsx}", 'node_modules/daisyui/dist/**/*.js', 'node_modules/react-daisyui/dist/**/*.js'],
+  mode: 'jit',
+  content: ["./src/**/*.{js,jsx,ts,tsx}", 'node_modules/daisyui/dist/**/*.js'],
   theme: {
     extend: {}
   },
+  plugins: [require("daisyui")],
   daisyui: {
     themes: [
       {
         light: {
-          ...require('daisyui/src/colors/themes')['[data-theme=light]'],
-          "primary": "#0c4a6e",
-          "primary-focus": "#0284c7",
-          "primary-content": "#e2e8f0",
-          "secondary": "#115e59",
-          "secondary-focus": "#0d9488",
-          "secondary-content": "#e2e8f0",
-          "accent": "#78350f",
-          "accent-focus": "#b45309",
-          "accent-content": "#fcd34d",
-          "info": "#e2e8f0",
-          "info-focus": "#cbd5e1",
-          "info-content": "#27272a",
+          ...require('daisyui/src/theming/themes')['[data-theme=light]'],
+          "primary": "#22D3EE",
+          "secondary": "#3DC5CF",
+          "accent": "#BBDEFF",
+          "neutral": "#191D24",
+          "base-100": "#BBDEFF",
+          "info": "#3B2FDF",
+          "success": "#36D399",
+          "warning": "#FBBD23",
+          "error": "#F87272",
         },
+      },
+      {
+        dark: {
+          ...require('daisyui/src/theming/themes')['[data-theme=dark]'],
+          "primary": "#0C4A6E",
+          "secondary": "#0369A1",
+          "accent": "#6E6B0C",
+          "neutral": "#191D24",
+          "base-100": "#2A303C",
+          "info": "#3ABFF8",
+          "success": "#36D399",
+          "warning": "#FBBD23",
+          "error": "#F87272",
+        }
       }
     ]
   },
-  plugins: [require("@tailwindcss/typography"), require("daisyui")],
 }

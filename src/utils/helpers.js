@@ -1,6 +1,11 @@
 // App Constants
 
-export const MOBILE_BREAKPOINT = '768px'
+export const WALLET_INPUT_RENDERS = {
+  createNewWallet: 'createNewWallet',
+  recoverFromSeed: 'recoverFromSeed',
+  recoverFromHexSeed: 'recoverFromHexSeed',
+  recoverFromDisk: 'recoverFromDisk'
+};
 
 
 // General utility functions
@@ -40,10 +45,10 @@ export class Helpers {
     switch(align) {
       case 'left':
       case 'start':
-        return 'items-start'
+        return 'center md:items-start'
       case 'right':
       case 'end':
-        return 'items-end'
+        return 'center md:items-end'
       case 'center':
       default:
         return 'items-center'

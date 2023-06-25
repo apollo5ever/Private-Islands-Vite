@@ -1,11 +1,11 @@
 import React from "react";
-import { useParams, useSearchParams } from "react-router-dom";
-import { LoginContext } from "../LoginContext";
+import {useParams, useSearchParams} from "react-router-dom";
+import {LoginContext} from "../LoginContext";
 import Success from "./success.jsx";
 import hex2a from "./hex2a.js";
-import { useSendTransaction } from "../useSendTransaction";
-import { useGetSC } from "../useGetSC";
-import { Button } from "react-daisyui";
+import {useSendTransaction} from "../useSendTransaction";
+import {useGetSC} from "../useGetSC";
+import {Button} from '@/components/common/Button.jsx';
 
 export default function BuryTreasure() {
   const [state, setState] = React.useContext(LoginContext);
@@ -32,13 +32,6 @@ export default function BuryTreasure() {
       ));
 
     setJudges(judgeList);
-
-    /*   const execList = Object.keys(scData)
-      .filter(key => search.test(key))
-      .filter(key => scData[key] == 2 || scData[key] == 3)
-      .map(key => <option value={key.substring(0, key.length - 2)}>{key.substring(0, key.length - 2)}</option>)
-
-    setExecs(execList) */
   });
 
   React.useEffect(() => {
@@ -108,7 +101,7 @@ export default function BuryTreasure() {
     });
     sendTransaction(txData);
 
-    setSearchParams({ status: "success" });
+    setSearchParams({status: "success"});
   });
 
   const DoIt = React.useCallback(async (event) => {
