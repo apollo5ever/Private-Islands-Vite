@@ -1,555 +1,814 @@
-import React from 'react'
-import {useParams} from 'react-router-dom'
-import {LoginContext} from '../LoginContext';
-import {useSearchParams, NavLink} from 'react-router-dom'
+import React from 'react';
+import { useParams } from 'react-router-dom';
+import { LoginContext } from '../LoginContext';
+import { useSearchParams, NavLink } from 'react-router-dom';
 import to from 'await-to-js';
 import TreasureCard from './treasureCard';
 import FundCard from './fundCard';
 import Feed from './feed';
 import FutureFeed from './futureFeed';
 import PublishPost from './publishPost';
-import {useSendTransaction} from '../useSendTransaction';
-import {useGetSC} from '../useGetSC';
-import {Button} from '@/components/common/Button.jsx';
+import { useSendTransaction } from '../useSendTransaction';
+import { useGetSC } from '../useGetSC';
+import { Button } from '@/components/common/Button.jsx';
 
 export default function MyIsland() {
-  const [sendTransaction] = useSendTransaction()
-  const [post, setPost] = React.useState([])
-  const [editing, setEditing] = React.useState("")
-  const [tierToModify, setTierToModify] = React.useState(0)
-  const [postTier, setPostTier] = React.useState(0)
-  const [postToEdit, setPostToEdit] = React.useState(0)
-  const [signalToClaim, setSignalToClaim] = React.useState(0)
-  const [treasureToClaim, setTreasureToClaim] = React.useState(0)
+  const [sendTransaction] = useSendTransaction();
+  const [post, setPost] = React.useState([]);
+  const [editing, setEditing] = React.useState('');
+  const [tierToModify, setTierToModify] = React.useState(0);
+  const [postTier, setPostTier] = React.useState(0);
+  const [postToEdit, setPostToEdit] = React.useState(0);
+  const [signalToClaim, setSignalToClaim] = React.useState(0);
+  const [treasureToClaim, setTreasureToClaim] = React.useState(0);
   const [state, setState] = React.useContext(LoginContext);
   let [searchParams, setSearchParams] = useSearchParams();
-  const [treasures, setTreasures] = React.useState([])
-  const [signals, setSignals] = React.useState([])
-  const [view, setView] = React.useState("main")
-  const [judging, setJudging] = React.useState([])
-  const [executing, setExecuting] = React.useState([])
-  const [getSC] = useGetSC()
-  const [island, setIsland] = React.useState(null)
+  const [treasures, setTreasures] = React.useState([]);
+  const [signals, setSignals] = React.useState([]);
+  const [view, setView] = React.useState('main');
+  const [judging, setJudging] = React.useState([]);
+  const [executing, setExecuting] = React.useState([]);
+  const [getSC] = useGetSC();
+  const [island, setIsland] = React.useState(null);
 
   function hex2a(hex) {
     var str = '';
-    for (var i = 0; i < hex.length; i += 2) str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+    for (var i = 0; i < hex.length; i += 2)
+      str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
     return str;
   }
 
   const getIslands = React.useCallback(async () => {
-    if (!state.myIslands) return
+    if (!state.myIslands) return;
     if (state.myIslands.length == 1) {
-      setPost(state.myIslands)
+      setPost(state.myIslands);
     } else {
-      setPost(state.myIslands[state.active])
+      setPost(state.myIslands[state.active]);
     }
-    console.log(post)
-  })
+    console.log('GET ISLANDS CALLBACK', post);
+  });
 
   const getIslandObjects = React.useCallback(async () => {
-    setTreasures([])
-    setSignals([])
-    setJudging([])
-    let signalArray = []
-    const res = await getSC(state.scid)
-    var scData = res.stringkeys //.map(x=>x.match(search))
-    var treasureSearch = new RegExp(`${state.myIslands[state.active].name}[0-9]*_bm`)
-    var signalSearch = new RegExp(`${state.myIslands[state.active].name}[0-9]*_sm`)
-    var judgeSearch = /.*_J\d{1,}/
-    var executerSearch = /.*_X\d{1,}/
+    setTreasures([]);
+    setSignals([]);
+    setJudging([]);
+    let signalArray = [];
+    const res = await getSC(state.scid);
+    var scData = res.stringkeys; //.map(x=>x.match(search))
+    var treasureSearch = new RegExp(
+      `${state.myIslands[state.active].name}[0-9]*_bm`
+    );
+    var signalSearch = new RegExp(
+      `${state.myIslands[state.active].name}[0-9]*_sm`
+    );
+    var judgeSearch = /.*_J\d{1,}/;
+    var executerSearch = /.*_X\d{1,}/;
 
     if (state.myIslands[state.active].tiers) {
       for (var t of state.myIslands[state.active].tiers) {
         // var supporterSearch = new RegExp(`.*_\\${state.myIslands[state.active].name+t.index}\_E`)
-        var supporterSearch = new RegExp(`_` + state.myIslands[state.active].name + t.index + `_E`)
+        var supporterSearch = new RegExp(
+          `_` + state.myIslands[state.active].name + t.index + `_E`
+        );
         t.subs = Object.keys(scData)
-          .filter(key => supporterSearch.test(key))
-          .filter(key => scData[key] > new Date().getTime() / 1000)
-          .map(x => x.substring(0, 66))
+          .filter((key) => supporterSearch.test(key))
+          .filter((key) => scData[key] > new Date().getTime() / 1000)
+          .map((x) => x.substring(0, 66));
       }
     }
 
-    let judgeFilter = Object.keys(scData)
-      .filter(key => judgeSearch.test(key))
-    console.log("JF", judgeFilter)
+    let judgeFilter = Object.keys(scData).filter((key) =>
+      judgeSearch.test(key)
+    );
+    console.log('JF', judgeFilter);
 
     let judgeList = Object.keys(scData)
-      .filter(key => judgeSearch.test(key))
-      .map(key => [hex2a(scData[key.substring(0, key.length - 2) + "bm"]), hex2a(scData[key]), scData[key.substring(0, key.length - 2) + "T"], scData[key.substring(0, key.length - 2) + "E"], scData[key.substring(0, key.length - 2) + "J"], key.substring(0, key.length - 3), Object.keys(scData).filter(key2 => new RegExp(`${key.substring(0,key.length-1)}*[0-9]`).test(key2)), key])
-    console.log("judgeList", judgeList)
-    console.log("judgesearch", judgeSearch)
-    var judgeArr = []
+      .filter((key) => judgeSearch.test(key))
+      .map((key) => [
+        hex2a(scData[key.substring(0, key.length - 2) + 'bm']),
+        hex2a(scData[key]),
+        scData[key.substring(0, key.length - 2) + 'T'],
+        scData[key.substring(0, key.length - 2) + 'E'],
+        scData[key.substring(0, key.length - 2) + 'J'],
+        key.substring(0, key.length - 3),
+        Object.keys(scData).filter((key2) =>
+          new RegExp(`${key.substring(0, key.length - 1)}*[0-9]`).test(key2)
+        ),
+        key,
+      ]);
+    console.log('judgeList', judgeList);
+    console.log('judgesearch', judgeSearch);
+    var judgeArr = [];
     for (let i = 0; i < judgeList.length; i++) {
-      if (judgeList[i][1] != state.myIslands[state.active].name || judgeList[i][5].substring(0, judgeList[i][5].length - 1) == state.myIslands[state.active].name) continue
-      console.log(judgeList[i][0])
+      if (
+        judgeList[i][1] != state.myIslands[state.active].name ||
+        judgeList[i][5].substring(0, judgeList[i][5].length - 1) ==
+          state.myIslands[state.active].name
+      )
+        continue;
+      console.log(judgeList[i][0]);
       for await (const buf of state.ipfs.cat(judgeList[i][0].toString())) {
         try {
-          let treasure = JSON.parse(buf.toString())
+          let treasure = JSON.parse(buf.toString());
 
-          treasure.judgeList = []
+          treasure.judgeList = [];
           for (var k = 0; k < judgeList[i][6].length; k++) {
-            treasure.judgeList.push(hex2a(scData[judgeList[i][6][k]]))
+            treasure.judgeList.push(hex2a(scData[judgeList[i][6][k]]));
           }
 
-          treasure.index = judgeList[i][5].substring(judgeList[i][5].length - 1)
-          treasure.expiry = judgeList[i][3]
-          treasure.treasure = judgeList[i][2] / 100000
-          treasure.judge = judgeList[i][4]
+          treasure.index = judgeList[i][5].substring(
+            judgeList[i][5].length - 1
+          );
+          treasure.expiry = judgeList[i][3];
+          treasure.treasure = judgeList[i][2] / 100000;
+          treasure.judge = judgeList[i][4];
 
-          if (treasure.expiry > new Date().getTime() / 1000) treasure.status = 0
+          if (treasure.expiry > new Date().getTime() / 1000)
+            treasure.status = 0;
 
-          judgeArr.push(treasure)
+          judgeArr.push(treasure);
         } catch (error) {
-          console.log(error)
+          console.log(error);
         }
       }
     }
-    setJudging(judgeArr)
+    setJudging(judgeArr);
 
     let execList = Object.keys(scData)
-      .filter(key => executerSearch.test(key))
-      .map(key => [hex2a(scData[key.substring(0, key.length - 2) + "bm"]), hex2a(scData[key]), scData[key.substring(0, key.length - 2) + "T"], scData[key.substring(0, key.length - 2) + "E"], scData[key.substring(0, key.length - 2) + "X"], key.substring(0, key.length - 3), Object.keys(scData).filter(key2 => new RegExp(`${key.substring(0,key.length-1)}*[0-9]`).test(key2)), key])
+      .filter((key) => executerSearch.test(key))
+      .map((key) => [
+        hex2a(scData[key.substring(0, key.length - 2) + 'bm']),
+        hex2a(scData[key]),
+        scData[key.substring(0, key.length - 2) + 'T'],
+        scData[key.substring(0, key.length - 2) + 'E'],
+        scData[key.substring(0, key.length - 2) + 'X'],
+        key.substring(0, key.length - 3),
+        Object.keys(scData).filter((key2) =>
+          new RegExp(`${key.substring(0, key.length - 1)}*[0-9]`).test(key2)
+        ),
+        key,
+      ]);
 
-
-    var execArr = []
+    var execArr = [];
     for (let i = 0; i < execList.length; i++) {
-      if (execList[i][1] != state.myIslands[state.active].name || execList[i][5].substring(0, execList[i][5].length - 1) == state.myIslands[state.active].name) continue
+      if (
+        execList[i][1] != state.myIslands[state.active].name ||
+        execList[i][5].substring(0, execList[i][5].length - 1) ==
+          state.myIslands[state.active].name
+      )
+        continue;
 
       for await (const buf of state.ipfs.cat(execList[i][0].toString())) {
         try {
-          let treasure = JSON.parse(buf.toString())
+          let treasure = JSON.parse(buf.toString());
 
-          treasure.judgeList = []
+          treasure.judgeList = [];
           for (var k = 0; k < execList[i][6].length; k++) {
-            treasure.judgeList.push(hex2a(scData[execList[i][6][k]]))
+            treasure.judgeList.push(hex2a(scData[execList[i][6][k]]));
           }
-          treasure.index = execList[i][5].substring(execList[i][5].length - 1)
-          treasure.expiry = execList[i][3]
-          treasure.treasure = execList[i][2] / 100000
-          treasure.executer = execList[i][4]
+          treasure.index = execList[i][5].substring(execList[i][5].length - 1);
+          treasure.expiry = execList[i][3];
+          treasure.treasure = execList[i][2] / 100000;
+          treasure.executer = execList[i][4];
 
-          if (treasure.expiry > new Date().getTime() / 1000) treasure.status = 0
+          if (treasure.expiry > new Date().getTime() / 1000)
+            treasure.status = 0;
 
-          execArr.push(treasure)
+          execArr.push(treasure);
         } catch (error) {
-          console.log(error)
+          console.log(error);
         }
       }
     }
-    setExecuting(execArr)
-    console.log("EXEC ARR", execArr)
+    setExecuting(execArr);
+    console.log('EXEC ARR', execArr);
 
     let treasureList = Object.keys(scData)
-      .filter(key => treasureSearch.test(key))
-      .map(key => [hex2a(scData[key]), scData[key.substring(0, key.length - 2) + "E"], scData[key.substring(0, key.length - 2) + "T"], scData[key.substring(0, key.length - 2) + "J"], key.substring(0, key.length - 3), Object.keys(scData).filter(key2 => new RegExp(`\\${state.myIslands[state.active].name+key.substring(key.length-4,key.length-3)}\*_J[0-9]`).test(key2)), scData[key.substring(0, key.length - 2) + "JN"], scData[key.substring(0, key.length - 2) + "JE"], scData[key.substring(0, key.length - 2) + "JT"], Object.keys(scData).filter(key3 => new RegExp(`\\${state.myIslands[state.active].name+key.substring(key.length-4,key.length-3)}\*_X[0-9]`).test(key3)), scData[key.substring(0, key.length - 2) + "XN"], scData[key.substring(0, key.length - 2) + "XE"], scData[key.substring(0, key.length - 2) + "XT"], scData[key.substring(0, key.length - 2) + "X"]])
+      .filter((key) => treasureSearch.test(key))
+      .map((key) => [
+        hex2a(scData[key]),
+        scData[key.substring(0, key.length - 2) + 'E'],
+        scData[key.substring(0, key.length - 2) + 'T'],
+        scData[key.substring(0, key.length - 2) + 'J'],
+        key.substring(0, key.length - 3),
+        Object.keys(scData).filter((key2) =>
+          new RegExp(
+            `\\${
+              state.myIslands[state.active].name +
+              key.substring(key.length - 4, key.length - 3)
+            }\*_J[0-9]`
+          ).test(key2)
+        ),
+        scData[key.substring(0, key.length - 2) + 'JN'],
+        scData[key.substring(0, key.length - 2) + 'JE'],
+        scData[key.substring(0, key.length - 2) + 'JT'],
+        Object.keys(scData).filter((key3) =>
+          new RegExp(
+            `\\${
+              state.myIslands[state.active].name +
+              key.substring(key.length - 4, key.length - 3)
+            }\*_X[0-9]`
+          ).test(key3)
+        ),
+        scData[key.substring(0, key.length - 2) + 'XN'],
+        scData[key.substring(0, key.length - 2) + 'XE'],
+        scData[key.substring(0, key.length - 2) + 'XT'],
+        scData[key.substring(0, key.length - 2) + 'X'],
+      ]);
 
-    var bountyArray = []
+    var bountyArray = [];
 
     for (let i = 0; i < treasureList.length; i++) {
       for await (const buf of state.ipfs.cat(treasureList[i][0].toString())) {
         try {
-          let treasure = JSON.parse(buf.toString())
+          let treasure = JSON.parse(buf.toString());
 
-          treasure.judgeList = []
+          treasure.judgeList = [];
           for (var k = 0; k < treasureList[i][5].length; k++) {
-            treasure.judgeList.push(hex2a(scData[treasureList[i][5][k]]))
+            treasure.judgeList.push(hex2a(scData[treasureList[i][5][k]]));
           }
-          treasure.executerList = []
+          treasure.executerList = [];
           for (var k = 0; k < treasureList[i][9].length; k++) {
-            treasure.executerList.push(hex2a(scData[treasureList[i][9][k]]))
+            treasure.executerList.push(hex2a(scData[treasureList[i][9][k]]));
           }
 
-          treasure.index = treasureList[i][4].substring(treasureList[i][4].length - 1)
-          treasure.expiry = treasureList[i][1]
-          treasure.treasure = treasureList[i][2] / 100000
-          treasure.judge = treasureList[i][3]
+          treasure.index = treasureList[i][4].substring(
+            treasureList[i][4].length - 1
+          );
+          treasure.expiry = treasureList[i][1];
+          treasure.treasure = treasureList[i][2] / 100000;
+          treasure.judge = treasureList[i][3];
 
-          if (treasure.expiry > new Date().getTime() / 1000) treasure.status = 0
+          if (treasure.expiry > new Date().getTime() / 1000)
+            treasure.status = 0;
 
-          bountyArray.push(treasure)
+          bountyArray.push(treasure);
 
           // setTreasures(treasures=>[...treasures,treasure])
-          console.log("fundz", treasures)
-
+          console.log('fundz', treasures);
         } catch (error) {
-          console.log(error)
+          console.log(error);
         }
       }
     }
-    setTreasures(bountyArray)
+    setTreasures(bountyArray);
     let fundList = Object.keys(scData)
-      .filter(key => signalSearch.test(key))
-      .map(key => [hex2a(scData[key]), scData[key.substring(0, key.length - 2) + "D"], scData[key.substring(0, key.length - 2) + "G"], scData[key.substring(0, key.length - 2) + "R"], scData[key.substring(0, key.length - 2) + "F"], scData[key.substring(0, key.length - 2) + "C"], key.substring(0, key.length - 3)])
+      .filter((key) => signalSearch.test(key))
+      .map((key) => [
+        hex2a(scData[key]),
+        scData[key.substring(0, key.length - 2) + 'D'],
+        scData[key.substring(0, key.length - 2) + 'G'],
+        scData[key.substring(0, key.length - 2) + 'R'],
+        scData[key.substring(0, key.length - 2) + 'F'],
+        scData[key.substring(0, key.length - 2) + 'C'],
+        key.substring(0, key.length - 3),
+      ]);
 
-    console.log("hash array", fundList)
+    console.log('hash array', fundList);
 
     for (let i = 0; i < fundList.length; i++) {
-      console.log("helllooo", state.ipfs)
-      console.log("fundList", fundList)
+      console.log('helllooo', state.ipfs);
+      console.log('fundList', fundList);
       for await (const buf of state.ipfs.cat(fundList[i][0].toString())) {
-        let fund = JSON.parse(buf.toString())
-        console.log("fund.island", fund.island)
-        console.log(fundList[i][6].substring(0, fundList[i][6].length - 1))
+        let fund = JSON.parse(buf.toString());
+        console.log('fund.island', fund.island);
+        console.log(fundList[i][6].substring(0, fundList[i][6].length - 1));
         //if(fund.island!=fundList[i][6].substring(0,fundList[i][6].length-1)) continue
-        fund.island = fundList[i][6].substring(0, fundList[i][6].length - 1)
-        fund.index = fundList[i][6].substring(fundList[i][6].length - 1)
-        fund.deadline = fundList[i][1]
-        fund.goal = fundList[i][2] / 100000
-        fund.raised = fundList[i][3]
-        fund.fundee = fundList[i][4]
-        fund.claimed = fundList[i][5]
-        if (fund.deadline > new Date().getTime() / 1000) fund.status = 0
-        else if (fund.deadline < new Date().getTime() / 1000 && fund.goal < fund.raised) fund.status = 1
-        else if (fund.deadline < new Date().getTime() / 1000 && fund.goal > fund.raised) fund.status = 2
+        fund.island = fundList[i][6].substring(0, fundList[i][6].length - 1);
+        fund.index = fundList[i][6].substring(fundList[i][6].length - 1);
+        fund.deadline = fundList[i][1];
+        fund.goal = fundList[i][2] / 100000;
+        fund.raised = fundList[i][3];
+        fund.fundee = fundList[i][4];
+        fund.claimed = fundList[i][5];
+        if (fund.deadline > new Date().getTime() / 1000) fund.status = 0;
+        else if (
+          fund.deadline < new Date().getTime() / 1000 &&
+          fund.goal < fund.raised
+        )
+          fund.status = 1;
+        else if (
+          fund.deadline < new Date().getTime() / 1000 &&
+          fund.goal > fund.raised
+        )
+          fund.status = 2;
         // setSignals(signals=>[...signals,fund])
-        signalArray.push(fund)
+        signalArray.push(fund);
       }
     }
-    console.log(err)
-    console.log(res)
+    console.log(err);
+    console.log(res);
 
-    setSignals(signalArray)
-
-  })
+    setSignals(signalArray);
+  });
 
   React.useEffect(() => {
     //getIslandObjects()
     if (state.myIslands) {
-      setIsland(state.myIslands[state.active])
+      setIsland(state.myIslands[state.active]);
     }
-  }, [post, searchParams, state.active])
+  }, [post, searchParams, state.active]);
 
-  const SetMetadata = async event => {
-    event.preventDefault()
+  const SetMetadata = async (event) => {
+    event.preventDefault();
 
-    let island = state.myIslands[state.active]
-    let fee
-    if (event.target.edit.value.length > 380) fee = 10000
+    let island = state.myIslands[state.active];
+    let fee;
+    if (event.target.edit.value.length > 380) fee = 10000;
 
     const metaDataData = {
-      "scid": island.scid,
-      "ringsize": 2,
-      "fees": fee,
-      "transfers": [
+      scid: island.scid,
+      ringsize: 2,
+      fees: fee,
+      transfers: [
         {
-          "destination": state.randomAddress,
-          "burn": 1,
-          "scid": island.scid
-        }
+          destination: state.randomAddress,
+          burn: 1,
+          scid: island.scid,
+        },
       ],
-      "sc_rpc": [
+      sc_rpc: [
         {
-          "name": "entrypoint",
-          "datatype": "S",
-          "value": `Set${editing}`
+          name: 'entrypoint',
+          datatype: 'S',
+          value: `Set${editing}`,
         },
         {
-          "name": editing,
-          "datatype": "S",
-          "value": event.target.edit.value
-        }
-      ]
+          name: editing,
+          datatype: 'S',
+          value: event.target.edit.value,
+        },
+      ],
     };
 
-    sendTransaction(metaDataData)
-    setEditing("")
-  }
+    sendTransaction(metaDataData);
+    setEditing('');
+  };
 
-  const editIsland = async e => {
-
-    e.preventDefault()
-    if (editing == "posts") {
+  const editIsland = async (e) => {
+    e.preventDefault();
+    if (editing == 'posts') {
       if (state.myIslands[state.active].posts) {
-        state.myIslands[state.active].posts.push(e.target.post.value)
+        state.myIslands[state.active].posts.push(e.target.post.value);
         //state.myIslands[state.active].posts=[e.target.post.value]
       } else {
-        state.myIslands[state.active].posts = [e.target.post.value]
+        state.myIslands[state.active].posts = [e.target.post.value];
       }
     } else {
-      state.myIslands[state.active][`${editing}`] = e.target.edit.value
+      state.myIslands[state.active][`${editing}`] = e.target.edit.value;
     }
 
+    var burn = 100;
 
-    var burn = 100
-
-    var transfers = []
+    var transfers = [];
     if (state.cocoBalance < burn) {
       transfers.push({
-        "destination": state.randomAddress,
-        "burn": burn * 100
-
-      })
+        destination: state.randomAddress,
+        burn: burn * 100,
+      });
     } else {
       transfers.push({
-        "destination": state.randomAddress,
-        "scid": state.coco,
-        "burn": burn
-      })
+        destination: state.randomAddress,
+        scid: state.coco,
+        burn: burn,
+      });
     }
-
 
     ////////////code copied from claim page
 
-
     var islandData = JSON.stringify({
-      "pinataOptions": {
-        "cidVersion": 0
+      pinataOptions: {
+        cidVersion: 0,
       },
-      "pinataMetadata": {
-        "name": state.myIslands[state.active].name,
-        "keyvalues": {}
+      pinataMetadata: {
+        name: state.myIslands[state.active].name,
+        keyvalues: {},
       },
-      "pinataContent": state.myIslands[state.active]
+      pinataContent: state.myIslands[state.active],
     });
 
-    const islandPinata = await fetch('https://api.pinata.cloud/pinning/pinJSONToIPFS', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiJhNjc5NzU5MS02OGUxLTQyNzAtYjZhMy01NjBjN2Y3M2IwYTMiLCJlbWFpbCI6ImJhY2tlbmRAYW1icm9zaWEubW9uZXkiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwicGluX3BvbGljeSI6eyJyZWdpb25zIjpbeyJpZCI6IkZSQTEiLCJkZXNpcmVkUmVwbGljYXRpb25Db3VudCI6MX0seyJpZCI6Ik5ZQzEiLCJkZXNpcmVkUmVwbGljYXRpb25Db3VudCI6MX1dLCJ2ZXJzaW9uIjoxfSwibWZhX2VuYWJsZWQiOmZhbHNlLCJzdGF0dXMiOiJBQ1RJVkUifSwiYXV0aGVudGljYXRpb25UeXBlIjoic2NvcGVkS2V5Iiwic2NvcGVkS2V5S2V5IjoiMDgzZTJkMGQ2Yzg2YTBhNjlkY2YiLCJzY29wZWRLZXlTZWNyZXQiOiJlN2VlMTE4MWM2YTBlN2FmNjQ0YmUzZmEyYmU1ZWY5ZWFmMmNmMmYyYzc0NWQzZGIxNDdiMThhOTU5NWMwZDNlIiwiaWF0IjoxNjYxMTk1NjUxfQ.9Pz2W_h7zCiYyuRuVySKcDwA2fl_Jbm6QDulihAIpmo`
-      },
-
-      body: islandData
-    });
-
-
-    const addIsland = await state.ipfs.add(JSON.stringify(state.myIslands[state.active]).toString())
-    const M = addIsland.cid.toString()
-
-    const data = new Object(
+    const islandPinata = await fetch(
+      'https://api.pinata.cloud/pinning/pinJSONToIPFS',
       {
-        "scid": state.scid,
-        "ringsize": 2,
-        "transfers": transfers,
-        "sc_rpc": [{
-          "name": "entrypoint",
-          "datatype": "S",
-          "value": "IVU"
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiJhNjc5NzU5MS02OGUxLTQyNzAtYjZhMy01NjBjN2Y3M2IwYTMiLCJlbWFpbCI6ImJhY2tlbmRAYW1icm9zaWEubW9uZXkiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwicGluX3BvbGljeSI6eyJyZWdpb25zIjpbeyJpZCI6IkZSQTEiLCJkZXNpcmVkUmVwbGljYXRpb25Db3VudCI6MX0seyJpZCI6Ik5ZQzEiLCJkZXNpcmVkUmVwbGljYXRpb25Db3VudCI6MX1dLCJ2ZXJzaW9uIjoxfSwibWZhX2VuYWJsZWQiOmZhbHNlLCJzdGF0dXMiOiJBQ1RJVkUifSwiYXV0aGVudGljYXRpb25UeXBlIjoic2NvcGVkS2V5Iiwic2NvcGVkS2V5S2V5IjoiMDgzZTJkMGQ2Yzg2YTBhNjlkY2YiLCJzY29wZWRLZXlTZWNyZXQiOiJlN2VlMTE4MWM2YTBlN2FmNjQ0YmUzZmEyYmU1ZWY5ZWFmMmNmMmYyYzc0NWQzZGIxNDdiMThhOTU5NWMwZDNlIiwiaWF0IjoxNjYxMTk1NjUxfQ.9Pz2W_h7zCiYyuRuVySKcDwA2fl_Jbm6QDulihAIpmo`,
         },
-          {
-            "name": "H",
-            "datatype": "S",
-            "value": state.myIslands[state.active].name
-          },
-          {
-            "name": "M",
-            "datatype": "S",
-            "value": M
-          },
-          {
-            "name": "j",
-            "datatype": "U",
-            "value": state.myIslands[state.active].j
-          }
-        ]
+
+        body: islandData,
       }
-    )
+    );
 
+    const addIsland = await state.ipfs.add(
+      JSON.stringify(state.myIslands[state.active]).toString()
+    );
+    const M = addIsland.cid.toString();
 
-    sendTransaction(data)
-    setEditing("")
-  }
+    const data = new Object({
+      scid: state.scid,
+      ringsize: 2,
+      transfers: transfers,
+      sc_rpc: [
+        {
+          name: 'entrypoint',
+          datatype: 'S',
+          value: 'IVU',
+        },
+        {
+          name: 'H',
+          datatype: 'S',
+          value: state.myIslands[state.active].name,
+        },
+        {
+          name: 'M',
+          datatype: 'S',
+          value: M,
+        },
+        {
+          name: 'j',
+          datatype: 'U',
+          value: state.myIslands[state.active].j,
+        },
+      ],
+    });
+
+    sendTransaction(data);
+    setEditing('');
+  };
   React.useEffect(() => {
-    setPost([])
-    getIslands()
+    setPost([]);
+    getIslands();
+  }, [state.myIslands]);
 
-  }, [state.myIslands])
+  const postFiltered = post;
+  console.log(postFiltered);
 
+  const changeTierToModify = (e) => {
+    e.preventDefault();
+    setTierToModify(e.target.value);
+  };
+  const changePostTier = (e) => {
+    e.preventDefault();
+    setPostTier(e.target.value);
+  };
+  const changePostToEdit = (e) => {
+    e.preventDefault();
+    setPostToEdit(e.target.value);
+  };
 
-  const postFiltered = post
-  console.log(postFiltered)
-
-
-  const changeTierToModify = e => {
-    e.preventDefault()
-    setTierToModify(e.target.value)
-  }
-  const changePostTier = e => {
-    e.preventDefault()
-    setPostTier(e.target.value)
-  }
-  const changePostToEdit = e => {
-    e.preventDefault()
-    setPostToEdit(e.target.value)
-  }
-
-  const changeSignalToClaim = e => {
-    e.preventDefault()
-    setSignalToClaim(e.target.value)
-  }
-  const changeTreasureToClaim = e => {
-    e.preventDefault()
-    setTreasureToClaim(e.target.value)
-  }
-
+  const changeSignalToClaim = (e) => {
+    e.preventDefault();
+    setSignalToClaim(e.target.value);
+  };
+  const changeTreasureToClaim = (e) => {
+    e.preventDefault();
+    setTreasureToClaim(e.target.value);
+  };
 
   return (
     <div className="function">
       <div className="profile">
-
-
-        {state.myIslands ? <>{state.myIslands.length === 0 ?
+        {state.myIslands ? (
           <>
-            <Feed />
-            <FutureFeed />
-            <NavLink to="/claimIsland">Claim your own Private Island Here</NavLink>
-          </>
-          :
-
-          <div>
-            <div className="icons">
-              {editing === "Image" ?
-                <>
-                  <form onSubmit={SetMetadata}>
-                    <input id="edit" defaultValue={state.myIslands[state.active].image} />
-
-                    <Button size='small' type="submit">Submit</Button>
-                  </form>
-                  <small onClick={() => setEditing("")}>cancel</small></>
-                :
-                <>
-                  <img src={state.myIslands[state.active].image} />
-                  <small onClick={() => setEditing("Image")}>edit</small>
-                </>} <h1 onClick={() => {
-              setView("main")
-            }}>{state.myIslands[state.active].name}</h1></div>
-
-
-            {view == "main" ? <>
-                <>{editing === "Tagline" ?
-                  <>
-                    <form onSubmit={SetMetadata}>
-                      <input id="edit" defaultValue={state.myIslands[state.active].tagline} />
-                      <Button size='small' type="submit">Submit</Button>
-                    </form>
-                    <small onClick={() => setEditing("")}>cancel</small></>
-                  : <><p>{state.myIslands[state.active].tagline}</p>
-                    <small onClick={() => setEditing("Tagline")}>edit</small>
-                  </>
-                }</>
-                <>{editing === "Bio" ?
-                  <>
-                    <form onSubmit={SetMetadata}>
-                      <textarea rows="44" cols="80" id="edit" defaultValue={state.myIslands[state.active].bio} />
-                      <Button size='small' type="submit">Submit</Button>
-                    </form>
-                    <small onClick={() => setEditing("")}>cancel</small></>
-                  : <><p dangerouslySetInnerHTML={{__html: state.myIslands[state.active].bio}} />
-                    <small onClick={() => setEditing("Bio")}>edit</small>
-                  </>
-                }</>
+            {state.myIslands.length === 0 ? (
+              <>
+                <Feed />
+                <FutureFeed />
+                <NavLink to="/claimIsland">
+                  Claim your own Private Island Here
+                </NavLink>
               </>
-              : view == "treasure" ?
-                <>
-                  <NavLink to={`/burytreasure/${island.scid}/${island.bounties.length}`}>Bury New Treasure</NavLink>
-                  {island.bounties.length > 0 ? <><h3>Bounties You Initiated</h3>
-                    <div className="card-grid">
+            ) : (
+              <div>
+                <div className="icons">
+                  {editing === 'Image' ? (
+                    <>
+                      <form onSubmit={SetMetadata}>
+                        <input
+                          id="edit"
+                          defaultValue={state.myIslands[state.active].image}
+                        />
 
-                      {island.bounties.map(x => <TreasureCard className="mytreasure" executerList={x.executerList}
-                                                              name={x.name} profile={x.island} tagline={x.tagline}
-                                                              treasure={x.treasure} image={x.image}
-                                                              judgeList={x.judgeList} index={x.index} />)}
-                    </div>
-                  </> : <p>No Buried Treasures yet</p>}
-                  {judging.length > 0 ? <><h3>Nominated for Judge</h3>
-                    <div className="card-grid">
-
-                      {judging.map(x => <TreasureCard className="mytreasure" name={x.name} profile={x.island}
-                                                      tagline={x.tagline} treasure={x.treasure} image={x.image}
-                                                      judgeList={x.judgeList} index={x.index} />)}
-                    </div>
-                  </> : ""}
-
-                  {executing.length > 0 ? <><h3>Nominated for Executer</h3>
-                    <div className="card-grid">
-
-                      {executing.map(x => <TreasureCard className="mytreasure" name={x.name} profile={x.island}
-                                                        tagline={x.tagline} treasure={x.treasure} image={x.image}
-                                                        executerList={x.judgeList} index={x.index} />)}
-                    </div>
-                  </> : ""}
-
-
-                </>
-                : view == "signal" ? <>
-                    <NavLink to={`/newsignal/${island.scid}/${island.fundraisers.length}`}>Start New Smoke
-                      Signal</NavLink>
-                    {island.fundraisers.length > 0 ? <>
-                      {island.fundraisers.map(x => <NavLink to={`/island/${x.island}/smokesignal/${x.index}`}><FundCard
-                        name={x.name} profile={x.island} tagline={x.tagline} goal={x.goal} image={x.image}
-                        deadline={x.deadline} /></NavLink>)}
-                    </> : <><p>No Smoke Signals Yet</p>
-                    </>}
-                  </>
-                  : view == "mail-in" ? <>
-                      <Button size='small' handleClick={() => {
-                        setView("mail-in")
-                      }}>Incoming</Button>
-                      <Button size='small' handleClick={() => {
-                      setView("mail-out")
-                    }}>Outgoing</Button>
-                      <Feed />
-
+                        <Button size="small" type="submit">
+                          Submit
+                        </Button>
+                      </form>
+                      <small onClick={() => setEditing('')}>cancel</small>
                     </>
-                    : view == "mail-out" ? <>
-                        <Button size='small' handleClick={() => {
-                          setView("mail-in")
-                        }}>Incoming</Button>
-                        <Button size='small' handleClick={() => {
-                        setView("mail-out")
-                      }}>Outgoing</Button>
-                        <h3>Your Subscription Tiers</h3>
-                        {state.myIslands[state.active].tiers.map(t => <p>{t.name}, subs:{t.subs.length}<NavLink
-                          to={`/island/${state.myIslands[state.active].name}/modifytier/${t.index}`}>Edit</NavLink></p>)}
-                        <NavLink to={`/island/${state.myIslands[state.active].name}/compose`}>Put a Message in a
-                          Bottle</NavLink>
-                        <Button size='small' handleClick={() => {
-                          setView("compose");
-                          setEditing("posts")
-                        }}>Compose Message</Button>
-                        <NavLink
-                          to={`/island/${state.myIslands[state.active].name}/modifytier/${state.myIslands[state.active].tiers.length}`}>New
-                          Subscription Tier</NavLink>
-                      </>
-                      : view == "compose" ? <>
-                          <Button size='small' handleClick={() => {
-                            if (state.myIslands[state.active].posts) {
-                              console.log(state.myIslands[state.active].posts)
-                            }
-                          }}>State</Button>
-                          <PublishPost editIsland={editIsland} setView={setView} />
+                  ) : (
+                    <>
+                      <img src={state.myIslands[state.active].image} />
+                      <small onClick={() => setEditing('Image')}>edit</small>
+                    </>
+                  )}{' '}
+                  <h1
+                    onClick={() => {
+                      setView('main');
+                    }}
+                  >
+                    {state.myIslands[state.active].name}
+                  </h1>
+                </div>
 
+                {view == 'main' ? (
+                  <>
+                    <>
+                      {editing === 'Tagline' ? (
+                        <>
+                          <form onSubmit={SetMetadata}>
+                            <input
+                              id="edit"
+                              defaultValue={
+                                state.myIslands[state.active].tagline
+                              }
+                            />
+                            <Button size="small" type="submit">
+                              Submit
+                            </Button>
+                          </form>
+                          <small onClick={() => setEditing('')}>cancel</small>
                         </>
-                        : view == "success" ? <>
-                            Success!
-                            <Button size='small' handleClick={() => {
-                              setView("main")
-                            }}>Return</Button>
-                          </>
-                          : ""}
+                      ) : (
+                        <>
+                          <p>{state.myIslands[state.active].tagline}</p>
+                          <small onClick={() => setEditing('Tagline')}>
+                            edit
+                          </small>
+                        </>
+                      )}
+                    </>
+                    <>
+                      {editing === 'Bio' ? (
+                        <>
+                          <form onSubmit={SetMetadata}>
+                            <textarea
+                              rows="44"
+                              cols="80"
+                              id="edit"
+                              defaultValue={state.myIslands[state.active].bio}
+                            />
+                            <Button size="small" type="submit">
+                              Submit
+                            </Button>
+                          </form>
+                          <small onClick={() => setEditing('')}>cancel</small>
+                        </>
+                      ) : (
+                        <>
+                          <p
+                            dangerouslySetInnerHTML={{
+                              __html: state.myIslands[state.active].bio,
+                            }}
+                          />
+                          <small onClick={() => setEditing('Bio')}>edit</small>
+                        </>
+                      )}
+                    </>
+                  </>
+                ) : view == 'treasure' ? (
+                  <>
+                    <NavLink
+                      to={`/burytreasure/${island.scid}/${island.bounties.length}`}
+                    >
+                      Bury New Treasure
+                    </NavLink>
+                    {island.bounties.length > 0 ? (
+                      <>
+                        <h3>Bounties You Initiated</h3>
+                        <div className="card-grid">
+                          {island.bounties.map((x) => (
+                            <TreasureCard
+                              className="mytreasure"
+                              executerList={x.executerList}
+                              name={x.name}
+                              profile={x.island}
+                              tagline={x.tagline}
+                              treasure={x.treasure}
+                              image={x.image}
+                              judgeList={x.judgeList}
+                              index={x.index}
+                            />
+                          ))}
+                        </div>
+                      </>
+                    ) : (
+                      <p>No Buried Treasures yet</p>
+                    )}
+                    {judging.length > 0 ? (
+                      <>
+                        <h3>Nominated for Judge</h3>
+                        <div className="card-grid">
+                          {judging.map((x) => (
+                            <TreasureCard
+                              className="mytreasure"
+                              name={x.name}
+                              profile={x.island}
+                              tagline={x.tagline}
+                              treasure={x.treasure}
+                              image={x.image}
+                              judgeList={x.judgeList}
+                              index={x.index}
+                            />
+                          ))}
+                        </div>
+                      </>
+                    ) : (
+                      ''
+                    )}
 
-            <div className="icons">
-              <div className="icons-treasure" onClick={() => {
-                setView("treasure")
-              }}>
-                <div className="icons-text">Bounties</div>
-              </div>
-              <div className="icons-signal" onClick={() => {
-                setView("signal")
-              }}>
-                <div className="icons-text">Fundraisers</div>
-              </div>
-              <div className="icons-mail" onClick={() => {
-                setView("mail-in")
-              }}>
-                <div className="icons-text">Subscriptions</div>
-              </div>
-            </div>
-          </div>
+                    {executing.length > 0 ? (
+                      <>
+                        <h3>Nominated for Executer</h3>
+                        <div className="card-grid">
+                          {executing.map((x) => (
+                            <TreasureCard
+                              className="mytreasure"
+                              name={x.name}
+                              profile={x.island}
+                              tagline={x.tagline}
+                              treasure={x.treasure}
+                              image={x.image}
+                              executerList={x.judgeList}
+                              index={x.index}
+                            />
+                          ))}
+                        </div>
+                      </>
+                    ) : (
+                      ''
+                    )}
+                  </>
+                ) : view == 'signal' ? (
+                  <>
+                    <NavLink
+                      to={`/newsignal/${island.scid}/${island.fundraisers.length}`}
+                    >
+                      Start New Smoke Signal
+                    </NavLink>
+                    {island.fundraisers.length > 0 ? (
+                      <>
+                        {island.fundraisers.map((x) => (
+                          <NavLink
+                            to={`/island/${x.island}/smokesignal/${x.index}`}
+                          >
+                            <FundCard
+                              name={x.name}
+                              profile={x.island}
+                              tagline={x.tagline}
+                              goal={x.goal}
+                              image={x.image}
+                              deadline={x.deadline}
+                            />
+                          </NavLink>
+                        ))}
+                      </>
+                    ) : (
+                      <>
+                        <p>No Smoke Signals Yet</p>
+                      </>
+                    )}
+                  </>
+                ) : view == 'mail-in' ? (
+                  <>
+                    <Button
+                      size="small"
+                      handleClick={() => {
+                        setView('mail-in');
+                      }}
+                    >
+                      Incoming
+                    </Button>
+                    <Button
+                      size="small"
+                      handleClick={() => {
+                        setView('mail-out');
+                      }}
+                    >
+                      Outgoing
+                    </Button>
+                    <Feed />
+                  </>
+                ) : view == 'mail-out' ? (
+                  <>
+                    <Button
+                      size="small"
+                      handleClick={() => {
+                        setView('mail-in');
+                      }}
+                    >
+                      Incoming
+                    </Button>
+                    <Button
+                      size="small"
+                      handleClick={() => {
+                        setView('mail-out');
+                      }}
+                    >
+                      Outgoing
+                    </Button>
+                    <h3>Your Subscription Tiers</h3>
+                    {state.myIslands[state.active].tiers.map((t) => (
+                      <p>
+                        {t.name}, subs:{t.subs.length}
+                        <NavLink
+                          to={`/island/${
+                            state.myIslands[state.active].name
+                          }/modifytier/${t.index}`}
+                        >
+                          Edit
+                        </NavLink>
+                      </p>
+                    ))}
+                    <NavLink
+                      to={`/island/${
+                        state.myIslands[state.active].name
+                      }/compose`}
+                    >
+                      Put a Message in a Bottle
+                    </NavLink>
+                    <Button
+                      size="small"
+                      handleClick={() => {
+                        setView('compose');
+                        setEditing('posts');
+                      }}
+                    >
+                      Compose Message
+                    </Button>
+                    <NavLink
+                      to={`/island/${
+                        state.myIslands[state.active].name
+                      }/modifytier/${
+                        state.myIslands[state.active].tiers.length
+                      }`}
+                    >
+                      New Subscription Tier
+                    </NavLink>
+                  </>
+                ) : view == 'compose' ? (
+                  <>
+                    <Button
+                      size="small"
+                      handleClick={() => {
+                        if (state.myIslands[state.active].posts) {
+                          console.log(state.myIslands[state.active].posts);
+                        }
+                      }}
+                    >
+                      State
+                    </Button>
+                    <PublishPost editIsland={editIsland} setView={setView} />
+                  </>
+                ) : view == 'success' ? (
+                  <>
+                    Success!
+                    <Button
+                      size="small"
+                      handleClick={() => {
+                        setView('main');
+                      }}
+                    >
+                      Return
+                    </Button>
+                  </>
+                ) : (
+                  ''
+                )}
 
-        }</> : <h3>Loading...</h3>}
+                <div className="icons">
+                  <div
+                    className="icons-treasure"
+                    onClick={() => {
+                      setView('treasure');
+                    }}
+                  >
+                    <div className="icons-text">Bounties</div>
+                  </div>
+                  <div
+                    className="icons-signal"
+                    onClick={() => {
+                      setView('signal');
+                    }}
+                  >
+                    <div className="icons-text">Fundraisers</div>
+                  </div>
+                  <div
+                    className="icons-mail"
+                    onClick={() => {
+                      setView('mail-in');
+                    }}
+                  >
+                    <div className="icons-text">Subscriptions</div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </>
+        ) : (
+          <h3>Loading...</h3>
+        )}
       </div>
     </div>
-  )
+  );
 }

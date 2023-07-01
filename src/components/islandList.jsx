@@ -38,14 +38,14 @@ export default function IslandList() {
   }, [islands]); // specify an empty array as the dependencies to run the effect only when the component mounts or updates
 
   return (
-    <div className="function">
+    <>
       <NavLink to={`/archipelago`}>
-        <h1>The Archipelago</h1>
+        <div className="flex text-3xl font-bold text-info">The Archipelago</div>
       </NavLink>
       <FeatureNav setSearchParams={setSearchParams} />
       {!searchParams.get('filter') ? (
         <div>
-          <div className="profile-card-grid">
+          <div className="flex flex-wrap justify-between">
             {islands.map((bio) => {
               return (
                 <NavLink to={`/island/${bio.name}?view=main`} key={bio.name}>
@@ -59,15 +59,15 @@ export default function IslandList() {
             })}
           </div>
         </div>
-      ) : searchParams.get('filter') == 'treasure' ? (
+      ) : searchParams.get('filter') === 'treasure' ? (
         <BountyList islands={islands} />
-      ) : searchParams.get('filter') == 'smokesignals' ? (
+      ) : searchParams.get('filter') === 'smokesignals' ? (
         <FundList islands={islands} />
-      ) : searchParams.get('filter') == 'mib' ? (
+      ) : searchParams.get('filter') === 'mib' ? (
         <BottleList islands={islands} state={state} />
       ) : (
         ''
       )}
-    </div>
+    </>
   );
 }

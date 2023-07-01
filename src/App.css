@@ -5,7 +5,6 @@
   align-items: center;
   flex-direction: column;
   margin: 0 20px 0 20px;
-  height: 100vh;
 }
 
 /*.navbar {*/
@@ -115,6 +114,7 @@ input[type="checkbox"] {
           rgba(231, 196, 196, 0.45)
   );
 
+  color: #000000;
   border-radius: 5%;
   margin-top:2vw;
   margin-left: auto;
@@ -505,12 +505,6 @@ input[type="password"]:focus {
   cursor: pointer;
 }
 
-.profile-card-grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-}
-
 .profile-card {
   position: relative;
   width: 200px;
@@ -522,6 +516,7 @@ input[type="password"]:focus {
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  box-shadow: 4px 2px 2px rgb(0, 0, 0, 0.1);
 }
 
 .profile-card__front,
@@ -531,6 +526,7 @@ input[type="password"]:focus {
   height: 100%;
   backface-visibility: hidden;
   transition: transform 0.8s;
+  z-index: 1;
 }
 
 .profile-card__front {
@@ -644,4 +640,3 @@ input[type="password"]:focus {
 .dropdown.open > .dropdown-content {
   display: block;
 }
-

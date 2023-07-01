@@ -270,74 +270,58 @@ const WalletModal = ({ handleClose }) => {
               X
             </Button>
           </FlexBoxRow>
-          <FlexBoxRow justify="left">
-            <FlexBoxColumn align="left">
-              <div className="pb-2 text-xl">RPC Wallet</div>
-              <div className="rounded-lg border border-slate-400 px-3 py-1">
-                {state.walletList[0].address ? (
-                  <WalletSelectItem
-                    i={0}
-                    address={state.walletList[0].address}
-                  />
-                ) : (
-                  'Not Connected'
-                )}
-              </div>
-            </FlexBoxColumn>
+          <FlexBoxRow justify="left" className="space-x-4">
+            <div className="text-xl">RPC Wallet</div>
+            <div className="rounded-lg border border-slate-400 px-3 py-1">
+              {state.walletList[0].address ? (
+                <WalletSelectItem i={0} address={state.walletList[0].address} />
+              ) : (
+                'Not Connected'
+              )}
+            </div>
           </FlexBoxRow>
           <FlexBoxRow justify="left">
             <FlexBoxColumn align="left">
               <div className="py-2 text-xl">Integrated Wallets</div>
               <FlexBoxRow justfy="between">
                 <Info />
-                <fieldset>
-                  <form onSubmit={openSelectedWallet}>
-                    <input
-                      id="pass"
-                      type="password"
-                      className="rounded-lg border border-slate-400 bg-zinc-800"
-                      placeholder="password"
-                    />
-                    <Button
-                      type={'submit'}
-                      size="small"
-                      className="m-1 bg-blue-500 text-xs"
-                    >
-                      Open
-                    </Button>
-                  </form>
-                </fieldset>
-
+                <form onSubmit={openSelectedWallet}>
+                  <input
+                    id="pass"
+                    type="password"
+                    className="w-3/4 rounded-lg border border-slate-400 bg-zinc-800"
+                    placeholder="password"
+                  />
+                  &nbsp;&nbsp;&nbsp;
+                  <Button type={'submit'} size="xsmall" className="m-0">
+                    Open
+                  </Button>
+                </form>
                 <Button
-                  size="small"
-                  className="m-1 bg-zinc-500 text-xs"
+                  size="xsmall"
+                  className="bg-zinc-500"
                   handleClick={() => closeSelectedWallet()}
                 >
                   Close
                 </Button>
+                &nbsp;&nbsp;&nbsp;&nbsp;
                 <Button
-                  size="small"
-                  className="m-1 bg-zinc-500 text-xs"
+                  size="xsmall"
+                  className="bg-zinc-500 px-2"
                   handleClick={() => removeSelectedWallet()}
                 >
                   Del
                 </Button>
               </FlexBoxRow>
-              <span className="divider" />
-              <Button
-                size="small"
-                handleClick={() => handleOptionClick('addWallet')}
-              >
-                Add Wallet
-              </Button>
-            </FlexBoxColumn>
-          </FlexBoxRow>
-          <FlexBoxRow justify="left">
-            <FlexBoxColumn align="left">
-              <div className="pb-2 text-xl">Ethereum Wallet</div>
-              <div className="rounded-lg border border-slate-400 px-3 py-1">
-                <ConnectButton />
-              </div>
+              <FlexBoxRow justify="between" className="pt-4">
+                <Button
+                  size="small"
+                  handleClick={() => handleOptionClick('addWallet')}
+                >
+                  Add Wallet
+                </Button>
+                <ConnectButton label="Ethereum Wallet" />
+              </FlexBoxRow>
             </FlexBoxColumn>
           </FlexBoxRow>
         </FlexBoxColumn>

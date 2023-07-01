@@ -1,68 +1,105 @@
-import React from 'react'
-import TreasureCard from './treasureCard'
-import '../App.css'
-import {useSearchParams} from 'react-router-dom'
-import {LoginContext} from '../LoginContext'
+import { useCallback, useContext, useEffect, useState } from 'react';
+import TreasureCard from './treasureCard';
+import '../App.css';
+import { useSearchParams } from 'react-router-dom';
+import { LoginContext } from '../LoginContext';
+import { FlexBoxColumn } from '@/components/common/FlexBoxColumn.jsx';
 
-export default function BountyList({islands}) {
-  const [state, setState] = React.useContext(LoginContext);
-  const [funds, setFunds] = React.useState([])
+export default function BountyList({ islands }) {
+  const [state, setState] = useContext(LoginContext);
+  const [funds, setFunds] = useState([]);
+  const [activeFilter, setActiveFilter] = useState('');
   let [searchParams, setSearchParams] = useSearchParams();
 
-  function hex2a(hex) {
-    var str = '';
-    for (var i = 0; i < hex.length; i += 2) str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
-    return str;
-  }
+  const filterOptions = [
+    { label: 'All', filter: 'treasure', status: '' },
+    { label: 'Active', filter: 'treasure', status: 0 },
+    { label: 'Successes', filter: 'treasure', status: 1 },
+    { label: 'Failures', filter: 'treasure', status: 2 },
+  ];
 
-  const getFunds = React.useCallback(async () => {
-    var bounties = []
-    console.log(islands)
+  const handleFilterSelection = (item) => {
+    setSearchParams({ filter: item.filter, status: item.status });
+    setActiveFilter(item.label);
+  };
+
+  const getFunds = useCallback(async () => {
+    var bounties = [];
 
     for (var i = 0; i < islands.length; i++) {
       for (var b = 0; b < islands[i].bounties.length; b++) {
-        bounties.push(islands[i].bounties[b])
+        bounties.push(islands[i].bounties[b]);
       }
     }
-    setFunds(bounties)
-  })
+    setFunds(bounties);
+  });
 
-  React.useEffect(() => {
+  useEffect(() => {
     getFunds();
-  }, [state, islands])
+  }, [state, islands]);
 
-  React.useEffect(() => {
-    console.log("funds??", funds)
-  }, [funds])
+  useEffect(() => {
+    // console.log('funds??', funds);
+  }, [funds]);
 
+  /*
+   TODO - MTS -- searchParams.get('island') is always null -- PROB SHOULD REMOVE
+   */
+  const fundJSX = funds.map((f) => {
+    if (
+      searchParams.get('status') &&
+      f.status !== parseInt(searchParams.get('status'))
+    )
+      return;
+    if (searchParams.get('island') && f.island != searchParams.get('island'))
+      return;
 
-  const fundJSX = funds.map(f => {
-    if (searchParams.get("status") && f.status != searchParams.get("status")) return
-    if (searchParams.get("island") && f.island != searchParams.get("island")) return
-
-    return (<div className="function"><TreasureCard JN={f.JN} image={f.image} index={f.index} treasure={f.treasure}
-                                                    deadline={f.deadline} profile={f.island} name={f.name}
-                                                    tagline={f.tagline} /></div>)
-
-  })
-
+    return (
+      <div className="mb-3">
+        <TreasureCard
+          key={f.name}
+          JN={f.JN}
+          image={f.image}
+          index={f.index}
+          treasure={f.treasure}
+          deadline={f.deadline}
+          profile={f.island}
+          name={f.name}
+          tagline={f.tagline}
+        />
+      </div>
+    );
+  });
 
   return (
     <div>
-      <div>
-
-        <h1>Buried Treasure Bounties</h1>
-        <div className="status-selector">
-          <ul>
-            <li className="status-selector-option"
-                onClick={() => setSearchParams({"filter": "treasure", "status": 0})}>Active
-            </li>
-            <li onClick={() => setSearchParams({"filter": "treasure", "status": 1})}>Successes</li>
-            <li onClick={() => setSearchParams({"filter": "treasure", "status": 2})}>Failures</li>
-          </ul>
+      <FlexBoxColumn className="my-3 flex justify-center">
+        <div className="text-xl font-semibold text-info">
+          Buried Treasure Bounties
         </div>
-        {fundJSX && fundJSX}
-      </div>
+        <div className="join">
+          {filterOptions.map((item, index) => (
+            <input
+              key={index}
+              className={`join-item btn ${
+                activeFilter === item.label ? 'btn-accent' : 'btn-info'
+              }`}
+              type="radio"
+              name="options"
+              aria-label={item.label}
+              onClick={() => handleFilterSelection(item)}
+              style={{
+                backgroundColor:
+                  activeFilter === item.label ? '#5ee596' : '#6c98d6',
+                borderColor:
+                  activeFilter === item.label ? '#5ee596' : '#6c98d6',
+                color: activeFilter === item.label ? '#28353e' : '#28353e',
+              }}
+            />
+          ))}
+        </div>
+      </FlexBoxColumn>
+      {fundJSX && fundJSX}
     </div>
-  )
+  );
 }

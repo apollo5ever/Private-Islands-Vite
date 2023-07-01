@@ -3,7 +3,7 @@ import { createRequire } from 'module';
 import path from 'path';
 import html from '@rollup/plugin-html';
 import addAssetHtml from 'add-asset-html-webpack-plugin';
-import react from '@vitejs/plugin-react'
+import react from '@vitejs/plugin-react';
 
 const require = createRequire(import.meta.url);
 
@@ -14,7 +14,7 @@ export default defineConfig({
       enforce: 'pre',
       apply: 'build',
     },
-    react()
+    react(),
   ],
   rollupInputOptions: {
     input: './src/index.js',
@@ -51,11 +51,12 @@ export default defineConfig({
   build: {
     sourcemap: true,
     outDir: 'dist',
+    envDir: './',
   },
   server: {
     port: 3000,
   },
   resolve: {
-    alias: [{find: '@', replacement: path.resolve(__dirname, 'src')}],
-  }
+    alias: [{ find: '@', replacement: path.resolve(__dirname, 'src') }],
+  },
 });

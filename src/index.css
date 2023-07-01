@@ -25,12 +25,7 @@ input {
   color: #c0c0c0;
 }
 
-/*
- Theme documentation for reference now & for when we create a theme
- colors: (from the standard tailwind color palette)
-    primary: sky-900
-    primary-light: cyan-400
-    blue-200 is the light blue background
-    sky-900 is the dark blue
-    cyan-400 is the middle blue
- */
+/* MTS Additions */
+.my-important-class {
+  @apply !important;
+}

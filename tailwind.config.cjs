@@ -11,15 +11,15 @@ module.exports = {
       {
         light: {
           ...require('daisyui/src/theming/themes')['[data-theme=light]'],
-          "primary": "#22D3EE",
-          "secondary": "#3DC5CF",
-          "accent": "#BBDEFF",
-          "neutral": "#191D24",
-          "base-100": "#BBDEFF",
-          "info": "#3B2FDF",
-          "success": "#36D399",
-          "warning": "#FBBD23",
-          "error": "#F87272",
+          "primary": "#3ce0d2",
+          "secondary": "#5ee596",
+          "accent": "#ffe182",
+          "neutral": "#28353e",
+          "base-100": "#eeeff6",
+          "info": "#6c98d6",
+          "success": "#125933",
+          "warning": "#967b03",
+          "error": "#e14167",
         },
       },
       {
@@ -36,6 +36,6 @@ module.exports = {
           "error": "#F87272",
         }
       }
-    ]
+    ],
   },
 }

@@ -1,8 +1,8 @@
-import React from "react";
-import { useSearchParams } from "react-router-dom";
-import { LoginContext } from "../LoginContext";
-import { useSendTransaction } from "../useSendTransaction";
-import { useGetSC } from "../useGetSC";
+import React from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { LoginContext } from '../LoginContext';
+import { useSendTransaction } from '../useSendTransaction';
+import { useGetSC } from '../useGetSC';
 
 export default function RevenueShare() {
   // const [searchParams, setSearchParams] = useSearchParams();
@@ -37,7 +37,7 @@ export default function RevenueShare() {
         setRegistryShares(0);
       }
       let bounty = await getSC(state.scid_bounties);
-      console.log("bounty ", bounty.stringkeys.T_DERO);
+      console.log('bounty ', bounty.stringkeys.T_DERO);
       setBountyTreasury(bounty.stringkeys.T_DERO);
       if (
         bounty.stringkeys[
@@ -54,7 +54,7 @@ export default function RevenueShare() {
       }
 
       let fund = await getSC(state.scid_fundraisers);
-      console.log("fund ", fund.stringkeys.T_DERO);
+      console.log('fund ', fund.stringkeys.T_DERO);
       setFundTreasury(fund.stringkeys.T_DERO);
       if (
         fund.stringkeys[
@@ -71,7 +71,7 @@ export default function RevenueShare() {
       }
 
       let sub = await getSC(state.scid_subscriptions);
-      console.log("sub ", sub.stringkeys.T_DERO);
+      console.log('sub ', sub.stringkeys.T_DERO);
       setSubTreasury(sub.stringkeys.T_DERO);
       if (
         sub.stringkeys[`${state.walletList[state.activeWallet].address}_SHARES`]
@@ -94,7 +94,7 @@ export default function RevenueShare() {
 
   const BountyBuyShares = React.useCallback(async (e) => {
     e.preventDefault();
-    console.log("bounty selected");
+    console.log('bounty selected');
 
     const data = new Object({
       scid: state.scid_bounties,
@@ -102,15 +102,15 @@ export default function RevenueShare() {
       transfers: [
         {
           destination: state.randomAddress,
-          scid: "a9a977297ed6ed087861bfa117e6fbbd603c2051b0cc1b0d704bc764011aabb6",
+          scid: 'a9a977297ed6ed087861bfa117e6fbbd603c2051b0cc1b0d704bc764011aabb6',
           burn: e.target.shares.value * 10000,
         },
       ],
       sc_rpc: [
         {
-          name: "entrypoint",
-          datatype: "S",
-          value: "D",
+          name: 'entrypoint',
+          datatype: 'S',
+          value: 'D',
         },
       ],
     });
@@ -125,13 +125,13 @@ export default function RevenueShare() {
       ringsize: 2,
       sc_rpc: [
         {
-          name: "entrypoint",
-          datatype: "S",
-          value: "SS",
+          name: 'entrypoint',
+          datatype: 'S',
+          value: 'SS',
         },
         {
-          name: "shares",
-          datatype: "U",
+          name: 'shares',
+          datatype: 'U',
           value: parseInt(e.target.shares.value),
         },
       ],
@@ -141,7 +141,7 @@ export default function RevenueShare() {
 
   const FundBuyShares = React.useCallback(async (e) => {
     e.preventDefault();
-    console.log("bounty selected");
+    console.log('bounty selected');
 
     const data = new Object({
       scid: state.scid_fundraisers,
@@ -149,15 +149,15 @@ export default function RevenueShare() {
       transfers: [
         {
           destination: state.randomAddress,
-          scid: "a9a977297ed6ed087861bfa117e6fbbd603c2051b0cc1b0d704bc764011aabb6",
+          scid: 'a9a977297ed6ed087861bfa117e6fbbd603c2051b0cc1b0d704bc764011aabb6',
           burn: e.target.shares.value * 10000,
         },
       ],
       sc_rpc: [
         {
-          name: "entrypoint",
-          datatype: "S",
-          value: "D",
+          name: 'entrypoint',
+          datatype: 'S',
+          value: 'D',
         },
       ],
     });
@@ -172,13 +172,13 @@ export default function RevenueShare() {
       ringsize: 2,
       sc_rpc: [
         {
-          name: "entrypoint",
-          datatype: "S",
-          value: "SS",
+          name: 'entrypoint',
+          datatype: 'S',
+          value: 'SS',
         },
         {
-          name: "shares",
-          datatype: "U",
+          name: 'shares',
+          datatype: 'U',
           value: parseInt(e.target.shares.value),
         },
       ],
@@ -188,7 +188,7 @@ export default function RevenueShare() {
 
   const SubBuyShares = React.useCallback(async (e) => {
     e.preventDefault();
-    console.log("bounty selected");
+    console.log('bounty selected');
 
     const data = new Object({
       scid: state.scid_subscriptions,
@@ -196,15 +196,15 @@ export default function RevenueShare() {
       transfers: [
         {
           destination: state.randomAddress,
-          scid: "a9a977297ed6ed087861bfa117e6fbbd603c2051b0cc1b0d704bc764011aabb6",
+          scid: 'a9a977297ed6ed087861bfa117e6fbbd603c2051b0cc1b0d704bc764011aabb6',
           burn: e.target.shares.value * 10000,
         },
       ],
       sc_rpc: [
         {
-          name: "entrypoint",
-          datatype: "S",
-          value: "D",
+          name: 'entrypoint',
+          datatype: 'S',
+          value: 'D',
         },
       ],
     });
@@ -219,13 +219,13 @@ export default function RevenueShare() {
       ringsize: 2,
       sc_rpc: [
         {
-          name: "entrypoint",
-          datatype: "S",
-          value: "SS",
+          name: 'entrypoint',
+          datatype: 'S',
+          value: 'SS',
         },
         {
-          name: "shares",
-          datatype: "U",
+          name: 'shares',
+          datatype: 'U',
           value: parseInt(e.target.shares.value),
         },
       ],
@@ -235,7 +235,7 @@ export default function RevenueShare() {
 
   const RegistryBuyShares = React.useCallback(async (e) => {
     e.preventDefault();
-    console.log("bounty selected");
+    console.log('bounty selected');
 
     const data = new Object({
       scid: state.scid_registry,
@@ -243,15 +243,15 @@ export default function RevenueShare() {
       transfers: [
         {
           destination: state.randomAddress,
-          scid: "a9a977297ed6ed087861bfa117e6fbbd603c2051b0cc1b0d704bc764011aabb6",
+          scid: 'a9a977297ed6ed087861bfa117e6fbbd603c2051b0cc1b0d704bc764011aabb6',
           burn: e.target.shares.value * 10000,
         },
       ],
       sc_rpc: [
         {
-          name: "entrypoint",
-          datatype: "S",
-          value: "D",
+          name: 'entrypoint',
+          datatype: 'S',
+          value: 'D',
         },
       ],
     });
@@ -260,20 +260,20 @@ export default function RevenueShare() {
 
   const RegistrySellShares = React.useCallback(async (e) => {
     e.preventDefault();
-    console.log("bounty selected");
+    console.log('bounty selected');
 
     const data = new Object({
       scid: state.scid_registry,
       ringsize: 2,
       sc_rpc: [
         {
-          name: "entrypoint",
-          datatype: "S",
-          value: "SS",
+          name: 'entrypoint',
+          datatype: 'S',
+          value: 'SS',
         },
         {
-          name: "shares",
-          datatype: "U",
+          name: 'shares',
+          datatype: 'U',
           value: parseInt(e.target.shares.value),
         },
       ],
@@ -300,20 +300,20 @@ export default function RevenueShare() {
             The Subscriptions contract which collects a 10% fee from
             subscriptions.
           </li>
-        </ul>{" "}
+        </ul>{' '}
       </p>
-      <div className="profile-card-grid">
+      <div className="flex flex-wrap justify-between">
         <div className="share-card">
           <h1>Registry</h1>
           <h3>Treasury: {registryTreasury / 100000} Dero</h3>
           <h3>Your shares: {registryShares}</h3>
           <form onSubmit={RegistryBuyShares}>
             <input type="number" placeholder="shares" id="shares" />
-            <button type={"submit"}>Buy Shares</button>
+            <button type={'submit'}>Buy Shares</button>
           </form>
           <form onSubmit={RegistrySellShares}>
             <input type="number" placeholder="shares" id="shares" />
-            <button type={"submit"}>Sell Shares</button>
+            <button type={'submit'}>Sell Shares</button>
           </form>
         </div>
         <div className="share-card">
@@ -322,11 +322,11 @@ export default function RevenueShare() {
           <h3>Your shares: {bountyShares}</h3>
           <form onSubmit={BountyBuyShares}>
             <input type="number" placeholder="shares" id="shares" />
-            <button type={"submit"}>Buy Shares</button>
+            <button type={'submit'}>Buy Shares</button>
           </form>
           <form onSubmit={BountySellShares}>
             <input type="number" placeholder="shares" id="shares" />
-            <button type={"submit"}>Sell Shares</button>
+            <button type={'submit'}>Sell Shares</button>
           </form>
         </div>
         <div className="share-card">
@@ -335,11 +335,11 @@ export default function RevenueShare() {
           <h3>Your shares: {fundShares}</h3>
           <form onSubmit={FundBuyShares}>
             <input type="number" placeholder="shares" id="shares" />
-            <button type={"submit"}>Buy Shares</button>
+            <button type={'submit'}>Buy Shares</button>
           </form>
           <form onSubmit={FundSellShares}>
             <input type="number" placeholder="shares" id="shares" />
-            <button type={"submit"}>Sell Shares</button>
+            <button type={'submit'}>Sell Shares</button>
           </form>
         </div>
         <div className="share-card">
@@ -348,11 +348,11 @@ export default function RevenueShare() {
           <h3>Your shares: {subShares}</h3>
           <form onSubmit={SubBuyShares}>
             <input type="number" placeholder="shares" id="shares" />
-            <button type={"submit"}>Buy Shares</button>
+            <button type={'submit'}>Buy Shares</button>
           </form>
           <form onSubmit={SubSellShares}>
             <input type="number" placeholder="shares" id="shares" />
-            <button type={"submit"}>Sell Shares</button>
+            <button type={'submit'}>Sell Shares</button>
           </form>
         </div>
       </div>
