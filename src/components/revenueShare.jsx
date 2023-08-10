@@ -139,6 +139,22 @@ export default function RevenueShare() {
     sendTransaction(data);
   });
 
+  const BountyWithdraw = React.useCallback(async (e) => {
+    e.preventDefault();
+
+    const data = new Object({
+      scid: state.scid_bounties,
+      ringsize: 2,
+      sc_rpc: [
+        {
+          name: "entrypoint",
+          datatype: "S",
+          value: "W",
+        },
+      ],
+    });
+    sendTransaction(data);
+  });
   const FundBuyShares = React.useCallback(async (e) => {
     e.preventDefault();
     console.log("bounty selected");
@@ -186,6 +202,23 @@ export default function RevenueShare() {
     sendTransaction(data);
   });
 
+  const FundWithdraw = React.useCallback(async (e) => {
+    e.preventDefault();
+
+    const data = new Object({
+      scid: state.scid_fundraisers,
+      ringsize: 2,
+      sc_rpc: [
+        {
+          name: "entrypoint",
+          datatype: "S",
+          value: "W",
+        },
+      ],
+    });
+    sendTransaction(data);
+  });
+
   const SubBuyShares = React.useCallback(async (e) => {
     e.preventDefault();
     console.log("bounty selected");
@@ -227,6 +260,23 @@ export default function RevenueShare() {
           name: "shares",
           datatype: "U",
           value: parseInt(e.target.shares.value),
+        },
+      ],
+    });
+    sendTransaction(data);
+  });
+
+  const SubWithdraw = React.useCallback(async (e) => {
+    e.preventDefault();
+
+    const data = new Object({
+      scid: state.scid_subscriptions,
+      ringsize: 2,
+      sc_rpc: [
+        {
+          name: "entrypoint",
+          datatype: "S",
+          value: "W",
         },
       ],
     });
@@ -281,6 +331,23 @@ export default function RevenueShare() {
     sendTransaction(data);
   });
 
+  const RegistryWithdraw = React.useCallback(async (e) => {
+    e.preventDefault();
+
+    const data = new Object({
+      scid: state.scid_registry,
+      ringsize: 2,
+      sc_rpc: [
+        {
+          name: "entrypoint",
+          datatype: "S",
+          value: "W",
+        },
+      ],
+    });
+    sendTransaction(data);
+  });
+
   return (
     <div className="function">
       <h1>Private Islands Revenue Share</h1>
@@ -315,6 +382,9 @@ export default function RevenueShare() {
             <input type="number" placeholder="shares" id="shares" />
             <button type={"submit"}>Sell Shares</button>
           </form>
+          <form onSubmit={RegistryWithdraw}>
+            <button type={"submit"}>Withdraw</button>
+          </form>
         </div>
         <div className="share-card">
           <h1>Bounties</h1>
@@ -327,6 +397,9 @@ export default function RevenueShare() {
           <form onSubmit={BountySellShares}>
             <input type="number" placeholder="shares" id="shares" />
             <button type={"submit"}>Sell Shares</button>
+          </form>
+          <form onSubmit={BountyWithdraw}>
+            <button type={"submit"}>Withdraw</button>
           </form>
         </div>
         <div className="share-card">
@@ -341,6 +414,9 @@ export default function RevenueShare() {
             <input type="number" placeholder="shares" id="shares" />
             <button type={"submit"}>Sell Shares</button>
           </form>
+          <form onSubmit={FundWithdraw}>
+            <button type={"submit"}>Withdraw</button>
+          </form>
         </div>
         <div className="share-card">
           <h1>Subscriptions</h1>
@@ -353,6 +429,9 @@ export default function RevenueShare() {
           <form onSubmit={SubSellShares}>
             <input type="number" placeholder="shares" id="shares" />
             <button type={"submit"}>Sell Shares</button>
+          </form>
+          <form onSubmit={SubWithdraw}>
+            <button type={"submit"}>Withdraw</button>
           </form>
         </div>
       </div>
