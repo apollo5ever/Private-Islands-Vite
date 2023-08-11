@@ -5,7 +5,7 @@ import Post from './post';
 import to from 'await-to-js';
 import {getSubscriberPosts} from './getSubscriberPosts';
 import {useGetSC} from '../useGetSC';
-import {Button} from 'react-daisyui';
+import {Button} from '@/components/common/Button.jsx';
 import {FlexBoxRow} from "@/components/common/FlexBoxRow.jsx";
 import {FlexBoxColumn} from "@/components/common/FlexBoxColumn.jsx";
 
@@ -124,13 +124,13 @@ export default function Feed() {
 
   // TODO MTS -- MyIsland -> subscriptions gets me there -- styling is incomplete as I can't get back to it -- getting error
   return (
-    <FlexBoxColumn justify='center' className='prose'>
+    <FlexBoxColumn justify='center' className=''>
       <h3>You have {encryptedCount} encrypted persistent posts.</h3>
         <form onSubmit={decryptPersistentPosts}>
           <input id="key" placeholder='key' />
           <FlexBoxRow className='pt-3' justify='even'>
-            <Button size='sm' type="submit">Decrypt</Button>
-            <Button size='sm' onClick={() => setFormType(formType === "cid" ? "txid" : "cid")}>Toggle Form</Button>
+            <Button size='small' type="submit">Decrypt</Button>
+            <Button size='small' onClick={() => setFormType(formType === "cid" ? "txid" : "cid")}>Toggle Form</Button>
           </FlexBoxRow>
         </form>
       <form onSubmit={getPost}>
@@ -148,7 +148,7 @@ export default function Feed() {
         )}
         <label>Decryption Key:</label>
         <input id="key" placeholder='decryption key' type='text' />
-        <Button size='sm' type="submit">Get Post</Button>
+        <Button size='small' type="submit">Get Post</Button>
       </form>
       {feed ? <div className="function">{feed}</div> : ""}
     </FlexBoxColumn>

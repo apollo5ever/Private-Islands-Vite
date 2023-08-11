@@ -5,8 +5,7 @@ import { useSendTransaction } from '../useSendTransaction'
 import { useGetSC } from '../useGetSC'
 import { LoginContext } from '../LoginContext';
 import Success from './success'
-import {Button} from 'react-daisyui'
-import hex2a from './hex2a';
+import {Button} from '@/components/common/Button.jsx'
 import { useGetBalance } from '../useGetBalance';
 
 
@@ -299,7 +298,7 @@ export default function ClaimIsland() {
         
         
         <p>&nbsp;</p>
-        <Button size='sm' type={"submit"}>Create</Button>
+        <Button size='small' type={"submit"}>Create</Button>
       </form>
       {islandSCID && "here's the scid for your island "+islandSCID}
       {error}
@@ -315,7 +314,7 @@ export default function ClaimIsland() {
   
         
         <p>&nbsp;</p>
-        <Button size='sm' type={"submit"}>Create</Button>
+        <Button size='small' type={"submit"}>Create</Button>
       </form>
       {islandSCID && "here's the scid for your island "+islandSCID}
       {error}
