@@ -32,7 +32,7 @@ export const HeroCard = ({
             )}
             <h1 className="pb-4 text-5xl font-bold">{title}</h1>
           </FlexBoxColumn>
-          <FlexBoxColumn align="start">{children}</FlexBoxColumn>
+          {children}
         </div>
       </div>
     </div>
