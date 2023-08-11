@@ -1,3 +1,9 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 /*TODO MTS - 'safe' doesnt name sense to me, but keeps the content hidden - redo menu & this file*/
 .App {
   display: flex;
@@ -192,6 +198,10 @@ a {
 /*  padding: 0px;*/
 /*  cursor: pointer;*/
 /*}*/
+
+img {
+  width: 500px;
+}
 
 footer {
   color: white;
