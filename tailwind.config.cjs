@@ -3,7 +3,12 @@ module.exports = {
   mode: 'jit',
   content: ["./src/**/*.{js,jsx,ts,tsx}", 'node_modules/daisyui/dist/**/*.js'],
   theme: {
-    extend: {}
+    extend: {
+      backgroundColor: {
+        'color-light': '#FFFFFF',
+        'color-dark': '#000000',
+      }
+    }
   },
   plugins: [require("daisyui")],
   daisyui: {
