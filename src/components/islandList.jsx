@@ -48,11 +48,11 @@ export default function IslandList() {
           <div className="flex flex-wrap justify-between">
             {islands.map((bio) => {
               return (
-                <NavLink to={`/island/${bio.name}?view=main`} key={bio.name}>
+                <NavLink to={`/island/${bio.SCID}?view=main`} key={bio.SCID}>
                   <IslandCard
-                    name={bio.name}
-                    tagline={bio.tagline}
-                    image={bio.image}
+                    name={bio.Name}
+                    tagline={bio.Tagline}
+                    image={bio.Image}
                   />
                 </NavLink>
               );

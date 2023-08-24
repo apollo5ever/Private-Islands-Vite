@@ -17,6 +17,7 @@ export const SummaryCard = (props) => {
     tagline,
     judging,
     executing,
+    initiator,
   } = props.props;
 
   return (
@@ -26,7 +27,10 @@ export const SummaryCard = (props) => {
       </figure>
       <div className="card-body text-neutral">
         <h2 className="card-title">{name}</h2>
-        <p>Initiated by {profile}</p>
+        <p>
+          Initiated by{' '}
+          <NavLink to={`/island/${initiator.SCID}`}>{initiator.Name}</NavLink>
+        </p>
         <p>{tagline}</p>
         <p>
           <strong>Treasure:</strong> {treasure / DERO_DENOMINATOR} Dero
@@ -64,7 +68,7 @@ export const SummaryCard = (props) => {
           )}
         </p>
         <div className="card-actions justify-end">
-          <NavLink to={`/island/${profile}/treasure/${index}`}>
+          <NavLink to={`/island/${initiator.SCID}/treasure/${index}`}>
             <button className="btn-secondary btn text-neutral hover:text-info">
               Learn More
             </button>

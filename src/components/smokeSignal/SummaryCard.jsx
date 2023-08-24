@@ -2,7 +2,8 @@ import { DERO_DENOMINATOR } from '@/utils/helpers.js';
 import { NavLink } from 'react-router-dom';
 
 export const SummaryCard = (props) => {
-  const { index, image, goal, deadline, profile, name, tagline } = props;
+  const { index, image, goal, deadline, profile, name, tagline, initiator } =
+    props;
   const deadlineDate = new Date(deadline * 1000);
   const deadlineString =
     (deadlineDate.getMonth() + 1).toString() +
@@ -18,14 +19,17 @@ export const SummaryCard = (props) => {
       </figure>
       <div className="card-body text-neutral">
         <h2 className="card-title">{name}</h2>
-        <p>Initiated by {profile}</p>
+        <p>
+          Initiated by{' '}
+          <NavLink to={`/island/${initiator.SCID}`}>{initiator.Name}</NavLink>
+        </p>
         <p>{tagline}</p>
         <p>
           <strong>Goal:</strong>&nbsp;
-          {goal / DERO_DENOMINATOR} Dero by {deadlineString}{' '}
+          {goal / DERO_DENOMINATOR} Dero by {deadline}
         </p>
         <div className="card-actions justify-end">
-          <NavLink to={`/island/${profile}/smokesignal/${index}`}>
+          <NavLink to={`/island/${initiator.SCID}/smokesignal/${index}`}>
             <button className="btn-secondary btn text-neutral hover:text-info">
               Learn More
             </button>

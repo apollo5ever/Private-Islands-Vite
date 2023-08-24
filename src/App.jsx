@@ -135,7 +135,7 @@ function App() {
     //first let's make empty array
     let myIslands = [];
     for (let i = 0; i < fullIslandList.length; i++) {
-      let balance = await getBalance(fullIslandList[i].scid);
+      let balance = await getBalance(fullIslandList[i].SCID);
       if (balance > 0) {
         myIslands.push(fullIslandList[i]);
       }

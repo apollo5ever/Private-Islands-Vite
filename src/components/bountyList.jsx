@@ -24,14 +24,15 @@ export default function BountyList({ islands }) {
   };
 
   const getFunds = useCallback(async () => {
-    var bounties = [];
+    var Bounties = [];
 
     for (var i = 0; i < islands.length; i++) {
-      for (var b = 0; b < islands[i].bounties.length; b++) {
-        bounties.push(islands[i].bounties[b]);
+      if (!islands[i].Bounties) continue;
+      for (var b = 0; b < islands[i].Bounties.length; b++) {
+        Bounties.push(islands[i].Bounties[b]);
       }
     }
-    setFunds(bounties);
+    setFunds(Bounties);
   });
 
   useEffect(() => {
@@ -57,15 +58,16 @@ export default function BountyList({ islands }) {
     return (
       <div className="mb-3">
         <TreasureCard
-          key={f.name}
+          key={f.Names[f.Names.length - 1]}
           JN={f.JN}
-          image={f.image}
-          index={f.index}
-          treasure={f.treasure}
-          deadline={f.deadline}
-          profile={f.island}
-          name={f.name}
-          tagline={f.tagline}
+          image={f.Images[f.Images.length - 1]}
+          index={f.Index}
+          treasure={f.Amount}
+          deadline={f.Expiry}
+          profile={f.Initiator.Name}
+          name={f.Names[f.Names.length - 1]}
+          tagline={f.Taglines[f.Taglines.length - 1]}
+          initiator={f.Initiator}
         />
       </div>
     );
