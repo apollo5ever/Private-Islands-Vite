@@ -253,23 +253,23 @@ const WalletModal = ({ handleClose }) => {
   };
 
   useEffect(() => {
-    console.log('EFECT FOR MODAL', menuOption);
-    if (menuOption !== 'main') {
-      window[menuOption].showModal();
-    }
+    window[menuOption].showModal();
   }, [menuOption]);
 
-  // TODO MTS -- START HERE - style modal
+  // Primary Modal
   const renderMainMenu = () => {
     return (
-      <>
-        <FlexBoxColumn className="z-1000 fixed left-1/2 top-20 flex w-80 min-w-fit -translate-x-1/2 transform space-y-2 rounded-b-lg bg-zinc-800 p-5 text-white">
+      <Modal className="bg-zinc-800" id={menuOption} key={menuOption}>
+        {/*<Modal.Header>*/}
+        <FlexBoxColumn className="top-20 flex rounded-b-sm bg-zinc-800 p-5 text-white">
           <FlexBoxRow justify="between">
             <div className="text-slate-300">Select / Switch Wallet</div>
             <Button size="small" handleClick={handleClose}>
               X
             </Button>
           </FlexBoxRow>
+          {/*</Modal.Header>*/}
+          {/*<Modal.Body>*/}
           <FlexBoxRow justify="left" className="space-x-4">
             <div className="text-xl">RPC Wallet</div>
             <div className="rounded-lg border border-slate-400 px-3 py-1">
@@ -325,14 +325,16 @@ const WalletModal = ({ handleClose }) => {
             </FlexBoxColumn>
           </FlexBoxRow>
         </FlexBoxColumn>
-      </>
+        {/*</Modal.Body>*/}
+      </Modal>
     );
   };
 
+  // Add Wallet Modal
   const renderAddWalletModal = () => {
     console.log('ADD WALLET', menuOption);
     return (
-      <Modal className="z-1000 bg-zinc-800" id={menuOption} key={menuOption}>
+      <Modal className="bg-zinc-800 p-5" id={menuOption} key={menuOption}>
         {/*<Modal.Header>*/}
         <FlexBoxRow justify="between">
           <div className="text-slate-300">Add Wallet</div>
@@ -353,7 +355,7 @@ const WalletModal = ({ handleClose }) => {
           <h2>Select an option:</h2>
           <div className="w-full cursor-pointer">
             <div
-              className="border-2 border-secondary p-4 text-slate-200 hover:bg-secondary"
+              className="border-2 border-secondary p-4 text-slate-200 hover:bg-secondary hover:text-warning"
               onClick={() =>
                 handleOptionClick(WALLET_INPUT_RENDERS.createNewWallet)
               }
@@ -361,7 +363,7 @@ const WalletModal = ({ handleClose }) => {
               Create New Wallet
             </div>
             <div
-              className="border-2 border-t-0 border-secondary p-4 text-slate-200 hover:bg-secondary"
+              className="border-2 border-t-0 border-secondary p-4 text-slate-200 hover:bg-secondary hover:text-warning"
               onClick={() =>
                 handleOptionClick(WALLET_INPUT_RENDERS.recoverFromSeed)
               }
@@ -369,7 +371,7 @@ const WalletModal = ({ handleClose }) => {
               Recover From Seed
             </div>
             <div
-              className="border-2 border-t-0 border-secondary p-4 text-slate-200 hover:bg-secondary"
+              className="border-2 border-t-0 border-secondary p-4 text-slate-200 hover:bg-secondary hover:text-warning"
               onClick={() =>
                 handleOptionClick(WALLET_INPUT_RENDERS.recoverFromHexSeed)
               }
@@ -377,7 +379,7 @@ const WalletModal = ({ handleClose }) => {
               Recover From Hex Seed
             </div>
             <div
-              className="border-2 border-t-0 border-secondary p-4 text-slate-200 hover:bg-secondary"
+              className="border-2 border-t-0 border-secondary p-4 text-slate-200 hover:bg-secondary hover:text-warning"
               onClick={() =>
                 handleOptionClick(WALLET_INPUT_RENDERS.recoverFromDisk)
               }
@@ -391,14 +393,17 @@ const WalletModal = ({ handleClose }) => {
     );
   };
 
+  // WalletOptionModal
   const renderOptionMenu = () => {
     console.log('RENDER OPTIONS MENU', menuOption);
     return (
-      <Modal className="z-1000 bg-zinc-800" id={menuOption} key={menuOption}>
+      <Modal className="bg-zinc-800 p-5" id={menuOption} key={menuOption}>
         {/*<Modal.Header>*/}
-        <Button size="small" handleClick={() => handleOptionClick('main')}>
-          Back
-        </Button>
+        <div className="flex justify-end">
+          <Button size="small" handleClick={() => handleOptionClick('main')}>
+            Back
+          </Button>
+        </div>
         {/*</Modal.Header>*/}
         {/*<Modal.Body>*/}
         {renderInputFields()}
@@ -414,9 +419,24 @@ const WalletModal = ({ handleClose }) => {
         return (
           <fieldset>
             <form onSubmit={handleSubmitCreateNewWallet}>
-              <input type="text" placeholder="Name your new wallet" id="name" />
-              <input type="password" placeholder="Enter a password" id="pass" />
-              <input type="password" placeholder="Confirm password" id="conf" />
+              <input
+                type="text"
+                className="rounded-lg border border-slate-400 bg-zinc-800"
+                placeholder="Name your new wallet"
+                id="name"
+              />
+              <input
+                type="password"
+                className="ml-2 rounded-lg border border-slate-400 bg-zinc-800"
+                placeholder="Enter a password"
+                id="pass"
+              />
+              <input
+                type="password"
+                className="rounded-lg border border-slate-400 bg-zinc-800"
+                placeholder="Confirm password"
+                id="conf"
+              />
               <span className="divider" />
               <Button color="secondary" type={'submit'}>
                 Create
@@ -431,7 +451,7 @@ const WalletModal = ({ handleClose }) => {
               <input
                 type="text"
                 id="name"
-                className="rounded-lg border border-slate-400 bg-zinc-800"
+                className="mr-2 rounded-lg border border-slate-400 bg-zinc-800"
                 placeholder="Name your wallet"
               />
               <input
@@ -444,7 +464,7 @@ const WalletModal = ({ handleClose }) => {
               <input
                 type="password"
                 id="pass"
-                className="rounded-lg border border-slate-400 bg-zinc-800"
+                className="mr-2 rounded-lg border border-slate-400 bg-zinc-800"
                 placeholder="Enter a password"
               />
               <input
@@ -464,15 +484,31 @@ const WalletModal = ({ handleClose }) => {
         return (
           <fieldset>
             <form onSubmit={handleSubmitHexSeed}>
-              <input type="text" id="name" placeholder="Name your wallet" />
+              <input
+                type="text"
+                id="name"
+                className="mr-2 rounded-lg border border-slate-400 bg-zinc-800"
+                placeholder="Name your wallet"
+              />
               <input
                 type="text"
                 name=""
                 id="seed"
+                className="rounded-lg border border-slate-400 bg-zinc-800"
                 placeholder="Enter your hex seed"
               />
-              <input type="password" id="pass" placeholder="Enter a password" />
-              <input type="password" id="conf" placeholder="Confirm password" />
+              <input
+                type="password"
+                id="pass"
+                className="mr-2 rounded-lg border border-slate-400 bg-zinc-800"
+                placeholder="Enter a password"
+              />
+              <input
+                type="password"
+                id="conf"
+                className="rounded-lg border border-slate-400 bg-zinc-800"
+                placeholder="Confirm password"
+              />
               <span className="divider" />
               <Button color="secondary" type={'submit'}>
                 Submit
@@ -484,8 +520,18 @@ const WalletModal = ({ handleClose }) => {
         return (
           <fieldset>
             <form onSubmit={handleSubmitDisk}>
-              <input type="text" id="name" placeholder="Name your wallet" />
-              <input type="password" id="pass" placeholder="Enter password" />
+              <input
+                type="text"
+                id="name"
+                className="mr-2 rounded-lg border border-slate-400 bg-zinc-800"
+                placeholder="Name your wallet"
+              />
+              <input
+                type="password"
+                id="pass"
+                className="rounded-lg border border-slate-400 bg-zinc-800"
+                placeholder="Enter password"
+              />
               <input type="file" id="file" />
               <span className="divider" />
               <Button size="small" color="secondary" type={'submit'}>
