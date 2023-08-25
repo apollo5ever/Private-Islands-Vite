@@ -421,19 +421,19 @@ const WalletModal = ({ handleClose }) => {
             <form onSubmit={handleSubmitCreateNewWallet}>
               <input
                 type="text"
-                className="rounded-lg border border-slate-400 bg-zinc-800"
+                className="mr-2 rounded-lg border border-slate-400 bg-zinc-800"
                 placeholder="Name your new wallet"
                 id="name"
               />
               <input
                 type="password"
-                className="ml-2 rounded-lg border border-slate-400 bg-zinc-800"
+                className="mr-2 rounded-lg border border-slate-400 bg-zinc-800"
                 placeholder="Enter a password"
                 id="pass"
               />
               <input
                 type="password"
-                className="rounded-lg border border-slate-400 bg-zinc-800"
+                className="mr-2 rounded-lg border border-slate-400 bg-zinc-800"
                 placeholder="Confirm password"
                 id="conf"
               />
@@ -458,7 +458,7 @@ const WalletModal = ({ handleClose }) => {
                 type="text"
                 name=""
                 id="seed"
-                className="rounded-lg border border-slate-400 bg-zinc-800"
+                className="mr-2 rounded-lg border border-slate-400 bg-zinc-800"
                 placeholder="Enter your seed phrase"
               />
               <input
@@ -470,7 +470,7 @@ const WalletModal = ({ handleClose }) => {
               <input
                 type="password"
                 id="conf"
-                className="rounded-lg border border-slate-400 bg-zinc-800"
+                className="mr-2 rounded-lg border border-slate-400 bg-zinc-800"
                 placeholder="Confirm password"
               />
               <span className="divider" />
@@ -494,7 +494,7 @@ const WalletModal = ({ handleClose }) => {
                 type="text"
                 name=""
                 id="seed"
-                className="rounded-lg border border-slate-400 bg-zinc-800"
+                className="mr-2 rounded-lg border border-slate-400 bg-zinc-800"
                 placeholder="Enter your hex seed"
               />
               <input
@@ -506,7 +506,7 @@ const WalletModal = ({ handleClose }) => {
               <input
                 type="password"
                 id="conf"
-                className="rounded-lg border border-slate-400 bg-zinc-800"
+                className="mr-2 rounded-lg border border-slate-400 bg-zinc-800"
                 placeholder="Confirm password"
               />
               <span className="divider" />
@@ -529,7 +529,7 @@ const WalletModal = ({ handleClose }) => {
               <input
                 type="password"
                 id="pass"
-                className="rounded-lg border border-slate-400 bg-zinc-800"
+                className="mr-2 rounded-lg border border-slate-400 bg-zinc-800"
                 placeholder="Enter password"
               />
               <input type="file" id="file" />
