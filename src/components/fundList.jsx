@@ -30,8 +30,9 @@ export default function FundList({ islands }) {
     console.log(islands);
 
     for (var i = 0; i < islands.length; i++) {
-      for (var b = 0; b < islands[i].fundraisers.length; b++) {
-        fundraisers.push(islands[i].fundraisers[b]);
+      if (!islands[i].Fundraisers) continue;
+      for (var b = 0; b < islands[i].Fundraisers.length; b++) {
+        fundraisers.push(islands[i].Fundraisers[b]);
       }
     }
     setFunds(fundraisers);
@@ -49,13 +50,13 @@ export default function FundList({ islands }) {
 
     return (
       <SummaryCard
-        image={f.image}
-        index={f.index}
-        goal={f.goal}
-        deadline={f.deadline}
-        profile={f.island}
-        name={f.name}
-        tagline={f.tagline}
+        image={f.Images[f.Images.length - 1]}
+        index={f.Index}
+        goal={f.Goal}
+        deadline={f.Deadline}
+        initiator={f.Initiator}
+        name={f.Names[f.Names.length - 1]}
+        tagline={f.Taglines[f.Taglines.length - 1]}
       />
     );
   });

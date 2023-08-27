@@ -26,12 +26,13 @@ export default function Fundraiser() {
 
   const getFunds = React.useCallback(async () => {
     let profile = await GI(state, island);
-    setSignal(profile.fundraisers[index]);
+    setSignal(profile.Fundraisers[parseInt(index)]);
+    console.log('SIGNAL: ', signal);
   });
 
   const withdraw = React.useCallback(async (event) => {
     event.preventDefault();
-    var hash = signal.scid;
+    var hash = signal.SCID;
 
     const data = new Object({
       scid: state.scid_fundraisers,
@@ -60,7 +61,7 @@ export default function Fundraiser() {
 
   const supportGoal = React.useCallback(async (event) => {
     event.preventDefault();
-    var HashAndIndex = signal.scid + params.index;
+    var HashAndIndex = signal.SCID + params.index;
     if (event.target.refundable.checked) {
       var refundable = 1;
     } else {
@@ -68,7 +69,7 @@ export default function Fundraiser() {
     }
 
     const data = new Object({
-      scid: state.scid,
+      scid: state.scid_fundraisers,
       ringsize: 2,
       transfers: [
         {
@@ -201,22 +202,26 @@ export default function Fundraiser() {
           >
             cancel
           </small>
-          <input placeholder="name" defaultValue={signal.name} id="Name" />
+          <input
+            placeholder="name"
+            defaultValue={signal.Names[signal.Names.length - 1]}
+            id="Name"
+          />
           <input
             placeholder="image url"
-            defaultValue={signal.image}
+            defaultValue={signal.Images[signal.Images.length - 1]}
             id="Image"
           />
           <input
             placeholder="tagline"
-            defaultValue={signal.tagline}
+            defaultValue={signal.Taglines[signal.Taglines.length - 1]}
             id="Tagline"
           />
           <textarea
             placeholder="description"
             rows="44"
             cols="80"
-            defaultValue={signal.description}
+            defaultValue={signal.Descriptions[signal.Descriptions.length - 1]}
             id="Description"
           />
           <button type={'submit'}>Submit</button>
@@ -228,7 +233,7 @@ export default function Fundraiser() {
         <div className="mx-10">
           <DetailCard signal={signal} deadline={deadlinestring} />
           <div className="profile">
-            {signal.status === 0 ? (
+            {signal.Status === 0 ? (
               <>
                 <form onSubmit={supportGoal}>
                   <input
@@ -242,7 +247,7 @@ export default function Fundraiser() {
                     Support
                   </Button>
                 </form>
-                {raised >= signal.goal ? (
+                {signal.Raised >= signal.Goal ? (
                   <form onSubmit={withdraw}>
                     <Button size="sm" type={'submit'}>
                       Withdraw
@@ -252,7 +257,7 @@ export default function Fundraiser() {
                   ''
                 )}
               </>
-            ) : signal.status === 1 ? (
+            ) : signal.Status === 1 ? (
               <>
                 <p>
                   This Smoke Signal has met its fundraiser goal! If you are the
@@ -264,7 +269,7 @@ export default function Fundraiser() {
                   </Button>
                 </form>
               </>
-            ) : signal.status === 2 ? (
+            ) : signal.Status === 2 ? (
               <>
                 <p>
                   This Smoke Signal failed to meet its goal. If you made a

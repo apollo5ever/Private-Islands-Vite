@@ -48,262 +48,7 @@ export default function MyIsland() {
     console.log('GET ISLANDS CALLBACK', post);
   });
 
-  const getIslandObjects = React.useCallback(async () => {
-    setTreasures([]);
-    setSignals([]);
-    setJudging([]);
-    let signalArray = [];
-    const res = await getSC(state.scid);
-    var scData = res.stringkeys; //.map(x=>x.match(search))
-    var treasureSearch = new RegExp(
-      `${state.myIslands[state.active].name}[0-9]*_bm`
-    );
-    var signalSearch = new RegExp(
-      `${state.myIslands[state.active].name}[0-9]*_sm`
-    );
-    var judgeSearch = /.*_J\d{1,}/;
-    var executerSearch = /.*_X\d{1,}/;
-
-    if (state.myIslands[state.active].tiers) {
-      for (var t of state.myIslands[state.active].tiers) {
-        // var supporterSearch = new RegExp(`.*_\\${state.myIslands[state.active].name+t.index}\_E`)
-        var supporterSearch = new RegExp(
-          `_` + state.myIslands[state.active].name + t.index + `_E`
-        );
-        t.subs = Object.keys(scData)
-          .filter((key) => supporterSearch.test(key))
-          .filter((key) => scData[key] > new Date().getTime() / 1000)
-          .map((x) => x.substring(0, 66));
-      }
-    }
-
-    let judgeFilter = Object.keys(scData).filter((key) =>
-      judgeSearch.test(key)
-    );
-    console.log('JF', judgeFilter);
-
-    let judgeList = Object.keys(scData)
-      .filter((key) => judgeSearch.test(key))
-      .map((key) => [
-        hex2a(scData[key.substring(0, key.length - 2) + 'bm']),
-        hex2a(scData[key]),
-        scData[key.substring(0, key.length - 2) + 'T'],
-        scData[key.substring(0, key.length - 2) + 'E'],
-        scData[key.substring(0, key.length - 2) + 'J'],
-        key.substring(0, key.length - 3),
-        Object.keys(scData).filter((key2) =>
-          new RegExp(`${key.substring(0, key.length - 1)}*[0-9]`).test(key2)
-        ),
-        key,
-      ]);
-    console.log('judgeList', judgeList);
-    console.log('judgesearch', judgeSearch);
-    var judgeArr = [];
-    for (let i = 0; i < judgeList.length; i++) {
-      if (
-        judgeList[i][1] != state.myIslands[state.active].name ||
-        judgeList[i][5].substring(0, judgeList[i][5].length - 1) ==
-          state.myIslands[state.active].name
-      )
-        continue;
-      console.log(judgeList[i][0]);
-      for await (const buf of state.ipfs.cat(judgeList[i][0].toString())) {
-        try {
-          let treasure = JSON.parse(buf.toString());
-
-          treasure.judgeList = [];
-          for (var k = 0; k < judgeList[i][6].length; k++) {
-            treasure.judgeList.push(hex2a(scData[judgeList[i][6][k]]));
-          }
-
-          treasure.index = judgeList[i][5].substring(
-            judgeList[i][5].length - 1
-          );
-          treasure.expiry = judgeList[i][3];
-          treasure.treasure = judgeList[i][2] / 100000;
-          treasure.judge = judgeList[i][4];
-
-          if (treasure.expiry > new Date().getTime() / 1000)
-            treasure.status = 0;
-
-          judgeArr.push(treasure);
-        } catch (error) {
-          console.log(error);
-        }
-      }
-    }
-    setJudging(judgeArr);
-
-    let execList = Object.keys(scData)
-      .filter((key) => executerSearch.test(key))
-      .map((key) => [
-        hex2a(scData[key.substring(0, key.length - 2) + 'bm']),
-        hex2a(scData[key]),
-        scData[key.substring(0, key.length - 2) + 'T'],
-        scData[key.substring(0, key.length - 2) + 'E'],
-        scData[key.substring(0, key.length - 2) + 'X'],
-        key.substring(0, key.length - 3),
-        Object.keys(scData).filter((key2) =>
-          new RegExp(`${key.substring(0, key.length - 1)}*[0-9]`).test(key2)
-        ),
-        key,
-      ]);
-
-    var execArr = [];
-    for (let i = 0; i < execList.length; i++) {
-      if (
-        execList[i][1] != state.myIslands[state.active].name ||
-        execList[i][5].substring(0, execList[i][5].length - 1) ==
-          state.myIslands[state.active].name
-      )
-        continue;
-
-      for await (const buf of state.ipfs.cat(execList[i][0].toString())) {
-        try {
-          let treasure = JSON.parse(buf.toString());
-
-          treasure.judgeList = [];
-          for (var k = 0; k < execList[i][6].length; k++) {
-            treasure.judgeList.push(hex2a(scData[execList[i][6][k]]));
-          }
-          treasure.index = execList[i][5].substring(execList[i][5].length - 1);
-          treasure.expiry = execList[i][3];
-          treasure.treasure = execList[i][2] / 100000;
-          treasure.executer = execList[i][4];
-
-          if (treasure.expiry > new Date().getTime() / 1000)
-            treasure.status = 0;
-
-          execArr.push(treasure);
-        } catch (error) {
-          console.log(error);
-        }
-      }
-    }
-    setExecuting(execArr);
-    console.log('EXEC ARR', execArr);
-
-    let treasureList = Object.keys(scData)
-      .filter((key) => treasureSearch.test(key))
-      .map((key) => [
-        hex2a(scData[key]),
-        scData[key.substring(0, key.length - 2) + 'E'],
-        scData[key.substring(0, key.length - 2) + 'T'],
-        scData[key.substring(0, key.length - 2) + 'J'],
-        key.substring(0, key.length - 3),
-        Object.keys(scData).filter((key2) =>
-          new RegExp(
-            `\\${
-              state.myIslands[state.active].name +
-              key.substring(key.length - 4, key.length - 3)
-            }\*_J[0-9]`
-          ).test(key2)
-        ),
-        scData[key.substring(0, key.length - 2) + 'JN'],
-        scData[key.substring(0, key.length - 2) + 'JE'],
-        scData[key.substring(0, key.length - 2) + 'JT'],
-        Object.keys(scData).filter((key3) =>
-          new RegExp(
-            `\\${
-              state.myIslands[state.active].name +
-              key.substring(key.length - 4, key.length - 3)
-            }\*_X[0-9]`
-          ).test(key3)
-        ),
-        scData[key.substring(0, key.length - 2) + 'XN'],
-        scData[key.substring(0, key.length - 2) + 'XE'],
-        scData[key.substring(0, key.length - 2) + 'XT'],
-        scData[key.substring(0, key.length - 2) + 'X'],
-      ]);
-
-    var bountyArray = [];
-
-    for (let i = 0; i < treasureList.length; i++) {
-      for await (const buf of state.ipfs.cat(treasureList[i][0].toString())) {
-        try {
-          let treasure = JSON.parse(buf.toString());
-
-          treasure.judgeList = [];
-          for (var k = 0; k < treasureList[i][5].length; k++) {
-            treasure.judgeList.push(hex2a(scData[treasureList[i][5][k]]));
-          }
-          treasure.executerList = [];
-          for (var k = 0; k < treasureList[i][9].length; k++) {
-            treasure.executerList.push(hex2a(scData[treasureList[i][9][k]]));
-          }
-
-          treasure.index = treasureList[i][4].substring(
-            treasureList[i][4].length - 1
-          );
-          treasure.expiry = treasureList[i][1];
-          treasure.treasure = treasureList[i][2] / 100000;
-          treasure.judge = treasureList[i][3];
-
-          if (treasure.expiry > new Date().getTime() / 1000)
-            treasure.status = 0;
-
-          bountyArray.push(treasure);
-
-          // setTreasures(treasures=>[...treasures,treasure])
-          console.log('fundz', treasures);
-        } catch (error) {
-          console.log(error);
-        }
-      }
-    }
-    setTreasures(bountyArray);
-    let fundList = Object.keys(scData)
-      .filter((key) => signalSearch.test(key))
-      .map((key) => [
-        hex2a(scData[key]),
-        scData[key.substring(0, key.length - 2) + 'D'],
-        scData[key.substring(0, key.length - 2) + 'G'],
-        scData[key.substring(0, key.length - 2) + 'R'],
-        scData[key.substring(0, key.length - 2) + 'F'],
-        scData[key.substring(0, key.length - 2) + 'C'],
-        key.substring(0, key.length - 3),
-      ]);
-
-    console.log('hash array', fundList);
-
-    for (let i = 0; i < fundList.length; i++) {
-      console.log('helllooo', state.ipfs);
-      console.log('fundList', fundList);
-      for await (const buf of state.ipfs.cat(fundList[i][0].toString())) {
-        let fund = JSON.parse(buf.toString());
-        console.log('fund.island', fund.island);
-        console.log(fundList[i][6].substring(0, fundList[i][6].length - 1));
-        //if(fund.island!=fundList[i][6].substring(0,fundList[i][6].length-1)) continue
-        fund.island = fundList[i][6].substring(0, fundList[i][6].length - 1);
-        fund.index = fundList[i][6].substring(fundList[i][6].length - 1);
-        fund.deadline = fundList[i][1];
-        fund.goal = fundList[i][2] / 100000;
-        fund.raised = fundList[i][3];
-        fund.fundee = fundList[i][4];
-        fund.claimed = fundList[i][5];
-        if (fund.deadline > new Date().getTime() / 1000) fund.status = 0;
-        else if (
-          fund.deadline < new Date().getTime() / 1000 &&
-          fund.goal < fund.raised
-        )
-          fund.status = 1;
-        else if (
-          fund.deadline < new Date().getTime() / 1000 &&
-          fund.goal > fund.raised
-        )
-          fund.status = 2;
-        // setSignals(signals=>[...signals,fund])
-        signalArray.push(fund);
-      }
-    }
-    console.log(err);
-    console.log(res);
-
-    setSignals(signalArray);
-  });
-
   React.useEffect(() => {
-    //getIslandObjects()
     if (state.myIslands) {
       setIsland(state.myIslands[state.active]);
     }
@@ -487,7 +232,7 @@ export default function MyIsland() {
                       <form onSubmit={SetMetadata}>
                         <input
                           id="edit"
-                          defaultValue={state.myIslands[state.active].image}
+                          defaultValue={state.myIslands[state.active].Image}
                         />
 
                         <Button size="small" type="submit">
@@ -498,7 +243,7 @@ export default function MyIsland() {
                     </>
                   ) : (
                     <>
-                      <img src={state.myIslands[state.active].image} />
+                      <img src={state.myIslands[state.active].Image} />
                       <small onClick={() => setEditing('Image')}>edit</small>
                     </>
                   )}{' '}
@@ -507,7 +252,7 @@ export default function MyIsland() {
                       setView('main');
                     }}
                   >
-                    {state.myIslands[state.active].name}
+                    {state.myIslands[state.active].Name}
                   </h1>
                 </div>
 
@@ -520,7 +265,7 @@ export default function MyIsland() {
                             <input
                               id="edit"
                               defaultValue={
-                                state.myIslands[state.active].tagline
+                                state.myIslands[state.active].Tagline
                               }
                             />
                             <Button size="small" type="submit">
@@ -531,7 +276,7 @@ export default function MyIsland() {
                         </>
                       ) : (
                         <>
-                          <p>{state.myIslands[state.active].tagline}</p>
+                          <p>{state.myIslands[state.active].Tagline}</p>
                           <small onClick={() => setEditing('Tagline')}>
                             edit
                           </small>
@@ -546,7 +291,9 @@ export default function MyIsland() {
                               rows="44"
                               cols="80"
                               id="edit"
-                              defaultValue={state.myIslands[state.active].bio}
+                              defaultValue={
+                                state.myIslands[state.active].Description
+                              }
                             />
                             <Button size="small" type="submit">
                               Submit
@@ -558,7 +305,7 @@ export default function MyIsland() {
                         <>
                           <p
                             dangerouslySetInnerHTML={{
-                              __html: state.myIslands[state.active].bio,
+                              __html: state.myIslands[state.active].Description,
                             }}
                           />
                           <small onClick={() => setEditing('Bio')}>edit</small>
@@ -569,25 +316,29 @@ export default function MyIsland() {
                 ) : view == 'treasure' ? (
                   <>
                     <NavLink
-                      to={`/burytreasure/${island.scid}/${island.bounties.length}`}
+                      to={`/burytreasure/${island.SCID}/${
+                        island.Bounties && island.Bounties.length
+                      }`}
                     >
                       Bury New Treasure
                     </NavLink>
-                    {island.bounties.length > 0 ? (
+                    {island.Bounties && island.Bounties.length > 0 ? (
                       <>
                         <h3>Bounties You Initiated</h3>
                         <div className="card-grid">
-                          {island.bounties.map((x) => (
+                          {island.Bounties.map((x) => (
                             <TreasureCard
                               className="mytreasure"
-                              executerList={x.executerList}
-                              name={x.name}
-                              profile={x.island}
-                              tagline={x.tagline}
-                              treasure={x.treasure}
-                              image={x.image}
-                              judgeList={x.judgeList}
-                              index={x.index}
+                              executerList={x.Execs}
+                              name={x.Names && x.Names[x.Names.length - 1]}
+                              initiator={x.Initiator}
+                              tagline={
+                                x.Taglines && x.Taglines[x.Taglines.length - 1]
+                              }
+                              treasure={x.Amount}
+                              image={x.Images && x.Images[x.Images.length - 1]}
+                              judgeList={x.Judges}
+                              index={x.Index}
                             />
                           ))}
                         </div>
@@ -603,7 +354,7 @@ export default function MyIsland() {
                             <TreasureCard
                               className="mytreasure"
                               name={x.name}
-                              profile={x.island}
+                              initiator={x.Initiator}
                               tagline={x.tagline}
                               treasure={x.treasure}
                               image={x.image}
@@ -617,20 +368,20 @@ export default function MyIsland() {
                       ''
                     )}
 
-                    {executing.length > 0 ? (
+                    {island.Judging.length > 0 ? (
                       <>
-                        <h3>Nominated for Executer</h3>
+                        <h3>Other Bounties You're Involved With</h3>
                         <div className="card-grid">
-                          {executing.map((x) => (
+                          {island.Judging.map((x) => (
                             <TreasureCard
                               className="mytreasure"
-                              name={x.name}
-                              profile={x.island}
-                              tagline={x.tagline}
-                              treasure={x.treasure}
-                              image={x.image}
+                              name={x.Names[x.Names.length - 1]}
+                              initiator={x.Initiator}
+                              tagline={x.Taglines[x.Taglines.length - 1]}
+                              treasure={x.Amount}
+                              image={x.Images[x.Images.length - 1]}
                               executerList={x.judgeList}
-                              index={x.index}
+                              index={x.Index}
                             />
                           ))}
                         </div>
@@ -642,23 +393,25 @@ export default function MyIsland() {
                 ) : view == 'signal' ? (
                   <>
                     <NavLink
-                      to={`/newsignal/${island.scid}/${island.fundraisers.length}`}
+                      to={`/newsignal/${island.SCID}/${
+                        island.Fundraisers ? island.Fundraisers.length : 0
+                      }`}
                     >
                       Start New Smoke Signal
                     </NavLink>
-                    {island.fundraisers.length > 0 ? (
+                    {island.Fundraisers && island.Fundraisers.length > 0 ? (
                       <>
-                        {island.fundraisers.map((x) => (
+                        {island.Fundraisers.map((x) => (
                           <NavLink
-                            to={`/island/${x.island}/smokesignal/${x.index}`}
+                            to={`/island/${island.SCID}/smokesignal/${x.Index}`}
                           >
                             <FundCard
-                              name={x.name}
+                              name={x.Names[x.Names.length - 1]}
                               profile={x.island}
-                              tagline={x.tagline}
-                              goal={x.goal}
-                              image={x.image}
-                              deadline={x.deadline}
+                              tagline={x.Taglines[x.Taglines.length - 1]}
+                              goal={x.Goal}
+                              image={x.Images[x.Images.length - 1]}
+                              deadline={x.Deadline}
                             />
                           </NavLink>
                         ))}
@@ -708,21 +461,23 @@ export default function MyIsland() {
                       Outgoing
                     </Button>
                     <h3>Your Subscription Tiers</h3>
-                    {state.myIslands[state.active].tiers.map((t) => (
-                      <p>
-                        {t.name}, subs:{t.subs.length}
-                        <NavLink
-                          to={`/island/${
-                            state.myIslands[state.active].name
-                          }/modifytier/${t.index}`}
-                        >
-                          Edit
-                        </NavLink>
-                      </p>
-                    ))}
+                    {state.myIslands[state.active].Tiers &&
+                      state.myIslands[state.active].Tiers.map((t) => (
+                        <p>
+                          {t.Names[t.Names.length - 1]}, subs:
+                          {t.Subscribers && t.Subscribers.length}
+                          <NavLink
+                            to={`/island/${
+                              state.myIslands[state.active].Name
+                            }/modifytier/${t.Index}`}
+                          >
+                            Edit
+                          </NavLink>
+                        </p>
+                      ))}
                     <NavLink
                       to={`/island/${
-                        state.myIslands[state.active].name
+                        state.myIslands[state.active].Name
                       }/compose`}
                     >
                       Put a Message in a Bottle
@@ -738,9 +493,11 @@ export default function MyIsland() {
                     </Button>
                     <NavLink
                       to={`/island/${
-                        state.myIslands[state.active].name
+                        state.myIslands[state.active].Name
                       }/modifytier/${
-                        state.myIslands[state.active].tiers.length
+                        state.myIslands[state.active].Tiers
+                          ? state.myIslands[state.active].Tiers.length
+                          : 0
                       }`}
                     >
                       New Subscription Tier

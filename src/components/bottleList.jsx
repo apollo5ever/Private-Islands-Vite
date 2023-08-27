@@ -10,25 +10,26 @@ export default function BottleList({ islands, state }) {
     var tierList = [];
 
     for (var i = 0; i < islands.length; i++) {
-      tierList = tierList.concat(islands[i].tiers);
+      if (!islands[i].Tiers) continue;
+      tierList = tierList.concat(islands[i].Tiers);
     }
     console.log('BOTTLELIST', tierList);
     setTiers(
       tierList.map((key) => (
         <Subscribe
-          profile={key.scid}
-          image={key.image}
-          name={key.name}
-          index={key.index}
-          tagline={key.tagline}
-          description={key.description}
-          amount={key.amount}
-          interval={key.interval}
+          profile={key.SCID}
+          image={key.Images[key.Images.length - 1]}
+          name={key.Names[key.Names.length - 1]}
+          index={key.Index}
+          tagline={key.Taglines[key.Taglines.length - 1]}
+          description={key.Descriptions[key.Descriptions.length - 1]}
+          amount={key.Amount}
+          interval={key.Interval}
           userAddress={state.walletList[state.activeWallet].address}
           dba={state.deroBridgeApiRef}
           scid={state.scid_subscriptions}
           randomAddress={state.randomAddress}
-          available={key.available}
+          available={key.Available}
         />
       ))
     );

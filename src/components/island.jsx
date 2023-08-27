@@ -90,31 +90,32 @@ export default function Island() {
       {island ? (
         <>
           <HeroCard
-            title={island.name}
-            image={island.image}
+            title={island.Name}
+            image={island.Image}
             searchParam={{ filter: 'main' }}
           >
             <div>
               {searchParams.get('filter') === 'main' ? (
                 <>
-                  <p>{island.tagline}</p>
+                  <p>{island.Tagline}</p>
                   <p>Social Coconut Score: {island.score}</p>
-                  <p dangerouslySetInnerHTML={{ __html: island.bio }} />
+                  <p dangerouslySetInnerHTML={{ __html: island.Description }} />
                 </>
               ) : searchParams.get('filter') === 'treasure' ? (
                 <>
-                  {island.bounties && island.bounties.length > 0 ? (
+                  {island.Bounties && island.Bounties.length > 0 ? (
                     <>
-                      {island.bounties.map((x) => (
+                      {island.Bounties.map((x) => (
                         <TreasureCard
                           className="mytreasure"
-                          name={x.name}
-                          profile={island.name}
-                          tagline={x.tagline}
-                          treasure={x.treasure}
-                          image={x.image}
-                          judgeList={x.judgeList}
-                          index={x.index}
+                          name={x.Names[x.Names.length - 1]}
+                          profile={island.Name}
+                          tagline={x.Taglines[x.Taglines.length - 1]}
+                          treasure={x.Amount}
+                          image={x.Images[x.Images.length - 1]}
+                          judgeList={x.Judges}
+                          index={x.Index}
+                          initiator={x.Initiator}
                         />
                       ))}
                     </>
@@ -142,17 +143,18 @@ export default function Island() {
                 </>
               ) : searchParams.get('filter') === 'smokesignals' ? (
                 <>
-                  {island.fundraisers && island.fundraisers.length > 0 ? (
+                  {island.Fundraisers && island.Fundraisers.length > 0 ? (
                     <>
-                      {island.fundraisers.map((x) => (
+                      {island.Fundraisers.map((x) => (
                         <SummaryCard
-                          index={x.index}
-                          name={x.name}
-                          profile={x.island}
-                          tagline={x.tagline}
-                          goal={x.goal}
-                          image={x.image}
-                          deadline={x.deadline}
+                          index={x.Index}
+                          name={x.Names[x.Names.length - 1]}
+                          initiator={x.Initiator}
+                          tagline={x.Taglines[x.Taglines.length - 1]}
+                          goal={x.Goal}
+                          raised={x.Raised}
+                          image={x.Images[x.Images.length - 1]}
+                          deadline={x.Deadline}
                         />
                       ))}
                     </>
@@ -164,23 +166,28 @@ export default function Island() {
                 </>
               ) : searchParams.get('filter') === 'mib' ? (
                 <>
-                  {island.tiers.map((key) => (
-                    <Subscribe
-                      profile={island.scid}
-                      name={key.name}
-                      image={key.image}
-                      index={key.index}
-                      tagline={key.tagline}
-                      description={key.description}
-                      amount={key.amount}
-                      interval={key.interval}
-                      userAddress={state.walletList[state.activeWallet].address}
-                      dba={state.deroBridgeApiRef}
-                      scid={state.scid_subscriptions}
-                      randomAddress={state.randomAddress}
-                      available={key.available}
-                    />
-                  ))}
+                  {island.Tiers &&
+                    island.Tiers.map((key) => (
+                      <Subscribe
+                        profile={island.SCID}
+                        name={key.Names[key.Names.length - 1]}
+                        image={key.Images[key.Images.length - 1]}
+                        index={key.Index}
+                        tagline={key.Taglines[key.Taglines.length - 1]}
+                        description={
+                          key.Descriptions[key.Descriptions.length - 1]
+                        }
+                        amount={key.Amount}
+                        interval={key.Interval}
+                        userAddress={
+                          state.walletList[state.activeWallet].address
+                        }
+                        dba={state.deroBridgeApiRef}
+                        scid={state.scid_subscriptions}
+                        randomAddress={state.randomAddress}
+                        available={key.Available}
+                      />
+                    ))}
                 </>
               ) : (
                 ''

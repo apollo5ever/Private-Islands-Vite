@@ -29,10 +29,10 @@ export default function Treasure() {
 
   const getJudging = () => {
     console.log('myslands', state);
-    if (!state.myIslands || !treasure.judgeList || state.myIslands.length == 0)
+    if (!state.myIslands || !treasure.Judges || state.myIslands.length == 0)
       return;
-    const matching = treasure.judgeList.filter(
-      (execObj) => execObj.scid === state.myIslands[state.active].scid
+    const matching = treasure.Judges.filter(
+      (execObj) => execObj.SCID === state.myIslands[state.active].SCID
     );
 
     if (matching.length == 1) setJudging(true);
@@ -62,7 +62,7 @@ export default function Treasure() {
     //const deroBridgeApi = state.deroBridgeApiRef.current
 
     const data = new Object({
-      scid: state.scid,
+      scid: state.scid_bounties,
       ringsize: 2,
       transfers: [
         {
@@ -103,20 +103,9 @@ export default function Treasure() {
           value: 0,
         },
         {
-          name: 'M',
+          name: 'name',
           datatype: 'S',
-          value: 'M',
-        },
-
-        {
-          name: 'm',
-          datatype: 'S',
-          value: 'm',
-        },
-        {
-          name: 'j',
-          datatype: 'U',
-          value: 0,
+          value: '',
         },
       ],
     });
@@ -126,9 +115,9 @@ export default function Treasure() {
 
   const getFunds = React.useCallback(async () => {
     let profile = await GI(state, island);
-    console.log(profile.bounties);
-    setTreasure(profile.bounties[index]);
-    setIslandSCID(profile.scid);
+    console.log(profile.Bounties);
+    setTreasure(profile.Bounties[index]);
+    setIslandSCID(profile.SCID);
     if (
       profile.bounties[index].recipientList &&
       profile.bounties[index].recipientList.length > 0
@@ -276,7 +265,9 @@ export default function Treasure() {
             <input
               className="input-bordered input w-full max-w-xs"
               placeholder="name"
-              defaultValue={treasure.name}
+              defaultValue={
+                treasure.Names && treasure.Names[treasure.Names.length - 1]
+              }
               id="Name"
             />
             <input
@@ -306,37 +297,38 @@ export default function Treasure() {
           <></>
         )}
 
-        {treasure.name ? (
+        {treasure.Names ? (
           <>
             <div className="card-body break-words text-neutral">
               <FlexBoxRow className="" justify="start">
                 <figure className="mr-4 min-w-[200px] max-w-[300px] content-center">
                   <img
-                    src={treasure.image}
+                    src={treasure.Images[treasure.Images.length - 1]}
                     className="rounded-2xl"
-                    alt={treasure.name}
+                    alt={treasure.Names[treasure.Names.length - 1]}
                   />
                 </figure>
                 <FlexBoxColumn className="" align="start">
-                  <h1 className="card-title">{treasure.name}</h1>
+                  <h1 className="card-title">
+                    {treasure.Names[treasure.Names.length - 1]}
+                  </h1>
                   <h3 className="font-bold">
                     Initiated by{' '}
-                    <NavLink to={`/island/${island}`}>{island}</NavLink>{' '}
+                    <NavLink to={`/island/${treasure.Initiator.SCID}`}>
+                      {treasure.Initiator.Name}
+                    </NavLink>{' '}
                   </h3>
                   <h3 className="font-bold">
-                    Treasure: {treasure.treasure / 100000} Dero
+                    Treasure: {treasure.Amount / 100000} Dero
                   </h3>
                   <h3 className="font-bold">{treasure.tagline}</h3>
-                  {treasure.status == 0 ? (
+                  {treasure.Status == 0 ? (
                     <p>
-                      This treasure expires on{' '}
-                      {new Date(treasure.expiry * 1000).getDate()}/
-                      {new Date(treasure.expiry * 1000).getMonth() + 1}/
-                      {new Date(treasure.expiry * 1000).getUTCFullYear()}. If
+                      This treasure expires on{' ' + treasure.Expiry}. If
                       treasure isn't released before this date, contributors can
                       return to this page to receive a 95% refund.
                     </p>
-                  ) : treasure.status == 2 ? (
+                  ) : treasure.Status == 2 ? (
                     <p>
                       This bounty has expired. If you added your treasure, you
                       can reclaim it now.
@@ -354,11 +346,11 @@ export default function Treasure() {
                 </FlexBoxColumn>
               </FlexBoxRow>
 
-              {treasure.judge ? (
+              {treasure.Judge ? (
                 <h3>
                   Active Judge:
-                  <NavLink to={`/island/${treasure.judge.name}?view=main`}>
-                    {treasure.judge.name}
+                  <NavLink to={`/island/${treasure.Judge.SCID}?view=main`}>
+                    {treasure.Judge.Name}
                   </NavLink>
                 </h3>
               ) : (
@@ -389,14 +381,13 @@ export default function Treasure() {
                 <span>
                   <h3 className="font-bold">Nominated judges: </h3>
                   <ol>
-                    {treasure.judgeList.map((j, i) => (
+                    {treasure.Judges.map((j, i) => (
                       <li>
-                        <NavLink to={`/island/${j.name}?view=main`}>
+                        <NavLink to={`/island/${j.SCID}?view=main`}>
                           {treasure.JNeff == i ? (
                             <b>
-                              {j.name}
-                              {treasure.judgeList &&
-                              treasure.judgeList.length > 1 ? (
+                              {j.Name}
+                              {treasure.Judges && treasure.Judges.length > 1 ? (
                                 <>
                                   {' '}
                                   (expires in{' '}
@@ -410,7 +401,7 @@ export default function Treasure() {
                               )}
                             </b>
                           ) : (
-                            j.name
+                            j.Name
                           )}
                         </NavLink>
                       </li>
@@ -421,13 +412,13 @@ export default function Treasure() {
                 <span>
                   <h3 className="font-bold">Nominated executors: </h3>
                   <ol>
-                    {treasure.execList &&
-                      treasure.execList.map((j, i) => (
+                    {treasure.Execs &&
+                      treasure.Execs.map((j, i) => (
                         <li>
-                          <NavLink to={`/island/${j.name}?view=main`}>
+                          <NavLink to={`/island/${j.SCID}?view=main`}>
                             {treasure.XNeff == i ? (
                               <b>
-                                {j.name}
+                                {j.Name}
                                 {treasure.execList &&
                                 treasure.execList.length > 1 ? (
                                   <>
@@ -443,7 +434,7 @@ export default function Treasure() {
                                 )}
                               </b>
                             ) : (
-                              j.name
+                              j.Name
                             )}
                           </NavLink>
                         </li>
@@ -452,7 +443,7 @@ export default function Treasure() {
                 </span>
               </div>
 
-              {treasure.status == 0 &&
+              {treasure.Status == 0 &&
               state.myIslands &&
               state.myIslands.length > 0 &&
               island == state.myIslands[state.active].name ? (
@@ -485,29 +476,29 @@ export default function Treasure() {
                 ''
               )}
 
-              {treasure.status == 0 &&
+              {treasure.Status == 0 &&
               state.myIslands &&
               state.myIslands.length > 0 &&
               judging ? (
                 <Judge
-                  active={treasure.judgeList[treasure.JN]}
-                  userIsland={state.myIslands[state.active].scid}
+                  active={treasure.Judges[treasure.JN]}
+                  userIsland={state.myIslands[state.active].SCID}
                   island={islandSCID}
                   index={index}
-                  judge={treasure.judge && treasure.judge.scid}
+                  judge={treasure.Judge && treasure.Judge.SCID}
                   JF={treasure.JF}
                   deroBridgeApiRef={state.deroBridgeApiRef}
                   randomAddress={state.randomAddress}
                   scid={state.scid_bounties}
                   XE={treasure.JE}
-                  solo={treasure.judgeList.length == 1}
+                  solo={treasure.Judges.length == 1}
                   recipientList={treasure.recipientList}
                 />
               ) : (
                 ''
               )}
 
-              {treasure.status == 0 &&
+              {treasure.Status == 0 &&
               state.myIslands &&
               state.myIslands.length > 0 &&
               executing ? (
@@ -531,7 +522,7 @@ export default function Treasure() {
               <p dangerouslySetInnerHTML={{ __html: treasure.description }} />
               <span className="divider" />
 
-              {treasure.status == 0 ? (
+              {treasure.Status == 0 ? (
                 <FlexBoxColumn align="center" className="">
                   <form onSubmit={AddTreasure}>
                     <FlexBoxRow className="space-x-4" justify="stretch">
