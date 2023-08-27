@@ -461,22 +461,23 @@ export default function MyIsland() {
                       Outgoing
                     </Button>
                     <h3>Your Subscription Tiers</h3>
-                    {state.myIslands[state.active].Tiers.map((t) => (
-                      <p>
-                        {t.Names[t.Names.length - 1]}, subs:
-                        {t.Subscribers && t.Subscribers.length}
-                        <NavLink
-                          to={`/island/${
-                            state.myIslands[state.active].Name
-                          }/modifytier/${t.index}`}
-                        >
-                          Edit
-                        </NavLink>
-                      </p>
-                    ))}
+                    {state.myIslands[state.active].Tiers &&
+                      state.myIslands[state.active].Tiers.map((t) => (
+                        <p>
+                          {t.Names[t.Names.length - 1]}, subs:
+                          {t.Subscribers && t.Subscribers.length}
+                          <NavLink
+                            to={`/island/${
+                              state.myIslands[state.active].Name
+                            }/modifytier/${t.Index}`}
+                          >
+                            Edit
+                          </NavLink>
+                        </p>
+                      ))}
                     <NavLink
                       to={`/island/${
-                        state.myIslands[state.active].name
+                        state.myIslands[state.active].Name
                       }/compose`}
                     >
                       Put a Message in a Bottle
@@ -494,7 +495,9 @@ export default function MyIsland() {
                       to={`/island/${
                         state.myIslands[state.active].Name
                       }/modifytier/${
-                        state.myIslands[state.active].Tiers.length
+                        state.myIslands[state.active].Tiers
+                          ? state.myIslands[state.active].Tiers.length
+                          : 0
                       }`}
                     >
                       New Subscription Tier

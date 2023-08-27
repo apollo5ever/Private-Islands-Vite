@@ -1,13 +1,13 @@
-import DeroBridgeApi from "dero-rpc-bridge-api";
-import React from "react";
-import ReactDOM from "react-dom";
-import to from "await-to-js";
-import sha256 from "crypto-js/sha256";
-import { useParams, useSearchParams } from "react-router-dom";
-import { LoginContext } from "../LoginContext";
-import Success from "./success";
-import { useSendTransaction } from "../useSendTransaction";
-import { useGetSC } from "../useGetSC";
+import DeroBridgeApi from 'dero-rpc-bridge-api';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import to from 'await-to-js';
+import sha256 from 'crypto-js/sha256';
+import { useParams, useSearchParams } from 'react-router-dom';
+import { LoginContext } from '../LoginContext';
+import Success from './success';
+import { useSendTransaction } from '../useSendTransaction';
+import { useGetSC } from '../useGetSC';
 
 export default function ModifyTier() {
   const [sendTransaction] = useSendTransaction();
@@ -20,7 +20,7 @@ export default function ModifyTier() {
   const [island, setIsland] = React.useState(null);
 
   function hex2a(hex) {
-    var str = "";
+    var str = '';
     for (var i = 0; i < hex.length; i += 2)
       str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
     return str;
@@ -28,10 +28,10 @@ export default function ModifyTier() {
 
   const getTier = React.useCallback(async () => {
     if (!state.myIslands) return;
-    let island = state.myIslands.filter((x) => x.name == params.island);
+    let island = state.myIslands.filter((x) => x.Name == params.island);
     setIsland(island[0]);
-    if (island[0].tiers[params.tier]) {
-      setTierObj(island[0].tiers[params.tier]);
+    if (island[0].Tiers[params.tier]) {
+      setTierObj(island[0].Tiers[params.tier]);
     }
   });
 
@@ -40,7 +40,7 @@ export default function ModifyTier() {
   }, [state.myIslands]);
 
   const handleChange = (e) => {
-    if (e.target.value === "custom") setCustom(true);
+    if (e.target.value === 'custom') setCustom(true);
     else {
       setCustom(false);
     }
@@ -52,14 +52,14 @@ export default function ModifyTier() {
     const transfers = [
       {
         destination: state.randomAddress,
-        scid: island.scid,
+        scid: island.SCID,
         burn: 1,
       },
     ];
 
     var interval = 0;
     console.log(event.target.wl.value);
-    if (custom) interval = event.target.custom - interval.value;
+    if (custom) interval = event.target.custom_interval.value;
     else {
       interval = event.target.interval.value;
     }
@@ -76,55 +76,55 @@ export default function ModifyTier() {
       transfers: transfers,
       sc_rpc: [
         {
-          name: "entrypoint",
-          datatype: "S",
-          value: "AOMT",
+          name: 'entrypoint',
+          datatype: 'S',
+          value: 'AOMT',
         },
         {
-          name: "Am",
-          datatype: "U",
+          name: 'Am',
+          datatype: 'U',
           value: parseInt(event.target.amount.value * 100000),
         },
         {
-          name: "I",
-          datatype: "U",
+          name: 'I',
+          datatype: 'U',
           value: parseInt(interval),
         },
         {
-          name: "L",
-          datatype: "U",
+          name: 'L',
+          datatype: 'U',
           value: parseInt(event.target.limit.value),
         },
         {
-          name: "Ad",
-          datatype: "S",
+          name: 'Ad',
+          datatype: 'S',
           value: event.target.address.value,
         },
         {
-          name: "H",
-          datatype: "S",
-          value: island.scid,
+          name: 'H',
+          datatype: 'S',
+          value: island.SCID,
         },
         {
-          name: "i",
-          datatype: "U",
+          name: 'i',
+          datatype: 'U',
           value: parseInt(params.tier),
         },
         {
-          name: "W",
-          datatype: "U",
+          name: 'W',
+          datatype: 'U',
           value: whitelisted,
         },
         {
-          name: "name",
-          datatype: "S",
+          name: 'name',
+          datatype: 'S',
           value: event.target.tierName.value,
         },
       ],
     });
     sendTransaction(txData);
 
-    setSearchParams({ status: "metadata", name: event.target.tierName.value });
+    setSearchParams({ status: 'metadata', name: event.target.tierName.value });
   });
 
   const SetMetadata = React.useCallback(async (event) => {
@@ -136,7 +136,7 @@ export default function ModifyTier() {
     const transfers = [
       {
         destination: state.randomAddress,
-        scid: island.scid,
+        scid: island.SCID,
         burn: 1,
       },
     ];
@@ -148,75 +148,84 @@ export default function ModifyTier() {
       transfers: transfers,
       sc_rpc: [
         {
-          name: "entrypoint",
-          datatype: "S",
-          value: "SetMetadata",
+          name: 'entrypoint',
+          datatype: 'S',
+          value: 'SetMetadata',
         },
         {
-          name: "H",
-          datatype: "S",
-          value: island.scid,
+          name: 'H',
+          datatype: 'S',
+          value: island.SCID,
         },
         {
-          name: "i",
-          datatype: "U",
+          name: 'i',
+          datatype: 'U',
           value: parseInt(params.tier),
         },
         {
-          name: "Name",
-          datatype: "S",
+          name: 'Name',
+          datatype: 'S',
           value: event.target.tierName.value,
         },
         {
-          name: "Image",
-          datatype: "S",
+          name: 'Image',
+          datatype: 'S',
           value: event.target.image.value,
         },
         {
-          name: "Tagline",
-          datatype: "S",
+          name: 'Tagline',
+          datatype: 'S',
           value: event.target.tagline.value,
         },
         {
-          name: "Description",
-          datatype: "S",
+          name: 'Description',
+          datatype: 'S',
           value: event.target.description.value,
         },
       ],
     });
     sendTransaction(txData);
 
-    setSearchParams({ status: "success" });
+    setSearchParams({ status: 'success' });
   });
 
   return (
     <div className="function">
-      {searchParams.get("status") == "metadata" ? (
+      {searchParams.get('status') == 'metadata' ? (
         <form onSubmit={SetMetadata}>
           <input
             placeholder="Tier Name"
             id="tierName"
-            defaultValue={tierObj.name}
+            defaultValue={
+              tierObj.Names && tierObj.Names[tierObj.Names.length - 1]
+            }
             type="text"
           />
           <input
             placeholder="image url"
             id="image"
-            defaultValue={tierObj.image}
+            defaultValue={
+              tierObj.Images && tierObj.Images[tierObj.Images.length - 1]
+            }
             type="text"
           />
           <input
             placeholder="Tagline"
             id="tagline"
             type="text"
-            defaultValue={tierObj.tagline}
+            defaultValue={
+              tierObj.Taglines && tierObj.Taglines[tierObj.Taglines.length - 1]
+            }
           />
           <textarea
             placeholder="Description"
             rows="44"
             cols="80"
             id="description"
-            defaultValue={tierObj.description}
+            defaultValue={
+              tierObj.Descriptions &&
+              tierObj.Descriptions[tierObj.Descriptions.length - 1]
+            }
           />
           {custom ? (
             <input
@@ -225,33 +234,35 @@ export default function ModifyTier() {
               type="text"
             />
           ) : (
-            ""
+            ''
           )}
-          <button type={"submit"}>Submit</button>
+          <button type={'submit'}>Submit</button>
         </form>
-      ) : searchParams.get("status") == "success" ? (
+      ) : searchParams.get('status') == 'success' ? (
         <Success />
       ) : (
         <>
-          <h3>Mofidy Your Subscription Tier</h3>
+          <h3>Modify Your Subscription Tier</h3>
 
           <form onSubmit={DoIt}>
             <input
               placeholder="Tier Name"
               id="tierName"
-              defaultValue={tierObj.name}
+              defaultValue={
+                tierObj.Names && tierObj.Names[tierObj.Names.length - 1]
+              }
               type="text"
             />
             <input
               placeholder="address"
               id="address"
               type="text"
-              defaultValue={tierObj.ad}
+              defaultValue={tierObj.Address}
             />
             <input
               placeholder="max number of subscribers"
               id="limit"
-              defaultValue={tierObj.av}
+              defaultValue={tierObj.Available}
               type="text"
             />
             <p>Can anybody subscribe or will there be a whitelist?</p>
@@ -262,7 +273,7 @@ export default function ModifyTier() {
             <input
               placeholder="Amount(Dero)"
               id="amount"
-              defaultValue={tierObj.am}
+              defaultValue={tierObj.Amount}
               type="text"
             />
             <select onChange={handleChange} id="interval">
@@ -274,13 +285,13 @@ export default function ModifyTier() {
             {custom ? (
               <input
                 placeholder="Subscription Interval in Seconds"
-                id="custom-interval"
+                id="custom_interval"
                 type="text"
               />
             ) : (
-              ""
+              ''
             )}
-            <button type={"submit"}>Submit</button>
+            <button type={'submit'}>Submit</button>
           </form>
         </>
       )}
