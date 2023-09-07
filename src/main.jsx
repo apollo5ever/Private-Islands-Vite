@@ -31,6 +31,7 @@ import { mainnet, polygon, optimism, arbitrum } from 'wagmi/chains';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
 import RevenueShare from './components/revenueShare';
+import COCOLotto from './components/cocoLotto';
 
 const { chains, provider } = configureChains(
   [mainnet],
@@ -65,7 +66,7 @@ createRoot(document.getElementById('root')).render(
             <Routes>
               <Route path="/" element={<App />}>
                 <Route path="/about" element={<About />} />
-                <Route path="/revenueshare" element={<RevenueShare />} />
+                <Route path="/lotto" element={<COCOLotto />} />
                 <Route path="/island/:island" element={<Island />} />
                 <Route
                   path="/island/:island/smokesignal/:index"
