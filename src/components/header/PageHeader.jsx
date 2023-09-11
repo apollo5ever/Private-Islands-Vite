@@ -58,18 +58,18 @@ export const PageHeader = () => {
                 </NavLink>
               </li>
               <li className="z-50 bg-secondary-focus">
-                <NavLink className="" to="revenueshare">
-                  <div className="text-xl">COCO Revenue Share</div>
+                <NavLink className="" to="lotto">
+                  <div className="text-xl">COCO Lotto</div>
+                </NavLink>
+              </li>
+              <li className="z-50 bg-secondary-focus">
+                <NavLink className="" to="migration">
+                  <div className="text-xl">Migration</div>
                 </NavLink>
               </li>
               <li className="z-50 bg-secondary-focus">
                 <NavLink className="" to="about?view=features">
                   <div className="text-xl">About</div>
-                </NavLink>
-              </li>
-              <li className="z-50 bg-secondary-focus">
-                <NavLink className="" to="oao">
-                  <div className="text-xl">OAO</div>
                 </NavLink>
               </li>
             </ul>

@@ -25,6 +25,13 @@ body[data-theme="dark"] {
   margin: 0 20px 0 20px;
 }
 
+.share-card {
+  border:#000000;
+  border-style:groove;
+  margin:10px;
+  padding:10 px;
+}
+
 /*.navbar {*/
 /*  height: 10vh;*/
 /*  background-color: #22d3ee;*/
