@@ -67,6 +67,7 @@ createRoot(document.getElementById('root')).render(
               <Route path="/" element={<App />}>
                 <Route path="/about" element={<About />} />
                 <Route path="/lotto" element={<COCOLotto />} />
+                <Route path="/migration" element={<RevenueShare />} />
                 <Route path="/island/:island" element={<Island />} />
                 <Route
                   path="/island/:island/smokesignal/:index"

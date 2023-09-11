@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { LoginContext } from '../LoginContext';
 import { useSendTransaction } from '../useSendTransaction';
 import { useGetSC } from '../useGetSC';
+import { Button } from '@/components/common/Button.jsx';
 
 export default function RevenueShare() {
   // const [searchParams, setSearchParams] = useSearchParams();
@@ -132,7 +133,7 @@ export default function RevenueShare() {
         {
           name: 'shares',
           datatype: 'U',
-          value: parseInt(e.target.shares.value),
+          value: bountyShares,
         },
       ],
     });
@@ -147,9 +148,9 @@ export default function RevenueShare() {
       ringsize: 2,
       sc_rpc: [
         {
-          name: "entrypoint",
-          datatype: "S",
-          value: "W",
+          name: 'entrypoint',
+          datatype: 'S',
+          value: 'W',
         },
       ],
     });
@@ -195,7 +196,7 @@ export default function RevenueShare() {
         {
           name: 'shares',
           datatype: 'U',
-          value: parseInt(e.target.shares.value),
+          value: fundShares,
         },
       ],
     });
@@ -210,9 +211,9 @@ export default function RevenueShare() {
       ringsize: 2,
       sc_rpc: [
         {
-          name: "entrypoint",
-          datatype: "S",
-          value: "W",
+          name: 'entrypoint',
+          datatype: 'S',
+          value: 'W',
         },
       ],
     });
@@ -259,7 +260,7 @@ export default function RevenueShare() {
         {
           name: 'shares',
           datatype: 'U',
-          value: parseInt(e.target.shares.value),
+          value: subShares,
         },
       ],
     });
@@ -274,9 +275,9 @@ export default function RevenueShare() {
       ringsize: 2,
       sc_rpc: [
         {
-          name: "entrypoint",
-          datatype: "S",
-          value: "W",
+          name: 'entrypoint',
+          datatype: 'S',
+          value: 'W',
         },
       ],
     });
@@ -324,7 +325,7 @@ export default function RevenueShare() {
         {
           name: 'shares',
           datatype: 'U',
-          value: parseInt(e.target.shares.value),
+          value: registryShares,
         },
       ],
     });
@@ -339,9 +340,9 @@ export default function RevenueShare() {
       ringsize: 2,
       sc_rpc: [
         {
-          name: "entrypoint",
-          datatype: "S",
-          value: "W",
+          name: 'entrypoint',
+          datatype: 'S',
+          value: 'W',
         },
       ],
     });
@@ -350,90 +351,71 @@ export default function RevenueShare() {
 
   return (
     <div className="function">
-      <h1>Private Islands Revenue Share</h1>
+      <h1>Redeem Your COCO from deprecated system</h1>
       <p>
-        Deposit your coco to receive shares in the Private Islands Treasury. 10k
-        coco = 1 share. The treasury is split across 4 contracts:
-        <ul>
-          <li>
-            The registry contract which collects one-time registration fees as
-            well as ratings fees.
-          </li>
-          <li>The Bounties contract which collects a 5% fee from bounties.</li>
-          <li>
-            The Fundraisers contract which collects a 10% fee from fundraisers.
-          </li>
-          <li>
-            The Subscriptions contract which collects a 10% fee from
-            subscriptions.
-          </li>
-        </ul>{' '}
+        We are migrating to a better and simpler COCO LOTTO system. Please
+        redeem your COCO from the old system.
       </p>
       <div className="flex flex-wrap justify-between">
-        <div className="share-card">
-          <h1>Registry</h1>
-          <h3>Treasury: {registryTreasury / 100000} Dero</h3>
-          <h3>Your shares: {registryShares}</h3>
-          <form onSubmit={RegistryBuyShares}>
-            <input type="number" placeholder="shares" id="shares" />
-            <button type={'submit'}>Buy Shares</button>
-          </form>
-          <form onSubmit={RegistrySellShares}>
-            <input type="number" placeholder="shares" id="shares" />
-            <button type={'submit'}>Sell Shares</button>
-          </form>
-          <form onSubmit={RegistryWithdraw}>
-            <button type={"submit"}>Withdraw</button>
-          </form>
-        </div>
-        <div className="share-card">
-          <h1>Bounties</h1>
-          <h3>Treasury: {bountyTreasury / 100000} Dero</h3>
-          <h3>Your shares: {bountyShares}</h3>
-          <form onSubmit={BountyBuyShares}>
-            <input type="number" placeholder="shares" id="shares" />
-            <button type={'submit'}>Buy Shares</button>
-          </form>
-          <form onSubmit={BountySellShares}>
-            <input type="number" placeholder="shares" id="shares" />
-            <button type={'submit'}>Sell Shares</button>
-          </form>
-          <form onSubmit={BountyWithdraw}>
-            <button type={"submit"}>Withdraw</button>
-          </form>
-        </div>
-        <div className="share-card">
-          <h1>Fundraisers</h1>
-          <h3>Treasury: {fundTreasury / 100000} Dero</h3>
-          <h3>Your shares: {fundShares}</h3>
-          <form onSubmit={FundBuyShares}>
-            <input type="number" placeholder="shares" id="shares" />
-            <button type={'submit'}>Buy Shares</button>
-          </form>
-          <form onSubmit={FundSellShares}>
-            <input type="number" placeholder="shares" id="shares" />
-            <button type={'submit'}>Sell Shares</button>
-          </form>
-          <form onSubmit={FundWithdraw}>
-            <button type={"submit"}>Withdraw</button>
-          </form>
-        </div>
-        <div className="share-card">
-          <h1>Subscriptions</h1>
-          <h3>Treasury: {subTreasury / 100000} Dero</h3>
-          <h3>Your shares: {subShares}</h3>
-          <form onSubmit={SubBuyShares}>
-            <input type="number" placeholder="shares" id="shares" />
-            <button type={'submit'}>Buy Shares</button>
-          </form>
-          <form onSubmit={SubSellShares}>
-            <input type="number" placeholder="shares" id="shares" />
-            <button type={'submit'}>Sell Shares</button>
-          </form>
-          <form onSubmit={SubWithdraw}>
-            <button type={"submit"}>Withdraw</button>
-          </form>
-        </div>
+        {registryShares ? (
+          <div className="share-card">
+            <h1>Registry</h1>
+            <h3>Your Locked COCO: {registryShares * 10000}</h3>
+
+            <form onSubmit={RegistrySellShares}>
+              <Button size="small" type={'submit'}>
+                Redeem COCO
+              </Button>
+            </form>
+          </div>
+        ) : (
+          ''
+        )}
+        {bountyShares ? (
+          <div className="share-card">
+            <h1>Bounties</h1>
+
+            <h3>Your Locked COCO: {bountyShares * 10000}</h3>
+
+            <form onSubmit={BountySellShares}>
+              <Button size="small" type={'submit'}>
+                Redeem COCO
+              </Button>
+            </form>
+          </div>
+        ) : (
+          ''
+        )}
+        {fundShares ? (
+          <div className="share-card">
+            <h1>Fundraisers</h1>
+
+            <h3>Your Locked COCO: {fundShares * 10000}</h3>
+
+            <form onSubmit={FundSellShares}>
+              <Button size="small" type={'submit'}>
+                Redeem COCO
+              </Button>
+            </form>
+          </div>
+        ) : (
+          ''
+        )}
+        {subShares ? (
+          <div className="share-card">
+            <h1>Subscriptions</h1>
+
+            <h3>Your Locked COCO: {subShares * 10000}</h3>
+
+            <form onSubmit={SubSellShares}>
+              <Button size="small" type={'submit'}>
+                Redeem COCO
+              </Button>
+            </form>
+          </div>
+        ) : (
+          ''
+        )}
       </div>
     </div>
   );

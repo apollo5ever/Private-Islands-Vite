@@ -63,6 +63,11 @@ export const PageHeader = () => {
                 </NavLink>
               </li>
               <li className="z-50 bg-secondary-focus">
+                <NavLink className="" to="migration">
+                  <div className="text-xl">Migration</div>
+                </NavLink>
+              </li>
+              <li className="z-50 bg-secondary-focus">
                 <NavLink className="" to="about?view=features">
                   <div className="text-xl">About</div>
                 </NavLink>
