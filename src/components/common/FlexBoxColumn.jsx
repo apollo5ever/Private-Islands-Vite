@@ -2,16 +2,17 @@ import { Helpers } from '@/utils/helpers.js';
 
 export const FlexBoxColumn = ({
   className,
-  justify = 'center',
-  align = 'center',
+  justify = '',
+  align = '',
   children,
 }) => {
+  console.log('JUSTIFY FOR COL', justify);
   const Justify = Helpers.twFlexJustify(justify);
   const Align = Helpers.twFlexAlignItems(align);
 
   const classNames = Helpers.formatClasses(
     className,
-    'flex flex-col justify-center align-center',
+    'flex flex-col',
     Justify,
     Align
   );

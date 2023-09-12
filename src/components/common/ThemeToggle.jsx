@@ -1,15 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useContext } from 'react';
+import ThemeContext from '../providers/ThemeContext.jsx';
 
 export const ThemeToggle = () => {
-  const [theme, setTheme] = useState('light');
+  const { theme, toggleTheme } = useContext(ThemeContext);
 
   useEffect(() => {
     document.body.dataset.theme = theme;
   }, [theme]);
-
-  function toggleTheme() {
-    setTheme(theme === 'light' ? 'dark' : 'light');
-  }
 
   return (
     <div className="flex min-h-screen items-center justify-center">

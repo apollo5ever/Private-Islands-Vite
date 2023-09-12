@@ -5,13 +5,28 @@ module.exports = {
   theme: {
     extend: {
       backgroundColor: {
-        'color-light': '#FFFFFF',
+        'color-light': '#eeeff6',
         'color-dark': '#2d353f',
+      },
+      colors: {
+        themeNeutral: {
+          DEFAULT: '#FFF',
+          dark: '#000'
+        }
+      },
+      typography: {
+        dark: {
+          css: {
+            '*': {
+              color: '#EEEDE6',
+            }
+          }
+        }
       }
     }
   },
   important: true,
-  plugins: [require("daisyui")],
+  plugins: [require("@tailwindcss/typography"), require("daisyui")],
   daisyui: {
     themes: [
       {
@@ -40,6 +55,7 @@ module.exports = {
           "success": "#36D399",
           "warning": "#FBBD23",
           "error": "#F87272",
+          "color": "#EEEDE6",
         }
       }
     ],

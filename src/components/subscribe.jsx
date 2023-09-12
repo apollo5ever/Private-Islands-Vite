@@ -1,29 +1,33 @@
-import React from "react";
-import {useSendTransaction} from "../useSendTransaction";
-import {useGetSC} from "../useGetSC";
-import {Button} from '@/components/common/Button.jsx';
+import React from 'react';
+import { useSendTransaction } from '../useSendTransaction';
+import { useGetSC } from '../useGetSC';
+import { Button } from '@/components/common/Button.jsx';
+import { useTheme } from '@/components/hooks/useTheme.js';
+import { Divider } from '@/components/common/Divider.jsx';
+import { FlexBoxRow } from '@/components/common/FlexBoxRow.jsx';
 
 export default function Subscribe(props) {
   const [sendTransaction] = useSendTransaction();
-  const [availability, setAvailability] = React.useState("");
+  const [availability, setAvailability] = React.useState('');
   const [subbed, setSubbed] = React.useState(false);
   const [expiry, setExpiry] = React.useState(null);
   const [integrated, setIntegrated] = React.useState(false);
-  const [integratedAddress, setIntegratedAddress] = React.useState("");
+  const [integratedAddress, setIntegratedAddress] = React.useState('');
   const [getSC] = useGetSC();
+  const { proseClass } = useTheme();
 
   const checkAvailability = React.useCallback(async () => {
     const res = await getSC(props.scid);
     const obj = res.stringkeys;
-    let search = props.profile + props.index + "_Av";
+    let search = props.profile + props.index + '_Av';
     let avail = obj[search];
-    console.log("avail", avail);
+    console.log('avail', avail);
     setAvailability(avail);
   });
 
   const getIntegrated = async (e) => {
     e.preventDefault();
-    console.log("integrate");
+    console.log('integrate');
     const response = await fetch(
       `/api/islands/integrate/${e.target.address.value}/${
         props.profile + props.index
@@ -57,11 +61,11 @@ export default function Subscribe(props) {
     }
   });
 
-  const [error, setError] = React.useState("");
+  const [error, setError] = React.useState('');
 
   const topUp = React.useCallback(async (event) => {
     event.preventDefault();
-    setError("");
+    setError('');
 
     const TierHash = props.profile + props.index.toString();
     const SupporterHash = props.userAddress;
@@ -76,18 +80,18 @@ export default function Subscribe(props) {
       ],
       sc_rpc: [
         {
-          name: "entrypoint",
-          datatype: "S",
-          value: "TU",
+          name: 'entrypoint',
+          datatype: 'S',
+          value: 'TU',
         },
         {
-          name: "T",
-          datatype: "S",
+          name: 'T',
+          datatype: 'S',
           value: TierHash,
         },
         {
-          name: "S",
-          datatype: "S",
+          name: 'S',
+          datatype: 'S',
           value: SupporterHash,
         },
       ],
@@ -97,7 +101,7 @@ export default function Subscribe(props) {
 
   const subscribe = React.useCallback(async (event) => {
     event.preventDefault();
-    setError("");
+    setError('');
 
     const TierHash = props.profile + props.index.toString();
     const SupporterHash = props.userAddress;
@@ -112,18 +116,18 @@ export default function Subscribe(props) {
       ],
       sc_rpc: [
         {
-          name: "entrypoint",
-          datatype: "S",
-          value: "AS",
+          name: 'entrypoint',
+          datatype: 'S',
+          value: 'AS',
         },
         {
-          name: "T",
-          datatype: "S",
+          name: 'T',
+          datatype: 'S',
           value: TierHash,
         },
         {
-          name: "S",
-          datatype: "S",
+          name: 'S',
+          datatype: 'S',
           value: SupporterHash,
         },
       ],
@@ -135,21 +139,21 @@ export default function Subscribe(props) {
     }, 10000);
   });
   React.useEffect(() => {
-    console.log("executed only once!");
+    console.log('executed only once!');
     //checkAvailability();
     checkSubbed();
   }, [props]);
 
   return (
-    <div className="subscribe">
-      <img src={props.image} />
+    <div className={proseClass}>
+      <img src={props.image} className="rounded-lg" />
       <h3>{props.name}</h3>
       <p>
-        {props.amount / 100000} Dero per{" "}
+        {props.amount / 100000} Dero per{' '}
         {Math.round(props.interval / (60 * 60 * 24))} days
       </p>
       <p>{props.tagline}</p>
-      <p dangerouslySetInnerHTML={{__html: props.description}} />
+      <p dangerouslySetInnerHTML={{ __html: props.description }} />
 
       <p>Available Spots: {props.available}</p>
       {subbed ? (
@@ -158,42 +162,61 @@ export default function Subscribe(props) {
             <p>Your subscription has expired.</p>
           ) : (
             <p>
-              You are subscribed to this tier. Your subscription ends in{" "}
+              You are subscribed to this tier. Your subscription ends in{' '}
               {expiry} days.
             </p>
           )}
-          <input placeholder="Dero Amount" id="amount" type="text" />
-          <Button size="small" type={"submit"}>
+          <input
+            placeholder="Dero Amount"
+            id="amount"
+            type="text"
+            className="input-bordered input w-full max-w-xs"
+          />
+          <Button size="small" type={'submit'}>
             Top Up
           </Button>
         </form>
       ) : (
         <form onSubmit={subscribe}>
-          <input placeholder="Dero Amount" id="amount" type="text" />
-          <Button size="small" type={"submit"}>
-            Subscribe
-          </Button>
+          <FlexBoxRow justify="stretch">
+            <input
+              placeholder="Dero Amount"
+              id="amount"
+              type="text"
+              className="input-bordered input w-full max-w-xs"
+            />
+            <Button size="small" type={'submit'}>
+              Subscribe
+            </Button>
+          </FlexBoxRow>
         </form>
       )}
       <div className="error"> {error}</div>
-      <small onClick={() => setIntegrated(!integrated)}>
+      <div
+        onClick={() => setIntegrated(!integrated)}
+        className="cursor-pointer pt-6 text-sm"
+      >
         Get Integrated Address
-      </small>
+      </div>
       {integrated ? (
         <form onSubmit={getIntegrated}>
-          <input
-            id="address"
-            type="text"
-            placeholder="Subscriber's Dero Address"
-          />
-          <Button size="small" type={"submit"}>
-            Get
-          </Button>
+          <FlexBoxRow justify="stretch">
+            <input
+              id="address"
+              type="text"
+              placeholder="Subscriber's Dero Address"
+              className="input-bordered input w-full max-w-xs"
+            />
+            <Button size="small" type={'submit'}>
+              Get
+            </Button>
+          </FlexBoxRow>
         </form>
       ) : (
-        ""
+        ''
       )}
       {integratedAddress}
+      <Divider />
     </div>
   );
 }

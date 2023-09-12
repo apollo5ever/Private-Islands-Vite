@@ -29,3 +29,18 @@ input {
 .my-important-class {
   @apply !important;
 }
+
+.group:hover .group-hover\:opacity-100 {
+  /*opacity: 100%;*/
+}
+
+/* Btn colors not part of theme that I use in my Button component */
+.btn-white {
+  background-color: white;
+  color: black;
+}
+
+.btn-black {
+  background-color: black;
+  color: white;
+}

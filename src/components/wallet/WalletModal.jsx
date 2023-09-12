@@ -9,6 +9,7 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { Button } from '@/components/common/Button.jsx';
 import { ModalDialog as Modal } from '@/components/common/ModalDialog.jsx';
 import { WALLET_INPUT_RENDERS } from '@/utils/helpers.js';
+import { ConnectButtonWrapper } from '@/components/wallet/ConnectButtonWrapper.jsx';
 
 const WalletModal = ({ handleClose }) => {
   const [menuOption, setMenuOption] = useState('main');
@@ -259,7 +260,11 @@ const WalletModal = ({ handleClose }) => {
   // Primary Modal
   const renderMainMenu = () => {
     return (
-      <Modal className="bg-zinc-800" id={menuOption} key={menuOption}>
+      <Modal
+        className="rounded-lg bg-zinc-800"
+        id={menuOption}
+        key={menuOption}
+      >
         {/*<Modal.Header>*/}
         <FlexBoxColumn className="top-20 flex rounded-b-sm bg-zinc-800 p-5 text-white">
           <FlexBoxRow justify="between">
@@ -320,7 +325,7 @@ const WalletModal = ({ handleClose }) => {
                 >
                   Add Wallet
                 </Button>
-                <ConnectButton label="Ethereum Wallet" />
+                <ConnectButtonWrapper onClose={handleClose} />
               </FlexBoxRow>
             </FlexBoxColumn>
           </FlexBoxRow>
@@ -334,7 +339,11 @@ const WalletModal = ({ handleClose }) => {
   const renderAddWalletModal = () => {
     console.log('ADD WALLET', menuOption);
     return (
-      <Modal className="bg-zinc-800 p-5" id={menuOption} key={menuOption}>
+      <Modal
+        className="rounded-lg bg-zinc-800 p-5"
+        id={menuOption}
+        key={menuOption}
+      >
         {/*<Modal.Header>*/}
         <FlexBoxRow justify="between">
           <div className="text-slate-300">Add Wallet</div>
@@ -397,7 +406,11 @@ const WalletModal = ({ handleClose }) => {
   const renderOptionMenu = () => {
     console.log('RENDER OPTIONS MENU', menuOption);
     return (
-      <Modal className="bg-zinc-800 p-5" id={menuOption} key={menuOption}>
+      <Modal
+        className="rounded-lg bg-zinc-800 p-5"
+        id={menuOption}
+        key={menuOption}
+      >
         {/*<Modal.Header>*/}
         <div className="flex justify-end">
           <Button size="small" handleClick={() => handleOptionClick('main')}>

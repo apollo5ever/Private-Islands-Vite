@@ -3,7 +3,6 @@ import { useParams } from 'react-router-dom';
 import { LoginContext } from '../LoginContext';
 import { useSearchParams, NavLink } from 'react-router-dom';
 import TreasureCard from './treasureCard';
-import FundCard from './fundCard';
 import Subscribe from './subscribe';
 import TrustIsland from './trustIsland';
 import getMIB from './getMIB';
@@ -13,6 +12,7 @@ import getFundraisers from './getFundraisers';
 import { FeatureNav } from '@/components/common/FeatureNav.jsx';
 import { HeroCard } from '@/components/common/HeroCard.jsx';
 import { SummaryCard } from '@/components/smokeSignal/SummaryCard.jsx';
+import { useTheme } from '@/components/hooks/useTheme.js';
 
 export default function Island() {
   const [post, setPost] = React.useState([]);
@@ -31,6 +31,7 @@ export default function Island() {
   const [view, setView] = React.useState('main');
   const params = useParams();
   const [island, setIsland] = React.useState(null);
+  const { proseClass } = useTheme();
 
   const getIslands = React.useCallback(async () => {
     console.log('client get island ', params.island);
@@ -96,18 +97,18 @@ export default function Island() {
           >
             <div>
               {searchParams.get('filter') === 'main' ? (
-                <>
-                  <p>{island.Tagline}</p>
-                  <p>Social Coconut Score: {island.score}</p>
+                <div className={proseClass}>
+                  <h2>{island.Tagline}</h2>
+                  <h3>Social Coconut Score: {island.score}</h3>
                   <p dangerouslySetInnerHTML={{ __html: island.Description }} />
-                </>
+                </div>
               ) : searchParams.get('filter') === 'treasure' ? (
                 <>
                   {island.Bounties && island.Bounties.length > 0 ? (
                     <>
                       {island.Bounties.map((x) => (
                         <TreasureCard
-                          className="mytreasure"
+                          className="overflow-x-auto"
                           name={x.Names[x.Names.length - 1]}
                           profile={island.Name}
                           tagline={x.Taglines[x.Taglines.length - 1]}
@@ -126,7 +127,7 @@ export default function Island() {
                     <>
                       {judging.map((x) => (
                         <TreasureCard
-                          className="mytreasure"
+                          className="overflow-x-auto"
                           name={x.name}
                           profile={x.island}
                           tagline={x.tagline}
