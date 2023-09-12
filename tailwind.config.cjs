@@ -7,11 +7,20 @@ module.exports = {
       backgroundColor: {
         'color-light': '#FFFFFF',
         'color-dark': '#2d353f',
+      },
+      typography: {
+        dark: {
+          css: {
+            '*': {
+              color: '#EEEDE6',
+            }
+          }
+        }
       }
     }
   },
   important: true,
-  plugins: [require("daisyui")],
+  plugins: [require("@tailwindcss/typography"), require("daisyui")],
   daisyui: {
     themes: [
       {
@@ -40,6 +49,7 @@ module.exports = {
           "success": "#36D399",
           "warning": "#FBBD23",
           "error": "#F87272",
+          "color": "#EEEDE6",
         }
       }
     ],

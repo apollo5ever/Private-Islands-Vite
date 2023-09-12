@@ -21,9 +21,13 @@ export const SummaryCard = (props) => {
   } = props.props;
 
   return (
-    <div className="card card-side bg-info shadow-xl">
+    <div className="card card-side mb-4 bg-info shadow-xl">
       <figure className="object-fit">
-        <img src={image} alt="Private Islands Treasure" />
+        <img
+          src={image}
+          alt="Private Islands Treasure"
+          className="rounded-lg"
+        />
       </figure>
       <div className="card-body text-neutral">
         <h2 className="card-title">{name}</h2>

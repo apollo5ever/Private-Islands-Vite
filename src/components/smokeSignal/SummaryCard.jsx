@@ -15,7 +15,11 @@ export const SummaryCard = (props) => {
   return (
     <div className="card card-side my-3 bg-info shadow-xl" key={name}>
       <figure className="max-w-[500px]">
-        <img src={image} alt="Private Islands Treasure" />
+        <img
+          src={image}
+          alt="Private Islands Treasure"
+          className="rounded-lg"
+        />
       </figure>
       <div className="card-body text-neutral">
         <h2 className="card-title">{name}</h2>

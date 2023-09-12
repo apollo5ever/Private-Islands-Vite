@@ -301,10 +301,9 @@ export default function Treasure() {
           <>
             <div className="card-body break-words text-neutral">
               <FlexBoxRow className="" justify="start">
-                <figure className="mr-4 min-w-[200px] max-w-[300px] content-center">
+                <figure className="mr-4 min-w-[200px] max-w-[300px] content-center rounded-lg">
                   <img
                     src={treasure.Images[treasure.Images.length - 1]}
-                    className="rounded-2xl"
                     alt={treasure.Names[treasure.Names.length - 1]}
                   />
                 </figure>
