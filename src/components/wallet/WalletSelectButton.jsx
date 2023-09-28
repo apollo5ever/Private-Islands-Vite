@@ -29,11 +29,9 @@ const WalletSelectButton = () => {
         color="text-default"
         handleClick={handleOpen}
       >
-        {state.walletType === 'rpc'
-          ? 'Wallet [RPC]'
-          : state.walletList
+        {state.walletList[state.activeWallet].address
           ? `Wallet [${state.walletList[state.activeWallet].name}]`
-          : 'Wallet'}
+          : 'Connect Wallet'}
       </Button>
       {isOpen && <WalletModal handleClose={handleClose} />}
     </>
