@@ -6,13 +6,9 @@ export const ModalDialog = ({ id, className, handleCloseModal, children }) => {
 
   return (
     <dialog className="modal" id={id}>
-      <div className={classNames}>{children}</div>
-
-      {/*<form method="dialog" className="modal-backdrop">*/}
-      {/*  <Button size="small" handleClick={handleCloseModal}>*/}
-      {/*    Close*/}
-      {/*  </Button>*/}
-      {/*</form>*/}
+      <div className="modal-box w-1/2 max-w-5xl bg-secondary">
+        <div className={classNames}>{children}</div>
+      </div>
     </dialog>
   );
 };

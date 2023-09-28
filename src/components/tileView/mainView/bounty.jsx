@@ -1,65 +1,68 @@
-import React from 'react';
-import { useParams, NavLink } from 'react-router-dom';
-import { LoginContext } from '../LoginContext';
-import RT from './RT';
-import Executer from './Executer';
-import N from './N';
-import Judge from './Judge';
-import { useSendTransaction } from '../useSendTransaction';
-import GI from './getIslands';
-import { SupportBountyByERC20 } from './supportBountyByErc20';
-import { useNameLookup } from '../useNameLookup';
+import { useCallback, useContext, useEffect, useState } from 'react';
+import { NavLink } from 'react-router-dom';
+import { LoginContext } from '@/LoginContext.jsx';
+import RT from '@/components/RT.jsx';
+import Executer from '@/components/Executer.jsx';
+import N from '@/components/N.jsx';
+import Judge from '@/components/Judge.jsx';
+import { useSendTransaction } from '@/useSendTransaction';
+import GI from '@/components/getIslands';
+import { SupportBountyByERC20 } from '@/components/supportBountyByErc20';
+import { useNameLookup } from '@/useNameLookup';
 import { FlexBoxRow } from '@/components/common/FlexBoxRow.jsx';
 import { FlexBoxColumn } from '@/components/common/FlexBoxColumn.jsx';
 import { Button } from '@/components/common/Button.jsx';
+import { Divider } from '@/components/common/Divider.jsx';
+import { useTheme } from '@/components/hooks/useTheme.js';
+import { TileContext } from '@/components/providers/TileContext.jsx';
+import { Helpers } from '@/utils/helpers.js';
 
-export default function Treasure() {
-  const [treasure, setTreasure] = React.useState({});
-  const params = useParams();
-  const island = params.island;
-  const index = params.index;
-  const [state, setState] = React.useContext(LoginContext);
-  const [judging, setJudging] = React.useState(false);
-  const [executing, setExecuting] = React.useState(false);
+export const Bounty = ({ bountyData }) => {
+  const { proseClass } = useTheme();
+  const [state, setState] = useContext(LoginContext);
+  const { gotoIslandTile } = useContext(TileContext);
+  const [treasure, setTreasure] = useState({});
+  const island = bountyData.Initiator.SCID;
+  const index = bountyData.Index;
+  const [judging, setJudging] = useState(false);
+  const [executing, setExecuting] = useState(false);
   const [sendTransaction] = useSendTransaction();
   const [nameLookup] = useNameLookup();
-  const [islandSCID, setIslandSCID] = React.useState('');
-  const [recipients, setRecipients] = React.useState([]);
-  const [editing, setEditing] = React.useState(false);
+  const [islandSCID, setIslandSCID] = useState('');
+  const [recipients, setRecipients] = useState([]);
+  const [editing, setEditing] = useState(false);
 
   const getJudging = () => {
     console.log('myslands', state);
-    if (!state.myIslands || !treasure.Judges || state.myIslands.length == 0)
+    if (!state.myIslands || !treasure.Judges || state.myIslands.length === 0)
       return;
     const matching = treasure.Judges.filter(
       (execObj) => execObj.SCID === state.myIslands[state.active].SCID
     );
 
-    if (matching.length == 1) setJudging(true);
+    if (matching.length === 1) setJudging(true);
     else setJudging(false);
   };
 
   const getExecuting = () => {
     console.log('execList', treasure.execList, treasure.XN);
-    if (!state.myIslands || !treasure.execList || state.myIslands.length == 0)
+    if (!state.myIslands || !treasure.execList || state.myIslands.length === 0)
       return;
     const matching = treasure.execList.filter(
       (execObj) => execObj.scid === state.myIslands[state.active].scid
     );
 
-    if (matching.length == 1) setExecuting(true);
+    if (matching.length === 1) setExecuting(true);
     else setExecuting(false);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     getJudging();
     getExecuting();
   }, [state.myIslands, treasure, state.active]);
 
-  const AddTreasure = React.useCallback(async (event) => {
+  const AddTreasure = useCallback(async (event) => {
     event.preventDefault();
-
-    //const deroBridgeApi = state.deroBridgeApiRef.current
 
     const data = new Object({
       scid: state.scid_bounties,
@@ -113,7 +116,7 @@ export default function Treasure() {
     sendTransaction(data);
   });
 
-  const getFunds = React.useCallback(async () => {
+  const getFunds = useCallback(async () => {
     let profile = await GI(state, island);
     console.log(profile.Bounties);
     setTreasure(profile.Bounties[index]);
@@ -135,10 +138,10 @@ export default function Treasure() {
     }
   });
 
-  const ClaimTreasure = React.useCallback(async (event) => {
+  const ClaimTreasure = useCallback(async (event) => {
     event.preventDefault();
     console.log(treasure.judge);
-    var hash = params.island;
+    var hash = bountyData.Initiator.SCID;
 
     const data = new Object({
       ringsize: 16,
@@ -167,7 +170,7 @@ export default function Treasure() {
     sendTransaction(data);
   });
 
-  const SetMetaData = React.useCallback(async (event) => {
+  const SetMetaData = useCallback(async (event) => {
     event.preventDefault();
     const transfers = [
       {
@@ -230,19 +233,19 @@ export default function Treasure() {
     setSearchParams({ status: 'success' });
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     console.log('executed only once!');
 
     getFunds();
   }, [state.ipfs]);
 
   return (
-    <div className="card card-side my-3 flex-col whitespace-normal bg-info shadow-xl md:flex-row">
+    <FlexBoxRow className="align-center card card-side my-3 whitespace-normal bg-secondary shadow-xl">
       <div>
         {!editing &&
         state.myIslands &&
         state.myIslands.length > 0 &&
-        island == state.myIslands[state.active].name ? (
+        island === state.myIslands[state.active].name ? (
           <small
             onClick={() => {
               setEditing(true);
@@ -255,43 +258,48 @@ export default function Treasure() {
         )}
         {editing ? (
           <form onSubmit={SetMetaData}>
-            <small
-              onClick={() => {
-                setEditing(false);
-              }}
-            >
-              cancel
-            </small>
-            <input
-              className="input-bordered input w-full max-w-xs"
-              placeholder="name"
-              defaultValue={
-                treasure.Names && treasure.Names[treasure.Names.length - 1]
-              }
-              id="Name"
-            />
-            <input
-              className="input-bordered input w-full max-w-xs"
-              placeholder="image url"
-              defaultValue={treasure.image}
-              id="Image"
-            />
-            <input
-              className="input-bordered input w-full max-w-xs"
-              placeholder="tagline"
-              defaultValue={treasure.tagline}
-              id="Tagline"
-            />
-            <textarea
-              placeholder="description"
-              rows="44"
-              cols="80"
-              defaultValue={treasure.description}
-              id="Description"
-            />
-            <Button size="small" type={'submit'}>
-              Submit
-            </Button>
+            <FlexBoxColumn className="mt-20">
+              <FlexBoxRow gap={2}>
+                <input
+                  className="input-bordered input w-full max-w-xs"
+                  placeholder="name"
+                  defaultValue={
+                    treasure.Names && treasure.Names[treasure.Names.length - 1]
+                  }
+                  id="Name"
+                />
+                <input
+                  className="input-bordered input w-full max-w-xs"
+                  placeholder="image url"
+                  defaultValue={Helpers.getTileImage(bountyData)}
+                  id="Image"
+                />
+                <input
+                  className="input-bordered input w-full max-w-xs"
+                  placeholder="tagline"
+                  defaultValue={Helpers.getTileTagline(bountyData)}
+                  id="Tagline"
+                />
+              </FlexBoxRow>
+              <textarea
+                placeholder="Description"
+                rows="20"
+                cols="80"
+                defaultValue={treasure.description}
+                id="Description"
+                className="my-2 rounded-md"
+              />
+              <Button size="small" type={'submit'}>
+                Submit
+              </Button>
+              <small
+                onClick={() => {
+                  setEditing(false);
+                }}
+              >
+                cancel
+              </small>
+            </FlexBoxColumn>
           </form>
         ) : (
           <></>
@@ -299,35 +307,39 @@ export default function Treasure() {
 
         {treasure.Names ? (
           <>
-            <div className="card-body break-words text-neutral">
-              <FlexBoxRow className="" justify="start">
+            <div className="card-body break-words">
+              <FlexBoxRow>
                 <figure className="mr-4 min-w-[200px] max-w-[300px] content-center rounded-lg">
                   <img
-                    src={treasure.Images[treasure.Images.length - 1]}
-                    alt={treasure.Names[treasure.Names.length - 1]}
+                    src={Helpers.getTileImage(bountyData)}
+                    alt={Helpers.getTileName(bountyData)}
                   />
                 </figure>
                 <FlexBoxColumn className="" align="start">
                   <h1 className="card-title">
-                    {treasure.Names[treasure.Names.length - 1]}
+                    {Helpers.getTileName(bountyData)}
                   </h1>
-                  <h3 className="font-bold">
-                    Initiated by{' '}
-                    <NavLink to={`/island/${treasure.Initiator.SCID}`}>
-                      {treasure.Initiator.Name}
-                    </NavLink>{' '}
+                  <h3
+                    className="cursor-pointer font-bold"
+                    onClick={() =>
+                      gotoIslandTile(Helpers.getInitiatorScid(bountyData))
+                    }
+                  >
+                    Initiated by {Helpers.getInitiatorName(bountyData)}
                   </h3>
                   <h3 className="font-bold">
                     Treasure: {treasure.Amount / 100000} Dero
                   </h3>
-                  <h3 className="font-bold">{treasure.tagline}</h3>
-                  {treasure.Status == 0 ? (
-                    <p>
-                      This treasure expires on{' ' + treasure.Expiry}. If
-                      treasure isn't released before this date, contributors can
-                      return to this page to receive a 95% refund.
-                    </p>
-                  ) : treasure.Status == 2 ? (
+                  <h3 className="font-bold">
+                    {Helpers.getTileTagline(bountyData)}
+                  </h3>
+                  {treasure.Status === 0 ? (
+                    <div className="mt-2">
+                      This treasure expires on{' ' + treasure.Expiry}. <br />
+                      If treasure isn't released before this date, contributors
+                      can return to this page to receive a 95% refund.
+                    </div>
+                  ) : treasure.Status === 2 ? (
                     <p>
                       This bounty has expired. If you added your treasure, you
                       can reclaim it now.
@@ -442,10 +454,10 @@ export default function Treasure() {
                 </span>
               </div>
 
-              {treasure.Status == 0 &&
+              {treasure.Status === 0 &&
               state.myIslands &&
               state.myIslands.length > 0 &&
-              island == state.myIslands[state.active].name ? (
+              island === state.myIslands[state.active].name ? (
                 <div className="">
                   <h3>Initiator Functions</h3>
                   <p>
@@ -475,7 +487,7 @@ export default function Treasure() {
                 ''
               )}
 
-              {treasure.Status == 0 &&
+              {treasure.Status === 0 &&
               state.myIslands &&
               state.myIslands.length > 0 &&
               judging ? (
@@ -490,14 +502,14 @@ export default function Treasure() {
                   randomAddress={state.randomAddress}
                   scid={state.scid_bounties}
                   XE={treasure.JE}
-                  solo={treasure.Judges.length == 1}
+                  solo={treasure.Judges.length === 1}
                   recipientList={treasure.recipientList}
                 />
               ) : (
                 ''
               )}
 
-              {treasure.Status == 0 &&
+              {treasure.Status === 0 &&
               state.myIslands &&
               state.myIslands.length > 0 &&
               executing ? (
@@ -518,37 +530,47 @@ export default function Treasure() {
                 ''
               )}
 
-              <p dangerouslySetInnerHTML={{ __html: treasure.description }} />
-              <span className="divider" />
+              <div className={`${proseClass} text-zinc-900`}>
+                <p
+                  dangerouslySetInnerHTML={{
+                    __html: Helpers.getTileDescription(bountyData),
+                  }}
+                />{' '}
+              </div>
+              <Divider />
 
-              {treasure.Status == 0 ? (
-                <FlexBoxColumn align="center" className="">
-                  <form onSubmit={AddTreasure}>
-                    <FlexBoxRow className="space-x-4" justify="stretch">
+              {treasure.Status === 0 ? (
+                <FlexBoxColumn>
+                  <form onSubmit={AddTreasure} className="my-2 flex w-1/2">
+                    <div className="flex-grow px-2">
                       <input
                         id="amount"
                         type="text"
                         placeholder="Amount (Dero)"
                         className="input-bordered input w-full max-w-xs"
                       />
+                    </div>
+                    <div className="p-2">
                       <Button size="small" type={'submit'}>
                         Add Treasure
                       </Button>
-                    </FlexBoxRow>
+                    </div>
                   </form>
 
-                  <form onSubmit={ClaimTreasure} className="space-x-4">
-                    <FlexBoxRow className="space-x-4" justify="stretch">
+                  <form onSubmit={ClaimTreasure} className="my-2 flex w-1/2">
+                    <div className="flex-grow p-2">
                       <input
                         id="proof"
                         type="text"
                         placeholder="proof"
                         className="input-bordered input w-full max-w-xs"
                       />
+                    </div>
+                    <div className="p-2">
                       <Button size="small" type={'submit'}>
                         Claim Treasure
                       </Button>
-                    </FlexBoxRow>
+                    </div>
                   </form>
                 </FlexBoxColumn>
               ) : (
@@ -561,6 +583,6 @@ export default function Treasure() {
         )}
         <SupportBountyByERC20 H={island} i={index} />
       </div>
-    </div>
+    </FlexBoxRow>
   );
-}
+};

@@ -417,6 +417,7 @@ export default function RevenueShare() {
           ''
         )}
       </div>
+      <h1>Bounty Migration</h1>
     </div>
   );
 }

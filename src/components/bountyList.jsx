@@ -1,15 +1,14 @@
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useState } from 'react';
 import TreasureCard from './treasureCard';
 import '../App.css';
 import { useSearchParams } from 'react-router-dom';
-import { LoginContext } from '../LoginContext';
 import { FlexBoxColumn } from '@/components/common/FlexBoxColumn.jsx';
+import { useGetBounties } from '@/components/hooks/useGetBounties.js';
 
 export default function BountyList({ islands }) {
-  const [state, setState] = useContext(LoginContext);
-  const [funds, setFunds] = useState([]);
   const [activeFilter, setActiveFilter] = useState('');
   let [searchParams, setSearchParams] = useSearchParams();
+  const { bounties } = useGetBounties(islands);
 
   const filterOptions = [
     { label: 'All', filter: 'treasure', status: '' },
@@ -23,30 +22,10 @@ export default function BountyList({ islands }) {
     setActiveFilter(item.label);
   };
 
-  const getFunds = useCallback(async () => {
-    var Bounties = [];
-
-    for (var i = 0; i < islands.length; i++) {
-      if (!islands[i].Bounties) continue;
-      for (var b = 0; b < islands[i].Bounties.length; b++) {
-        Bounties.push(islands[i].Bounties[b]);
-      }
-    }
-    setFunds(Bounties);
-  });
-
-  useEffect(() => {
-    getFunds();
-  }, [state, islands]);
-
-  useEffect(() => {
-    // console.log('funds??', funds);
-  }, [funds]);
-
   /*
    TODO - MTS -- searchParams.get('island') is always null -- PROB SHOULD REMOVE
    */
-  const fundJSX = funds.map((f) => {
+  const bountyJSX = bounties.map((f) => {
     if (
       searchParams.get('status') &&
       f.status !== parseInt(searchParams.get('status'))
@@ -101,7 +80,7 @@ export default function BountyList({ islands }) {
           ))}
         </div>
       </FlexBoxColumn>
-      {fundJSX && fundJSX}
+      {bountyJSX && bountyJSX}
     </div>
   );
 }

@@ -1,16 +1,15 @@
-import { useCallback, useContext, useEffect, useState } from 'react';
-import FundCard from './fundCard';
+import { useState } from 'react';
 import '../App.css';
 import { useSearchParams, NavLink } from 'react-router-dom';
-import { LoginContext } from '../LoginContext';
 import { FlexBoxColumn } from '@/components/common/FlexBoxColumn.jsx';
 import { SummaryCard } from '@/components/smokeSignal/SummaryCard.jsx';
+import { useGetFundraisers } from '@/components/hooks/useGetFundraisers.js';
 
 export default function FundList({ islands }) {
-  const [state, setState] = useContext(LoginContext);
   const [activeFilter, setActiveFilter] = useState('');
+  const { fundraisers, setFundraisers } = useGetFundraisers(islands);
 
-  const [funds, setFunds] = useState([]);
+  // const [funds, setFunds] = useState([]);
   let [searchParams, setSearchParams] = useSearchParams();
 
   const filterOptions = [
@@ -25,24 +24,7 @@ export default function FundList({ islands }) {
     setActiveFilter(item.label);
   };
 
-  const getFunds = useCallback(async () => {
-    var fundraisers = [];
-    console.log(islands);
-
-    for (var i = 0; i < islands.length; i++) {
-      if (!islands[i].Fundraisers) continue;
-      for (var b = 0; b < islands[i].Fundraisers.length; b++) {
-        fundraisers.push(islands[i].Fundraisers[b]);
-      }
-    }
-    setFunds(fundraisers);
-  });
-
-  useEffect(() => {
-    getFunds();
-  }, [islands]);
-
-  const fundJSX = funds.map((f) => {
+  const fundJSX = fundraisers.map((f) => {
     if (searchParams.get('status') && f.status !== searchParams.get('status'))
       return;
     if (searchParams.get('island') && f.island !== searchParams.get('island'))

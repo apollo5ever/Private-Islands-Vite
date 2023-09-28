@@ -19,13 +19,18 @@ export const HeroCard = ({
   };
 
   return (
-    <div className="hero mt-3 min-h-screen bg-secondary px-20">
+    <div className="hero mt-3 min-h-screen rounded-lg bg-secondary px-20">
       <div className="hero-content">
         <div className="max-w-md">
           <FlexBoxColumn>
             {image ? (
               <figure className="max-w-[500px] cursor-pointer pb-4">
-                <img src={image} alt="title" onClick={handleImageClick} />
+                <img
+                  src={image}
+                  alt="title"
+                  onClick={handleImageClick}
+                  className="rounded-lg"
+                />
               </figure>
             ) : (
               ''

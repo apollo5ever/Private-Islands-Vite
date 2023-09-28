@@ -21,15 +21,19 @@ export const SummaryCard = (props) => {
   } = props.props;
 
   return (
-    <div className="card card-side bg-info shadow-xl">
+    <div className="card card-side mb-4 mt-3 bg-info shadow-xl">
       <figure className="object-fit">
-        <img src={image} alt="Private Islands Treasure" />
+        <img
+          src={image}
+          alt="Private Islands Treasure"
+          className="rounded-lg"
+        />
       </figure>
       <div className="card-body text-neutral">
         <h2 className="card-title">{name}</h2>
         <p>
           Initiated by{' '}
-          <NavLink to={`/island/${initiator.SCID}`}>{initiator.Name}</NavLink>
+          <NavLink to={`/island/${initiator?.SCID}`}>{initiator?.Name}</NavLink>
         </p>
         <p>{tagline}</p>
         <p>
@@ -68,7 +72,7 @@ export const SummaryCard = (props) => {
           )}
         </p>
         <div className="card-actions justify-end">
-          <NavLink to={`/island/${initiator.SCID}/treasure/${index}`}>
+          <NavLink to={`/island/${initiator?.SCID}/treasure/${index}`}>
             <button className="btn-secondary btn text-neutral hover:text-info">
               Learn More
             </button>

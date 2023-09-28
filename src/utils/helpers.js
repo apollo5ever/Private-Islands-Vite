@@ -9,6 +9,21 @@ export const WALLET_INPUT_RENDERS = {
 
 export const DERO_DENOMINATOR = 100000;
 
+export const piAssetType = {
+  ISLAND: 'island',
+  BOUNTY: 'bounty',
+  FUNDRAISER: 'fundraiser',
+  SUBSCRIPTION: 'subscription',
+  ALL: 'all',
+};
+
+export const statusFilter = {
+  ALL: null,
+  ACTIVE: 0,
+  SUCCESS: 1,
+  FAILURE: 2,
+};
+
 // General utility functions
 /*
  To get classnames formatted properly
@@ -18,6 +33,107 @@ export const DERO_DENOMINATOR = 100000;
         active ? 'active classes' : 'inactive classes')}>Text</button>
  */
 export class Helpers {
+  static getTileName = (tile) => {
+    switch (tile.type) {
+      case piAssetType.ISLAND:
+        return tile.Name;
+      case piAssetType.BOUNTY:
+      case piAssetType.FUNDRAISER:
+      case piAssetType.SUBSCRIPTION:
+        return tile.Names[tile.Names.length - 1];
+    }
+  };
+
+  static getTileTagline = (tile) => {
+    switch (tile.type) {
+      case piAssetType.ISLAND:
+        return tile.Tagline;
+      case piAssetType.BOUNTY:
+      case piAssetType.FUNDRAISER:
+      case piAssetType.SUBSCRIPTION:
+        return tile.Taglines[tile.Taglines.length - 1];
+    }
+  };
+
+  static getTileImage = (tile) => {
+    switch (tile.type) {
+      case piAssetType.ISLAND:
+        return tile.Image;
+      case piAssetType.BOUNTY:
+      case piAssetType.FUNDRAISER:
+      case piAssetType.SUBSCRIPTION:
+        return tile.Images[tile.Images.length - 1];
+    }
+  };
+
+  static getTileDescription = (tile) => {
+    switch (tile.type) {
+      case piAssetType.ISLAND:
+        return tile.Description;
+      case piAssetType.BOUNTY:
+      case piAssetType.FUNDRAISER:
+      case piAssetType.SUBSCRIPTION:
+        return tile.Description[tile.Description.length - 1];
+    }
+  };
+
+  static getInitiatorScid = (tile) => {
+    switch (tile.type) {
+      case piAssetType.ISLAND:
+      case piAssetType.SUBSCRIPTION:
+        return tile.SCID;
+      case piAssetType.BOUNTY:
+      case piAssetType.FUNDRAISER:
+        return tile?.Initiator.SCID;
+    }
+  };
+
+  static getInitiatorName = (tile) => {
+    switch (tile.type) {
+      case piAssetType.ISLAND:
+      case piAssetType.SUBSCRIPTION:
+        return tile.Name;
+      case piAssetType.BOUNTY:
+      case piAssetType.FUNDRAISER:
+        return tile?.Initiator.Name;
+    }
+  };
+
+  static getTileFromIsland = (island, type) => {
+    switch (type) {
+      case piAssetType.ISLAND:
+        return { ...island, type: piAssetType.ISLAND };
+      case piAssetType.SUBSCRIPTION:
+        return { ...island.Tiers[0], type: piAssetType.SUBSCRIPTION };
+      case piAssetType.BOUNTY:
+        return { ...island.Bounties[0], type: piAssetType.BOUNTY };
+      case piAssetType.FUNDRAISER:
+        return { ...island.Fundraisers[0], type: piAssetType.FUNDRAISER };
+    }
+  };
+
+  static getItemCounts = (island) => {
+    console.log('TILE ISLAND', island);
+    return {
+      bountiesCount: island.Bounties ? island.Bounties.length : 0,
+      tiersCount: island.Tiers ? island.Tiers.length : 0,
+      fundraisersCount: island.Fundraisers ? island.Fundraisers.length : 0,
+    };
+  };
+
+  static shuffleArray = (array) => {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  };
+
+  static ucfirst = (str) => {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  };
+
   static formatClasses = (...classes) => {
     return classes.filter(Boolean).join(' ');
   };

@@ -12,12 +12,15 @@ export const PageHeader = () => {
   };
 
   return (
-    <div className="navbar h-32 bg-primary">
+    <div className="navbar h-24 bg-primary">
       <div className="navbar-start">
-        <img className="mask mask-decagon h-28" src={DeroIslandsLogo3} />
+        <img
+          className="mx-4 w-24"
+          src="https://privateislands.fund/static/media/logotransparent.ee389a36cdf74af7b010.png"
+        />
         <div className="mt-1 hidden md:block">
           <NavLink to="/" className="bg-gray-50 no-underline">
-            <h1 className="text-default md:text-3xl">Dero Private Islands</h1>
+            <h1 className="md:text-3xl">Dero Private Islands</h1>
           </NavLink>
         </div>
       </div>
