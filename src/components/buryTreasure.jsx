@@ -42,23 +42,12 @@ export default function BuryTreasure() {
     event.preventDefault();
     let fee;
     if (event.target.description.value.length > 380) fee = 10000;
-    const transfers = [
-      {
-        destination: state.randomAddress,
-        scid: island,
-        burn: 1,
-      },
-      {
-        destination: state.randomAddress,
-        burn: parseInt(event.target.treasure.value * 100000),
-      },
-    ];
+   
 
     const txData = new Object({
       scid: state.scid_bounties,
       ringsize: 2,
       fees: fee,
-      transfers: transfers,
       sc_rpc: [
         {
           name: "entrypoint",
