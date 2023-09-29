@@ -133,15 +133,7 @@ export default function BuryTreasure() {
       return;
     }
 
-    var obj = {
-      name: event.target.bountyName.value,
-      expiry: expiry,
-      tagline: event.target.tagline.value,
-      index: index,
-      description: event.target.description.value,
-      image: event.target.bountyPhoto.value,
-      island: island,
-    };
+   
 
     const transfers = [
       {
@@ -218,7 +210,7 @@ export default function BuryTreasure() {
             treasure, and appoint a judge (it can be you) to decide when that
             criteria has been met.
           </p>
-
+<h4>Set Metadata</h4>
           <form onSubmit={updateMetaData}>
             <input
               placeholder="Buried Treasure Name"
@@ -227,11 +219,7 @@ export default function BuryTreasure() {
             />
             <input placeholder="Image URL" id="bountyPhoto" />
             <input placeholder="Tagline" id="tagline" />
-            <p>
-              Expiry (if the task isn't complete before this date, supporters
-              can retrieve their funds)
-            </p>
-            <input type="date" id="expiry" name="expiry"></input>
+          
 
             <textarea
               placeholder="Description"
@@ -239,24 +227,7 @@ export default function BuryTreasure() {
               cols="80"
               id="description"
             />
-            <input
-              placeholder="Initial Treasure (Dero Amount)"
-              id="treasure"
-              type="text"
-            />
-            <p>
-              Nominate a Judge. This person sorts through treasure claims and
-              chooses who is entitled to the funds. The judge is paid 10% of the
-              treasure for this work. Backup judges can be nominated later.
-            </p>
-            <select id="judge">{judges}</select>
-            <p>
-              Nominate an Executer. This person releases the treasure according
-              to the judge's judgement, or he may veto the decision if he
-              believes it to be in error. He is not paid. Backup executers can
-              be nominated later.
-            </p>
-            <select id="executer">{judges}</select>
+         
 
             <Button size="small" type={"submit"}>
               Create
@@ -275,23 +246,18 @@ export default function BuryTreasure() {
             treasure, and appoint a judge (it can be you) to decide when that
             criteria has been met.
           </p>
+          
 
           <form onSubmit={DoIt}>
             <input placeholder="Buried Treasure Name" id="bountyName" />
-            <input placeholder="Image URL" id="bountyPhoto" />
-            <input placeholder="Tagline" id="tagline" />
+            
             <p>
               Expiry (if the task isn't complete before this date, supporters
               can retrieve their funds)
             </p>
             <input type="date" id="expiry" name="expiry"></input>
 
-            <textarea
-              placeholder="Description"
-              rows="44"
-              cols="80"
-              id="description"
-            />
+            
             <input
               placeholder="Initial Treasure (Dero Amount)"
               id="treasure"
