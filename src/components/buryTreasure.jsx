@@ -41,7 +41,7 @@ export default function BuryTreasure() {
   const updateMetaData = React.useCallback(async (event) => {
     event.preventDefault();
     let fee;
-    if (event.target.bio.description.length > 380) fee = 10000;
+    if (event.target.description.value.length > 380) fee = 10000;
     const transfers = [
       {
         destination: state.randomAddress,
