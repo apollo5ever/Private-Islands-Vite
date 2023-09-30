@@ -1,11 +1,11 @@
-import React from "react";
-import {useParams, useSearchParams} from "react-router-dom";
-import {LoginContext} from "../LoginContext";
-import Success from "./success.jsx";
-import hex2a from "./hex2a.js";
-import {useSendTransaction} from "../useSendTransaction";
-import {useGetSC} from "../useGetSC";
-import {Button} from '@/components/common/Button.jsx';
+import React from 'react';
+import { useParams, useSearchParams } from 'react-router-dom';
+import { LoginContext } from '../LoginContext';
+import Success from './success.jsx';
+import hex2a from './hex2a.js';
+import { useSendTransaction } from '../useSendTransaction';
+import { useGetSC } from '../useGetSC';
+import { Button } from '@/components/common/Button.jsx';
 
 export default function BuryTreasure() {
   const [state, setState] = React.useContext(LoginContext);
@@ -15,13 +15,15 @@ export default function BuryTreasure() {
   const index = params.index;
   const [judges, setJudges] = React.useState([]);
   const [execs, setExecs] = React.useState([]);
-  const [error, setError] = React.useState("");
+  const [error, setError] = React.useState('');
+  const [preview, setPreview] = React.useState(true);
+  const [description, setDescription] = React.useState('');
   const [sendTransaction] = useSendTransaction();
   const [getSC] = useGetSC();
 
   const getJudges = React.useCallback(async () => {
     const res = await getSC(state.scid_registry);
-    console.log("get judges res", res);
+    console.log('get judges res', res);
     var search = new RegExp(`N::PRIVATE-ISLANDS::*`);
     var scData = res.stringkeys; //.map(x=>x.match(search))
 
@@ -38,11 +40,15 @@ export default function BuryTreasure() {
     getJudges();
   }, [state]);
 
+  const handlePreview = () => {
+    console.log('preview change');
+    setPreview(!preview);
+  };
+
   const updateMetaData = React.useCallback(async (event) => {
     event.preventDefault();
     let fee;
     if (event.target.description.value.length > 380) fee = 10000;
-   
 
     const txData = new Object({
       scid: state.scid_bounties,
@@ -50,67 +56,67 @@ export default function BuryTreasure() {
       fees: fee,
       sc_rpc: [
         {
-          name: "entrypoint",
-          datatype: "S",
-          value: "SetMetadata",
+          name: 'entrypoint',
+          datatype: 'S',
+          value: 'SetMetadata',
         },
 
         {
-          name: "H",
-          datatype: "S",
+          name: 'H',
+          datatype: 'S',
           value: island,
         },
         {
-          name: "i",
-          datatype: "U",
+          name: 'i',
+          datatype: 'U',
           value: parseInt(index),
         },
         {
-          name: "Name",
-          datatype: "S",
+          name: 'Name',
+          datatype: 'S',
           value: event.target.bountyName.value,
         },
         {
-          name: "Image",
-          datatype: "S",
+          name: 'Image',
+          datatype: 'S',
           value: event.target.bountyPhoto.value,
         },
         {
-          name: "Tagline",
-          datatype: "S",
+          name: 'Tagline',
+          datatype: 'S',
           value: event.target.tagline.value,
         },
 
         {
-          name: "Description",
-          datatype: "S",
+          name: 'Description',
+          datatype: 'S',
           value: event.target.description.value,
         },
       ],
     });
     sendTransaction(txData);
 
-    setSearchParams({status: "success"});
+    setSearchParams({ status: 'success' });
   });
 
   const DoIt = React.useCallback(async (event) => {
     event.preventDefault();
     if (!event.target.bountyName.value) {
-      setError("Bounty name is required.");
+      setError('Bounty name is required.');
       return;
     }
     if (!event.target.expiry.value) {
-      setError("Expiry is required.");
+      setError('Expiry is required.');
       return;
     }
 
     const res0 = await getSC(state.scid_registry);
     var executer = event.target.executer.value;
 
-    if (executer === "self") executer = event.target.island.value;
+    if (executer === 'self') executer = event.target.island.value;
 
     var judge = event.target.judge.value;
-    if (judge === "self") judge = event.target.island.value;
+    if (judge === 'self') judge = event.target.island.value;
 
     var burn = 100;
 
@@ -118,11 +124,9 @@ export default function BuryTreasure() {
       new Date(event.target.expiry.value).getTime() / 1000 +
       new Date().getTimezoneOffset() * 60;
     if (expiry < new Date().getTime() / 1000) {
-      setError("Expiry must be future date");
+      setError('Expiry must be future date');
       return;
     }
-
-   
 
     const transfers = [
       {
@@ -142,40 +146,40 @@ export default function BuryTreasure() {
       transfers: transfers,
       sc_rpc: [
         {
-          name: "entrypoint",
-          datatype: "S",
-          value: "BT",
+          name: 'entrypoint',
+          datatype: 'S',
+          value: 'BT',
         },
 
         {
-          name: "H",
-          datatype: "S",
+          name: 'H',
+          datatype: 'S',
           value: island,
         },
         {
-          name: "i",
-          datatype: "U",
+          name: 'i',
+          datatype: 'U',
           value: parseInt(index),
         },
         {
-          name: "J",
-          datatype: "S",
+          name: 'J',
+          datatype: 'S',
           value: event.target.judge.value,
         },
         {
-          name: "X",
-          datatype: "S",
+          name: 'X',
+          datatype: 'S',
           value: event.target.executer.value,
         },
         {
-          name: "E",
-          datatype: "U",
+          name: 'E',
+          datatype: 'U',
           value: expiry,
         },
 
         {
-          name: "name",
-          datatype: "S",
+          name: 'name',
+          datatype: 'S',
           value: event.target.bountyName.value,
         },
       ],
@@ -183,14 +187,14 @@ export default function BuryTreasure() {
     sendTransaction(txData);
 
     setSearchParams({
-      status: "metadata",
+      status: 'metadata',
       name: event.target.bountyName.value,
     });
   });
 
   return (
     <div className="function">
-      {searchParams.get("status") == "metadata" ? (
+      {searchParams.get('status') == 'metadata' ? (
         <div className="profile">
           <h3>Bury Treasure</h3>
           <p>
@@ -199,32 +203,39 @@ export default function BuryTreasure() {
             treasure, and appoint a judge (it can be you) to decide when that
             criteria has been met.
           </p>
-<h4>Set Metadata</h4>
+          <h4>Set Metadata</h4>
           <form onSubmit={updateMetaData}>
             <input
               placeholder="Buried Treasure Name"
               id="bountyName"
-              defaultValue={searchParams.get("name")}
+              defaultValue={searchParams.get('name')}
             />
             <input placeholder="Image URL" id="bountyPhoto" />
             <input placeholder="Tagline" id="tagline" />
-          
 
-            <textarea
-              placeholder="Description"
-              rows="44"
-              cols="80"
-              id="description"
-            />
-         
+            {preview ? (
+              <p dangerouslySetInnerHTML={{ __html: description }} />
+            ) : (
+              <textarea
+                placeholder="Description"
+                rows="44"
+                cols="80"
+                id="description"
+                defaultValue={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+            )}
 
-            <Button size="small" type={"submit"}>
+            <Button size="small" type={'submit'}>
               Create
             </Button>
           </form>
+          <button onClick={() => handlePreview()}>
+            {preview ? 'Edit HTML' : 'Preview HTML'}
+          </button>
           {error}
         </div>
-      ) : searchParams.get("status") == "success" ? (
+      ) : searchParams.get('status') == 'success' ? (
         <Success />
       ) : (
         <div className="profile">
@@ -235,18 +246,16 @@ export default function BuryTreasure() {
             treasure, and appoint a judge (it can be you) to decide when that
             criteria has been met.
           </p>
-          
 
           <form onSubmit={DoIt}>
             <input placeholder="Buried Treasure Name" id="bountyName" />
-            
+
             <p>
               Expiry (if the task isn't complete before this date, supporters
               can retrieve their funds)
             </p>
             <input type="date" id="expiry" name="expiry"></input>
 
-            
             <input
               placeholder="Initial Treasure (Dero Amount)"
               id="treasure"
@@ -266,7 +275,7 @@ export default function BuryTreasure() {
             </p>
             <select id="executer">{judges}</select>
 
-            <Button size="small" type={"submit"}>
+            <Button size="small" type={'submit'}>
               Create
             </Button>
           </form>
