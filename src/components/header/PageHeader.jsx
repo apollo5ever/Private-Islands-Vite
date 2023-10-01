@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import WalletSelectButton from '@/components/wallet/WalletSelectButton.jsx';
-import DeroIslandsLogo3 from '@/assets/images/DeroIslandsLogo3.jpg';
 import { ThemeToggle } from '@/components/common/ThemeToggle.jsx';
-import WalletToggle from '../walletToggle';
-import DaemonToggle from '../daemonToggle';
+import WalletToggle from '../tileView/header/walletToggle.jsx';
+import DaemonToggle from '../tileView/header/daemonToggle.jsx';
 
 export const PageHeader = () => {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);

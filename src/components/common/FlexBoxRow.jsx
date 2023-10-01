@@ -5,6 +5,8 @@ export const FlexBoxRow = ({
   justify = 'center',
   align = 'center',
   gap,
+  maxWidth = '',
+  overflow = '',
   children,
 }) => {
   const Justify = Helpers.twFlexJustify(justify);
@@ -17,7 +19,11 @@ export const FlexBoxRow = ({
       : '';
   const flexClasses = 'min-w-full flex flex-col pt-2 md:min-w-full md:flex-row';
 
-  console.log('GAP/gap', Gap, gap);
+  const styles = {
+    maxWidth,
+    overflow,
+  };
+
   const classNames = Helpers.formatClasses(
     className,
     flexClasses,
@@ -26,7 +32,9 @@ export const FlexBoxRow = ({
     Gap
   );
 
-  console.log('CLASSES', classNames);
-
-  return <div className={classNames}>{children}</div>;
+  return (
+    <div className={classNames} style={styles}>
+      {children}
+    </div>
+  );
 };

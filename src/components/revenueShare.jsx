@@ -1,9 +1,11 @@
 import React from 'react';
-import { useSearchParams } from 'react-router-dom';
 import { LoginContext } from '../LoginContext';
 import { useSendTransaction } from './hooks/useSendTransaction';
 import { useGetSC } from './hooks/useGetSC';
 import { Button } from '@/components/common/Button.jsx';
+import bgImage from '@/assets/parallax/BigIsland.png';
+import { FullPageContainer } from '@/components/common/FullPageContainer.jsx';
+import { FlexBoxColumn } from '@/components/common/FlexBoxColumn.jsx';
 
 export default function RevenueShare() {
   // const [searchParams, setSearchParams] = useSearchParams();
@@ -350,74 +352,81 @@ export default function RevenueShare() {
   });
 
   return (
-    <div className="function">
-      <h1>Redeem Your COCO from deprecated system</h1>
-      <p>
+    <FullPageContainer bgImage={bgImage} rightPct={-75}>
+      <div className="mb-6 text-4xl font-bold">COCO Lotto - Update</div>
+      <div class="text-2xl">Redeem Your COCO from deprecated system</div>
+      <div className="text-xl">
         We are migrating to a better and simpler COCO LOTTO system. Please
         redeem your COCO from the old system.
-      </p>
-      <div className="flex flex-wrap justify-between">
+      </div>
+      <div className="flex flex-col justify-between">
         {registryShares ? (
-          <div className="share-card">
-            <h1>Registry</h1>
-            <h3>Your Locked COCO: {registryShares * 10000}</h3>
+          <FlexBoxColumn className="mx-auto mb-2 rounded-2xl border border-accent p-4">
+            <div className="text-2xl">Registry</div>
+            <div className="text-xl">Your Locked COCO</div>
+            <div className="text-4xl">{registryShares * 10000}</div>
 
             <form onSubmit={RegistrySellShares}>
               <Button size="small" type={'submit'}>
                 Redeem COCO
               </Button>
             </form>
-          </div>
+          </FlexBoxColumn>
         ) : (
           ''
         )}
         {bountyShares ? (
-          <div className="share-card">
-            <h1>Bounties</h1>
+          <FlexBoxColumn className="mx-auto mb-2 rounded-2xl border border-accent p-4">
+            <div className="flex text-2xl">Bounties</div>
 
-            <h3>Your Locked COCO: {bountyShares * 10000}</h3>
+            <div className="text-xl">Your Locked COCO</div>
+            <div className="text-4xl">{bountyShares * 10000}</div>
 
             <form onSubmit={BountySellShares}>
               <Button size="small" type={'submit'}>
                 Redeem COCO
               </Button>
             </form>
-          </div>
+          </FlexBoxColumn>
         ) : (
           ''
         )}
         {fundShares ? (
-          <div className="share-card">
-            <h1>Fundraisers</h1>
+          <FlexBoxColumn className="mx-auto mb-2 rounded-2xl border border-accent p-4">
+            <div className="text-2xl">Fundraisers</div>
 
-            <h3>Your Locked COCO: {fundShares * 10000}</h3>
+            <div className="text-xl">Your Locked COCO</div>
+            <div className="text-4xl">{fundShares * 10000}</div>
 
             <form onSubmit={FundSellShares}>
               <Button size="small" type={'submit'}>
                 Redeem COCO
               </Button>
             </form>
-          </div>
+          </FlexBoxColumn>
         ) : (
           ''
         )}
         {subShares ? (
-          <div className="share-card">
-            <h1>Subscriptions</h1>
+          <FlexBoxColumn className="mx-auto mb-2 rounded-2xl border border-accent p-4">
+            <div className="flex text-2xl">Subscriptions</div>
 
-            <h3>Your Locked COCO: {subShares * 10000}</h3>
+            <div className="text-xl">Your Locked COCO</div>
+            <div className="text-4xl">{subShares * 10000}</div>
 
             <form onSubmit={SubSellShares}>
               <Button size="small" type={'submit'}>
                 Redeem COCO
               </Button>
             </form>
-          </div>
+          </FlexBoxColumn>
         ) : (
           ''
         )}
       </div>
-      <h1>Bounty Migration</h1>
-    </div>
+      <div className="mt-3 text-xl">
+        It appears you Do Not have any COCO to Migrate
+      </div>
+    </FullPageContainer>
   );
 }

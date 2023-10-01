@@ -1,23 +1,26 @@
-import React from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { LoginContext } from '../LoginContext';
 import { useSendTransaction } from './hooks/useSendTransaction';
 import { useGetSC } from './hooks/useGetSC';
 import dateString from '../utils/dateString';
 import hex2a from './hex2a';
 import { useGetGasEstimate } from './hooks/useGetGasEstimate';
+import bgImage from '@/assets/parallax/FancyIsland.png';
+import { FullPageContainer } from '@/components/common/FullPageContainer.jsx';
+import { FlexBoxColumn } from '@/components/common/FlexBoxColumn.jsx';
+import { Button } from '@/components/common/Button.jsx';
 
 export default function COCOLotto() {
-  const [state, setState] = React.useContext(LoginContext);
+  const [state, setState] = useContext(LoginContext);
   const [sendTransaction] = useSendTransaction();
   const [getSC] = useGetSC();
-  const [lottos, setLottos] = React.useState([]);
-  const [userTickets, setUserTickets] = React.useState([]);
-  const [totalTickets, setTotalTickets] = React.useState(0);
+  const [lottos, setLottos] = useState([]);
+  const [userTickets, setUserTickets] = useState([]);
+  const [totalTickets, setTotalTickets] = useState(0);
   const [getGasEstimate] = useGetGasEstimate();
-  const [error, setError] = React.useState('');
+  const [error, setError] = useState('');
 
-  React.useEffect(() => {
+  useEffect(() => {
     async function fetchData() {
       let lotto = await getSC(state.scid_lotto);
       // let's make a list of all asset treasuries
@@ -53,9 +56,9 @@ export default function COCOLotto() {
       var ticketArray = [];
       let ticketCount = totalTicketArray.length;
       for (i = 0; i < totalTicketArray.length; i++) {
-        if (ticketCount == 0) break;
+        if (ticketCount === 0) break;
         if (
-          hex2a(lotto.stringkeys[`TICKET_${totalTicketArray[i]}`]) ==
+          hex2a(lotto.stringkeys[`TICKET_${totalTicketArray[i]}`]) ===
           state.userAddress
         ) {
           ticketCount--;
@@ -70,7 +73,7 @@ export default function COCOLotto() {
     fetchData();
   }, [state.userAddress]);
 
-  const BuyTickets = React.useCallback(async (e) => {
+  const BuyTickets = useCallback(async (e) => {
     e.preventDefault();
 
     const data = new Object({
@@ -121,7 +124,7 @@ export default function COCOLotto() {
     }
   });
 
-  const RedeemCOCO = React.useCallback(async (e) => {
+  const RedeemCOCO = useCallback(async (e) => {
     //find x tickets owned by user then create appropriate string
     e.preventDefault();
     let ticketString = '';
@@ -194,16 +197,20 @@ export default function COCOLotto() {
   });
 
   return (
-    <div className="function">
-      <h1>COCO Lotto</h1>
-      <p>
-        Deposit your Cocotokenuts to buy tickets in the COCO Lotto! One Lotto
-        Ticket costs 10,000 COCO. A single ticket is good for life. You can sell
-        your tickets at anytime for 9,000 COCO each.
-      </p>
-      <h3>Total Tickets in Next Draw: {totalTickets}</h3>
-      <div className="flex flex-wrap justify-between">
-        <div className="share-card">
+    <FullPageContainer bgImage={bgImage} rightPct={-75}>
+      <h1 className="mb-6 text-4xl font-bold">COCO Lotto</h1>
+      <div className="px-10 text-xl">
+        Deposit your Cocotokenuts to buy tickets in the COCO Lotto!
+        <div>One Lotto Ticket costs 10,000 COCO.</div>
+        <div>A single ticket is good for life.</div>
+        <div>You can sell your tickets at anytime for 9,000 COCO each.</div>
+      </div>
+      <FlexBoxColumn className="mt-3 rounded-xl border border-accent p-4 text-2xl">
+        <div>Total Tickets in Next Draw</div>
+        <div className="text-5xl">{totalTickets}</div>
+      </FlexBoxColumn>
+      <div className="hero relative mt-3 items-start rounded-lg bg-secondary px-2 font-fell text-2xl">
+        <FlexBoxColumn className="hero-content">
           {lottos.map((x) => (
             <>
               <h1>{x.Name}</h1>
@@ -213,22 +220,56 @@ export default function COCOLotto() {
               </h3>
             </>
           ))}
-          <h3>
+          <div>
             You have {userTickets.length} ticket
-            {userTickets.length == 1 ? '' : 's'} (
+            {userTickets.length === 1 ? '' : 's'} (
             {(100 * userTickets.length) / totalTickets}% chance of winning)
-          </h3>
-          <form onSubmit={BuyTickets}>
-            <input type="number" placeholder="tickets" id="tickets" />
-            <button type={'submit'}>Buy Tickets</button>
-          </form>
-          <form onSubmit={RedeemCOCO}>
-            <input type="number" placeholder="tickets" id="tickets" />
-            <button type={'submit'}>Sell Tickets</button>
-          </form>
-          {error}
-        </div>
+          </div>
+          <div className="w-full">
+            <form onSubmit={BuyTickets} className="flex w-full">
+              <div className="flex-grow px-2">
+                <input
+                  type="number"
+                  placeholder="tickets"
+                  className="input-bordered input w-full max-w-xs border border-accent"
+                  id="tickets"
+                />
+              </div>
+              <div className="px-2">
+                <Button
+                  size="md"
+                  btnColor="accent"
+                  color="text-white"
+                  type={'submit'}
+                >
+                  Buy Tickets
+                </Button>
+              </div>
+            </form>
+            <form onSubmit={RedeemCOCO} className="my-2 flex w-full">
+              <div className="flex-grow px-2">
+                <input
+                  type="number"
+                  placeholder="tickets"
+                  className="input-bordered input w-full max-w-xs border border-accent"
+                  id="tickets"
+                />
+              </div>
+              <div className="px-2">
+                <Button
+                  size="md"
+                  btnColor="accent"
+                  color="text-white"
+                  type={'submit'}
+                >
+                  Sell Tickets
+                </Button>
+              </div>
+            </form>
+            {error}
+          </div>
+        </FlexBoxColumn>
       </div>
-    </div>
+    </FullPageContainer>
   );
 }

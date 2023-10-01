@@ -5,6 +5,8 @@ export const FlexBoxColumn = ({
   justify = '',
   align = '',
   children,
+  maxHeight = '',
+  overflow = '',
 }) => {
   console.log('JUSTIFY FOR COL', justify);
   const Justify = Helpers.twFlexJustify(justify);
@@ -17,5 +19,14 @@ export const FlexBoxColumn = ({
     Align
   );
 
-  return <div className={classNames}>{children}</div>;
+  const styles = {
+    maxHeight: maxHeight,
+    overflow: overflow,
+  };
+
+  return (
+    <div className={classNames} style={styles}>
+      {children}
+    </div>
+  );
 };
