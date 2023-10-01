@@ -263,7 +263,7 @@ export default function Treasure() {
               cancel
             </small>
             <input
-              className="input-bordered input w-full max-w-xs"
+              className="input input-bordered w-full max-w-xs"
               placeholder="name"
               defaultValue={
                 treasure.Names && treasure.Names[treasure.Names.length - 1]
@@ -271,13 +271,13 @@ export default function Treasure() {
               id="Name"
             />
             <input
-              className="input-bordered input w-full max-w-xs"
+              className="input input-bordered w-full max-w-xs"
               placeholder="image url"
               defaultValue={treasure.image}
               id="Image"
             />
             <input
-              className="input-bordered input w-full max-w-xs"
+              className="input input-bordered w-full max-w-xs"
               placeholder="tagline"
               defaultValue={treasure.tagline}
               id="Tagline"
@@ -518,7 +518,12 @@ export default function Treasure() {
                 ''
               )}
 
-              <p dangerouslySetInnerHTML={{ __html: treasure.description }} />
+              <p
+                dangerouslySetInnerHTML={{
+                  __html:
+                    treasure.Descriptions[treasure.Descriptions.length - 1],
+                }}
+              />
               <span className="divider" />
 
               {treasure.Status == 0 ? (
@@ -529,7 +534,7 @@ export default function Treasure() {
                         id="amount"
                         type="text"
                         placeholder="Amount (Dero)"
-                        className="input-bordered input w-full max-w-xs"
+                        className="input input-bordered w-full max-w-xs"
                       />
                       <Button size="small" type={'submit'}>
                         Add Treasure
@@ -543,7 +548,7 @@ export default function Treasure() {
                         id="proof"
                         type="text"
                         placeholder="proof"
-                        className="input-bordered input w-full max-w-xs"
+                        className="input input-bordered w-full max-w-xs"
                       />
                       <Button size="small" type={'submit'}>
                         Claim Treasure
