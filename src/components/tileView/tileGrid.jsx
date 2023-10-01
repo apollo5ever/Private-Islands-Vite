@@ -10,13 +10,21 @@ import { TileContext } from '@/components/providers/TileContext.jsx';
 
 // TODO - DONE -- Get status search feature working on button filter
 // TODO - DONE -- Get the fundraiser & subscription primary cards set up
-// TODO - figure out side bar for all elements
+// TODO - DONE -- Use color swatches from jayraptor for new light theme
+// TODO - DONE -- Adjust header image to show mor island
+// TODO - DONE -- Add back drop down list & get hamburger icon
+// TODO - DONE -- Use transition for messages for coco -- maybe an array?  (Bounty - description -- then timer to display shuffled msgs)?
+// TODO - DONE -- add the messages for Senior Coco
+// TODO - figure out how to get indexes of 'other' items if more than 1 and display sidebarTile
+// TODO - style up sidebarTile
 // TODO - For bounties (and others) in the sidebar, when more than 1, show a summary of others in the sidebar
 //         & if they click to see that one, set it as selectedTile so it will show in main window
-// TODO - Fix wallet styling to hide stuff until clicked for adding wallets
+// TODO - add the new wallet toggle to the header once the code is merged to main
 // TODO - add other menu options in header and get rid of explore the islands drop down
 // TODO - convert styling for old styled stuff reachable from other menu options
 // TODO - have the Shuffle only happen when tiles page loads first time
+// TODO - get rid of scroll bar for primary window
+// TODO - DetailCard is called in the new mainView/fundraiser.jsx -- I should move this to mainView folder and verify it works
 
 export const TileGrid = () => {
   const logger = useContext(LoggerContext);
@@ -72,7 +80,7 @@ export const TileGrid = () => {
             tiles={allElements}
           />
         </div>
-        <div className="h-full w-1/4 overflow-auto">
+        <div className="flex-grow overflow-auto">
           <SidebarCard data={selectedTile} />
         </div>
       </div>
@@ -82,7 +90,16 @@ export const TileGrid = () => {
   logger(LOG.API, COMPNAME, 'TILE GRID', allElements);
 
   return (
-    <div className="relative">
+    <div
+      className="relative"
+      // TODO - get this to be the entire page, need to do it at the App component level, and perhaps use TileContext to manage state for when I want it on conditionally
+      // style={{
+      //   backgroundImage: `url('/src/assets/parallax/IslandBackground.png')`,
+      //   backgroundSize: 'cover', // This will cover the entire viewport
+      //   backgroundPosition: 'center', // This will center the image
+      //   backgroundRepeat: 'no-repeat', // This will prevent the image from repeating
+      // }}
+    >
       <TypeFilterBar
         selectedFilter={selectedFilter}
         setSelectedFilter={setSelectedFilter}

@@ -8,14 +8,6 @@ body {
   padding: 0;
 }
 
-body[data-theme="light"] {
-  @apply bg-color-light;
-}
-
-body[data-theme="dark"] {
-  @apply bg-color-dark;
-}
-
 /*TODO MTS - 'safe' doesnt name sense to me, but keeps the content hidden - redo menu & this file*/
 .App {
   display: flex;

@@ -21,7 +21,7 @@ import Fundraiser from './components/fundraiser';
 import CreateFund from './components/addFundraiser';
 import BuryTreasure from './components/buryTreasure';
 import Test from './components/simulatorTest';
-import { PageHeader } from '@/components/header/PageHeader.jsx';
+import { PageHeader } from '@/components/tileView/header/PageHeader.jsx';
 import { ThemeProvider } from '@/components/providers/ThemeContext.jsx';
 
 import './polyfills';

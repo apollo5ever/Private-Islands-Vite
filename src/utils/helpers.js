@@ -112,8 +112,48 @@ export class Helpers {
     }
   };
 
+  static getAssociatedBounties = (island, index) => {
+    let otherBounties = [];
+    if (island?.Bounties?.length > 1) {
+      otherBounties = island.Bounties.filter((bounty) => {
+        return bounty.Index !== index;
+      }).map((bounty) => ({ ...bounty, type: piAssetType.BOUNTY }));
+    }
+    return otherBounties;
+  };
+
+  static getAssociatedFundraisers = (island, index) => {
+    let otherFundraisers = [];
+    if (island?.Fundraisers?.length > 1) {
+      otherFundraisers = island.Fundraisers.filter((fundraiser) => {
+        return fundraiser.Index !== index;
+      }).map((fundraiser) => ({ ...fundraiser, type: piAssetType.FUNDRAISER }));
+    }
+    return otherFundraisers;
+  };
+
+  static getAssociatedSubscriptions = (island, index) => {
+    let otherSubscriptions = [];
+    if (island?.Tiers?.length > 1) {
+      otherSubscriptions = island.Tiers.filter((tier) => {
+        return tier.Index !== index;
+      }).map((tier) => ({ ...tier, type: piAssetType.SUBSCRIPTION }));
+    }
+    return otherSubscriptions;
+  };
+
+  static getItemTypeName = (type) => {
+    switch (type) {
+      case piAssetType.BOUNTY:
+        return { singular: 'Bounty', plural: 'Bounties' };
+      case piAssetType.SUBSCRIPTION:
+        return { singular: 'Subscription', plural: 'Subscriptions' };
+      case piAssetType.FUNDRAISER:
+        return { singular: 'Fundraiser', plural: 'Fundraisers' };
+    }
+  };
+
   static getItemCounts = (island) => {
-    console.log('TILE ISLAND', island);
     return {
       bountiesCount: island.Bounties ? island.Bounties.length : 0,
       tiersCount: island.Tiers ? island.Tiers.length : 0,

@@ -35,21 +35,35 @@ export const HeaderButtons = ({ type }) => {
   };
 
   return (
-    <FlexBoxRow gap="2">
+    <FlexBoxRow gap="2 mb-3">
       {Object.values(piAssetType)
         .filter((value) => value !== piAssetType.ALL && value !== type)
         .map((value, index) => (
-          <Button
-            variant="outline"
-            btnColor="themeNeutral"
-            size="xs"
+          <button
+            className={`hexagon bg-accent text-black ${
+              counts[value] === 0 ? 'cursor-not-allowed opacity-50' : ''
+            }`}
             key={index}
-            handleClick={() => gotoTile(value)}
+            onClick={() => gotoTile(value)}
+            disabled={counts[value] === 0}
           >
-            {Helpers.ucfirst(value)}
-            <br />
-            {counts[value]}
-          </Button>
+            <span className="hex-content text-md">
+              {Helpers.ucfirst(value)}
+              <br />
+              {counts[value]}
+            </span>
+          </button>
+          // <Button
+          //   variant="outline"
+          //   btnColor="themeNeutral"
+          //   size="xs"
+          //   key={index}
+          //   handleClick={() => gotoTile(value)}
+          // >
+          //   {Helpers.ucfirst(value)}
+          //   <br />
+          //   {counts[value]}
+          // </Button>
         ))}
     </FlexBoxRow>
   );

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import WalletSelectButton from '@/components/wallet/WalletSelectButton.jsx';
-import DeroIslandsLogo3 from '@/assets/images/DeroIslandsLogo3.jpg';
 import { ThemeToggle } from '@/components/common/ThemeToggle.jsx';
 
 export const PageHeader = () => {
