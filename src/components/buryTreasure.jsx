@@ -16,8 +16,11 @@ export default function BuryTreasure() {
   const [judges, setJudges] = React.useState([]);
   const [execs, setExecs] = React.useState([]);
   const [error, setError] = React.useState('');
-  const [preview, setPreview] = React.useState(true);
+  const [preview, setPreview] = React.useState(false);
   const [description, setDescription] = React.useState('');
+  const [image, setImage] = React.useState('');
+  const [tagline, setTagline] = React.useState('');
+  const [name, setName] = React.useState(searchParams.get('name'));
   const [sendTransaction] = useSendTransaction();
   const [getSC] = useGetSC();
 
@@ -193,7 +196,7 @@ export default function BuryTreasure() {
   });
 
   return (
-    <div className="function">
+    <div className="hero mt-3 min-h-screen rounded-lg bg-secondary px-20">
       {searchParams.get('status') == 'metadata' ? (
         <div className="profile">
           <h3>Bury Treasure</h3>
@@ -205,25 +208,42 @@ export default function BuryTreasure() {
           </p>
           <h4>Set Metadata</h4>
           <form onSubmit={updateMetaData}>
-            <input
-              placeholder="Buried Treasure Name"
-              id="bountyName"
-              defaultValue={searchParams.get('name')}
-            />
-            <input placeholder="Image URL" id="bountyPhoto" />
-            <input placeholder="Tagline" id="tagline" />
-
             {preview ? (
-              <p dangerouslySetInnerHTML={{ __html: description }} />
+              <>
+                <h1>{name}</h1>
+                <img src={image} />
+                <p>{tagline}</p>
+                <p dangerouslySetInnerHTML={{ __html: description }} />
+              </>
             ) : (
-              <textarea
-                placeholder="Description"
-                rows="44"
-                cols="80"
-                id="description"
-                defaultValue={description}
-                onChange={(e) => setDescription(e.target.value)}
-              />
+              <>
+                <input
+                  placeholder="Buried Treasure Name"
+                  id="bountyName"
+                  defaultValue={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+                <input
+                  onChange={(e) => setImage(e.target.value)}
+                  defaultValue={image}
+                  placeholder="Image URL"
+                  id="bountyPhoto"
+                />
+                <input
+                  onChange={(e) => setTagline(e.target.value)}
+                  defaultValue={tagline}
+                  placeholder="Tagline"
+                  id="tagline"
+                />
+                <textarea
+                  placeholder="Description"
+                  rows="44"
+                  cols="80"
+                  id="description"
+                  defaultValue={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                />
+              </>
             )}
 
             <Button size="small" type={'submit'}>
@@ -231,7 +251,7 @@ export default function BuryTreasure() {
             </Button>
           </form>
           <button onClick={() => handlePreview()}>
-            {preview ? 'Edit HTML' : 'Preview HTML'}
+            {preview ? 'Edit' : 'Preview'}
           </button>
           {error}
         </div>
