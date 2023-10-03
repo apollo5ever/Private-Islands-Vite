@@ -169,38 +169,34 @@ export default function Treasure() {
 
   const SetMetaData = React.useCallback(async (event) => {
     event.preventDefault();
-    const transfers = [
+    const attributes = ['Description', 'Name', 'Image', 'Tagline'];
+    var count = 0;
+    var method = '';
+    var scrpc = [
       {
-        destination: state.randomAddress,
-        scid: islandSCID,
-        burn: 1,
+        name: 'H',
+        datatype: 'S',
+        value: islandSCID,
+      },
+      {
+        name: 'i',
+        datatype: 'U',
+        value: parseInt(index),
       },
     ];
-
-    let fee;
-    if (event.target.Description.value.length > 360) fee = 10000;
-
-    const txData = new Object({
-      scid: state.scid_bounties,
-      ringsize: 2,
-      fees: fee,
-      transfers: transfers,
-      sc_rpc: [
+    for (var a of attributes) {
+      if (event.target[`${a}`].value) {
+        count++;
+        method = `Set${a}`;
+      }
+    }
+    if (count > 1) {
+      method = 'SetMetadata';
+      scrpc = scrpc.concat([
         {
           name: 'entrypoint',
           datatype: 'S',
-          value: 'SetMetadata',
-        },
-
-        {
-          name: 'H',
-          datatype: 'S',
-          value: islandSCID,
-        },
-        {
-          name: 'i',
-          datatype: 'U',
-          value: parseInt(index),
+          value: method,
         },
         {
           name: 'Name',
@@ -223,7 +219,44 @@ export default function Treasure() {
           datatype: 'S',
           value: event.target.Description.value,
         },
-      ],
+      ]);
+    } else {
+      console.log('method', method, method.substring(3));
+      scrpc = scrpc.concat([
+        {
+          name: 'entrypoint',
+          datatype: 'S',
+          value: method,
+        },
+        {
+          name: method.substring(3),
+          datatype: 'S',
+          value: event.target[`${method.substring(3)}`].value,
+        },
+      ]);
+    }
+
+    const transfers = [
+      {
+        destination: state.randomAddress,
+        scid: islandSCID,
+        burn: 1,
+      },
+    ];
+
+    let fee;
+    if (
+      method == 'setDescription' &&
+      event.target.Description.value.length > 360
+    )
+      fee = 10000;
+
+    const txData = new Object({
+      scid: state.scid_bounties,
+      ringsize: 2,
+      fees: fee,
+      transfers: transfers,
+      sc_rpc: scrpc,
     });
     sendTransaction(txData);
 
@@ -254,45 +287,44 @@ export default function Treasure() {
           <></>
         )}
         {editing ? (
-          <form onSubmit={SetMetaData}>
-            <small
-              onClick={() => {
-                setEditing(false);
-              }}
-            >
-              cancel
-            </small>
-            <input
-              className="input input-bordered w-full max-w-xs"
-              placeholder="name"
-              defaultValue={
-                treasure.Names && treasure.Names[treasure.Names.length - 1]
-              }
-              id="Name"
-            />
-            <input
-              className="input input-bordered w-full max-w-xs"
-              placeholder="image url"
-              defaultValue={treasure.image}
-              id="Image"
-            />
-            <input
-              className="input input-bordered w-full max-w-xs"
-              placeholder="tagline"
-              defaultValue={treasure.tagline}
-              id="Tagline"
-            />
-            <textarea
-              placeholder="description"
-              rows="44"
-              cols="80"
-              defaultValue={treasure.description}
-              id="Description"
-            />
-            <Button size="small" type={'submit'}>
-              Submit
-            </Button>
-          </form>
+          <div className="profile">
+            <form onSubmit={SetMetaData}>
+              <small
+                onClick={() => {
+                  setEditing(false);
+                }}
+              >
+                cancel
+              </small>
+              <input
+                className="input input-bordered w-full max-w-xs"
+                placeholder="name"
+                id="Name"
+              />
+              <input
+                className="input input-bordered w-full max-w-xs"
+                placeholder="image url"
+                defaultValue={treasure.image}
+                id="Image"
+              />
+              <input
+                className="input input-bordered w-full max-w-xs"
+                placeholder="tagline"
+                defaultValue={treasure.tagline}
+                id="Tagline"
+              />
+              <textarea
+                placeholder="description"
+                rows="44"
+                cols="80"
+                defaultValue={treasure.description}
+                id="Description"
+              />
+              <Button size="small" type={'submit'}>
+                Submit
+              </Button>
+            </form>
+          </div>
         ) : (
           <></>
         )}
