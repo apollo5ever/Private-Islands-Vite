@@ -275,7 +275,7 @@ export default function Treasure() {
         {!editing &&
         state.myIslands &&
         state.myIslands.length > 0 &&
-        island == state.myIslands[state.active].name ? (
+        island == state.myIslands[state.active].SCID ? (
           <small
             onClick={() => {
               setEditing(true);
