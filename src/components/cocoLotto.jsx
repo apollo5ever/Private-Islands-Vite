@@ -1,11 +1,11 @@
 import React from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { LoginContext } from '../LoginContext';
-import { useSendTransaction } from '../useSendTransaction';
-import { useGetSC } from '../useGetSC';
+import { useSendTransaction } from './hooks/useSendTransaction';
+import { useGetSC } from './hooks/useGetSC';
 import dateString from '../utils/dateString';
 import hex2a from './hex2a';
-import { useGetGasEstimate } from '../useGetGasEstimate';
+import { useGetGasEstimate } from './hooks/useGetGasEstimate';
 
 export default function COCOLotto() {
   const [state, setState] = React.useContext(LoginContext);

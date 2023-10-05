@@ -8,8 +8,8 @@ import FundCard from './fundCard';
 import Feed from './feed';
 import FutureFeed from './futureFeed';
 import PublishPost from './publishPost';
-import { useSendTransaction } from '../useSendTransaction';
-import { useGetSC } from '../useGetSC';
+import { useSendTransaction } from './hooks/useSendTransaction';
+import { useGetSC } from './hooks/useGetSC';
 import { Button } from '@/components/common/Button.jsx';
 
 export default function MyIsland() {

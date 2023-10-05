@@ -1,13 +1,13 @@
-import DeroBridgeApi from "dero-rpc-bridge-api";
-import React from "react";
-import ReactDOM from "react-dom";
-import to from "await-to-js";
-import { useParams, useSearchParams } from "react-router-dom";
-import { useSendTransaction } from "../useSendTransaction";
-import { useGetSC } from "../useGetSC";
+import DeroBridgeApi from 'dero-rpc-bridge-api';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import to from 'await-to-js';
+import { useParams, useSearchParams } from 'react-router-dom';
+import { useSendTransaction } from './hooks/useSendTransaction';
+import { useGetSC } from './hooks/useGetSC';
 
-import { LoginContext } from "../LoginContext";
-import Success from "./success.jsx";
+import { LoginContext } from '../LoginContext';
+import Success from './success.jsx';
 
 export default function CreateFund() {
   const [sendTransaction] = useSendTransaction();
@@ -37,51 +37,51 @@ export default function CreateFund() {
       transfers: transfers,
       sc_rpc: [
         {
-          name: "entrypoint",
-          datatype: "S",
-          value: "NF",
+          name: 'entrypoint',
+          datatype: 'S',
+          value: 'NF',
         },
 
         {
-          name: "G",
-          datatype: "U",
+          name: 'G',
+          datatype: 'U',
           value: parseInt(event.target.goal.value) * 100000,
         },
         {
-          name: "D",
-          datatype: "U",
+          name: 'D',
+          datatype: 'U',
           value: deadline,
         },
         {
-          name: "A",
-          datatype: "S",
+          name: 'A',
+          datatype: 'S',
           value: event.target.address.value,
         },
         {
-          name: "H",
-          datatype: "S",
+          name: 'H',
+          datatype: 'S',
           value: island,
         },
         {
-          name: "i",
-          datatype: "U",
+          name: 'i',
+          datatype: 'U',
           value: parseInt(index),
         },
         {
-          name: "name",
-          datatype: "S",
+          name: 'name',
+          datatype: 'S',
           value: event.target.fundName.value,
         },
         {
-          name: "t",
-          datatype: "S",
-          value: "",
+          name: 't',
+          datatype: 'S',
+          value: '',
         },
       ],
     });
     sendTransaction(txData);
 
-    setSearchParams({ status: "metadata", name: event.target.fundName.value });
+    setSearchParams({ status: 'metadata', name: event.target.fundName.value });
   });
 
   const SetMetadata = React.useCallback(async (event) => {
@@ -104,57 +104,57 @@ export default function CreateFund() {
       transfers: transfers,
       sc_rpc: [
         {
-          name: "entrypoint",
-          datatype: "S",
-          value: "SetMetadata",
+          name: 'entrypoint',
+          datatype: 'S',
+          value: 'SetMetadata',
         },
 
         {
-          name: "H",
-          datatype: "S",
+          name: 'H',
+          datatype: 'S',
           value: island,
         },
         {
-          name: "i",
-          datatype: "U",
+          name: 'i',
+          datatype: 'U',
           value: parseInt(index),
         },
         {
-          name: "Name",
-          datatype: "S",
+          name: 'Name',
+          datatype: 'S',
           value: event.target.fundName.value,
         },
         {
-          name: "Image",
-          datatype: "S",
+          name: 'Image',
+          datatype: 'S',
           value: event.target.fundPhoto.value,
         },
         {
-          name: "Tagline",
-          datatype: "S",
+          name: 'Tagline',
+          datatype: 'S',
           value: event.target.tagline.value,
         },
         {
-          name: "Description",
-          datatype: "S",
+          name: 'Description',
+          datatype: 'S',
           value: event.target.description.value,
         },
       ],
     });
     sendTransaction(txData);
 
-    setSearchParams({ status: "success" });
+    setSearchParams({ status: 'success' });
   });
 
   return (
     <div className="function">
-      {searchParams.get("status") == "metadata" ? (
+      {searchParams.get('status') == 'metadata' ? (
         <form onSubmit={SetMetadata}>
           <input
             placeholder="Name"
             id="fundName"
             type="text"
-            defaultValue={searchParams.get("name")}
+            defaultValue={searchParams.get('name')}
           />
           <input placeholder="Image URL" id="fundPhoto" type="text" />
           <input placeholder="Tagline" id="tagline" type="text" />
@@ -166,9 +166,9 @@ export default function CreateFund() {
             id="description"
           />
 
-          <button type={"submit"}>Launch</button>
+          <button type={'submit'}>Launch</button>
         </form>
-      ) : searchParams.get("status") == "success" ? (
+      ) : searchParams.get('status') == 'success' ? (
         <Success />
       ) : (
         <div className="profile">
@@ -183,7 +183,7 @@ export default function CreateFund() {
             <input placeholder="Goal" id="goal" type="text" />
             <input placeholder="Address" id="address" type="text" />
 
-            <button type={"submit"}>Launch</button>
+            <button type={'submit'}>Launch</button>
           </form>
         </div>
       )}

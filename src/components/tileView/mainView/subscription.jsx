@@ -1,6 +1,6 @@
 import React from 'react';
-import { useSendTransaction } from '@/useSendTransaction.jsx';
-import { useGetSC } from '@/useGetSC.jsx';
+import { useSendTransaction } from '@/components/hooks/useSendTransaction.jsx';
+import { useGetSC } from '@/components/hooks/useGetSC.jsx';
 import { Button } from '@/components/common/Button.jsx';
 import { useTheme } from '@/components/hooks/useTheme.js';
 import { Divider } from '@/components/common/Divider.jsx';
@@ -190,7 +190,7 @@ export const Subscription = ({ subData }) => {
               placeholder="Dero Amount"
               id="amount"
               type="text"
-              className="input-bordered input w-full max-w-xs"
+              className="input input-bordered w-full max-w-xs"
             />
             <Button size="small" type={'submit'}>
               Top Up
@@ -203,7 +203,7 @@ export const Subscription = ({ subData }) => {
                 placeholder="Dero Amount"
                 id="amount"
                 type="text"
-                className="input-bordered input w-full max-w-xs"
+                className="input input-bordered w-full max-w-xs"
               />
               <Button size="small" type={'submit'}>
                 Subscribe
@@ -225,7 +225,7 @@ export const Subscription = ({ subData }) => {
                 id="address"
                 type="text"
                 placeholder="Subscriber's Dero Address"
-                className="input-bordered input w-full max-w-xs"
+                className="input input-bordered w-full max-w-xs"
               />
               <Button size="small" type={'submit'}>
                 Get

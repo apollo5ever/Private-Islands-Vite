@@ -4,30 +4,11 @@ import Cookies from 'js-cookie';
 const LoginContext = React.createContext([{}, () => {}]);
 //const walletListCookie = Cookies.get('walletList');
 
-function getWalletItemsFromLocalStorage() {
-  const walletItems = [];
-  const pattern = /^wallet-[\w\s]+$/;
-
-  for (let i = 0; i < localStorage.length; i++) {
-    const key = localStorage.key(i);
-    if (pattern.test(key)) {
-      const walletItem = JSON.parse(localStorage.getItem(key));
-      walletItems.push(walletItem);
-    }
-  }
-
-  return walletItems;
-}
-
-let walletList = [{ name: 'RPC', open: true }];
-
-walletList = walletList.concat(getWalletItemsFromLocalStorage());
-
 const LoginProvider = (props) => {
   const [state, setState] = useState({
-    activeWallet: 0,
-    walletList: walletList,
-    daemon: 'pools',
+    walletMode: 'rpc',
+    daemonMode: 'pools',
+    ws: null,
     scid_registry:
       'a5daa9a02a81a762c83f3d4ce4592310140586badb4e988431819f47657559f7',
     scid_bounties:

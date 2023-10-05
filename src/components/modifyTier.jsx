@@ -6,8 +6,8 @@ import sha256 from 'crypto-js/sha256';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { LoginContext } from '../LoginContext';
 import Success from './success';
-import { useSendTransaction } from '../useSendTransaction';
-import { useGetSC } from '../useGetSC';
+import { useSendTransaction } from './hooks/useSendTransaction';
+import { useGetSC } from './hooks/useGetSC';
 
 export default function ModifyTier() {
   const [sendTransaction] = useSendTransaction();

@@ -1,6 +1,6 @@
 import React from 'react';
-import { useSendTransaction } from '../useSendTransaction';
-import { useGetSC } from '../useGetSC';
+import { useSendTransaction } from './hooks/useSendTransaction';
+import { useGetSC } from './hooks/useGetSC';
 import { Button } from '@/components/common/Button.jsx';
 import { useTheme } from '@/components/hooks/useTheme.js';
 import { Divider } from '@/components/common/Divider.jsx';
@@ -170,7 +170,7 @@ export default function Subscribe(props) {
             placeholder="Dero Amount"
             id="amount"
             type="text"
-            className="input-bordered input w-full max-w-xs"
+            className="input input-bordered w-full max-w-xs"
           />
           <Button size="small" type={'submit'}>
             Top Up
@@ -183,7 +183,7 @@ export default function Subscribe(props) {
               placeholder="Dero Amount"
               id="amount"
               type="text"
-              className="input-bordered input w-full max-w-xs"
+              className="input input-bordered w-full max-w-xs"
             />
             <Button size="small" type={'submit'}>
               Subscribe
@@ -205,7 +205,7 @@ export default function Subscribe(props) {
               id="address"
               type="text"
               placeholder="Subscriber's Dero Address"
-              className="input-bordered input w-full max-w-xs"
+              className="input input-bordered w-full max-w-xs"
             />
             <Button size="small" type={'submit'}>
               Get

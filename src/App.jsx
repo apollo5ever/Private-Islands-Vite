@@ -8,18 +8,22 @@ import React, {
 import { Outlet, NavLink, Link } from 'react-router-dom';
 import './App.css';
 import { LoginContext } from './LoginContext';
-import { useGetSC } from './useGetSC';
+import { useGetSC } from './components/hooks/useGetSC';
 import { default as GI } from './components/getIslands';
 import hex2a from './components/hex2a';
-import { useGetBalance } from './useGetBalance';
+import { useGetBalance } from './components/hooks/useGetBalance';
 import LoggerContext, { LOG } from '@/components/providers/LoggerContext.jsx';
+import { useInitializeWallet } from './components/hooks/useInitializeWallet';
+import { useGetTransfers } from './components/hooks/useGetTransfers';
 
 function App() {
   const [menuActive, setMenuActive] = useState(false);
   const [state, setState] = useContext(LoginContext);
   const logger = useContext(LoggerContext);
   const [getSC] = useGetSC();
+  const [initializeWallet] = useInitializeWallet();
   const [getBalance] = useGetBalance();
+  const [getTransfers] = useGetTransfers();
   const [workerActive, setWorkerActive] = useState(false);
   const [bridgeInitText, setBridgeInitText] = useState(
     <a
@@ -73,13 +77,12 @@ function App() {
   });
 
   useEffect(() => {
+    initializeWallet();
+  }, [state.walletMode]);
+
+  useEffect(() => {
     getCocoBalance();
-  }, [
-    state.scid,
-    state.activeWallet,
-    state.walletList[state.activeWallet].open,
-    state.walletList[state.activeWallet].address,
-  ]);
+  }, [state.scid, state.activeMode]);
 
   async function run() {
     logger(LOG.INFO, COMPNAME, 'create worker');
@@ -162,6 +165,16 @@ function App() {
         }}
       >
         State
+      </button>
+      <button
+        onClick={() => {
+          getTransfers({
+            incoming: false,
+            out: true,
+          });
+        }}
+      >
+        GetTransfers
       </button>
     </div>
   );
