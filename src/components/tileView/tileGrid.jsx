@@ -70,8 +70,8 @@ export const TileGrid = () => {
     logger(LOG.DEBUG, COMPNAME, 'SELECTED TILE', selectedTile);
 
     return (
-      <div className="flex h-screen w-full">
-        <div className="h-full w-3/4 overflow-x-hidden">
+      <div className="flex h-full w-full">
+        <div className="mr-2 h-full w-3/4 overflow-x-hidden">
           <PrimaryCard
             data={selectedTile}
             selectedIndex={selectedIndex}
