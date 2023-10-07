@@ -15,7 +15,7 @@ import IslandList from './components/islandList';
 import Island from './components/island';
 import PublishPost from './components/publishPost';
 import ModifyTier from './components/modifyTier';
-import About from './components/about';
+import { About } from '@/components/tileView/about';
 import FundList from './components/fundList';
 import Fundraiser from './components/fundraiser';
 import CreateFund from './components/addFundraiser';

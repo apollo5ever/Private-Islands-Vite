@@ -59,7 +59,7 @@ export const PageHeader = () => {
               <NavLink to="migration" className="block border-b px-1">
                 Migration
               </NavLink>
-              <NavLink to="about?view=features" className="block border-b px-1">
+              <NavLink to="/about" className="block border-b px-1">
                 About
               </NavLink>
             </div>
