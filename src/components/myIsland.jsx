@@ -62,14 +62,14 @@ export default function MyIsland() {
     if (event.target.edit.value.length > 380) fee = 10000;
 
     const metaDataData = {
-      scid: island.scid,
+      scid: island.SCID,
       ringsize: 2,
       fees: fee,
       transfers: [
         {
           destination: state.randomAddress,
           burn: 1,
-          scid: island.scid,
+          scid: island.SCID,
         },
       ],
       sc_rpc: [

@@ -133,12 +133,15 @@ function App() {
     //we have list of assets, check wallet balance for each one
     const fullIslandList = await GI();
     logger(LOG.API, COMPNAME, 'full island list', fullIslandList);
+    console.log('populate my islands', fullIslandList);
     //perfect now we need to check balance but do we have a wallet agnostic way to do this yet?
     //looks like we do
     //first let's make empty array
     let myIslands = [];
     for (let i = 0; i < fullIslandList.length; i++) {
+      console.log('populate for loop ', i, fullIslandList[i].SCID);
       let balance = await getBalance(fullIslandList[i].SCID);
+      console.log('populate my islands balance ', i, balance);
       if (balance > 0) {
         myIslands.push(fullIslandList[i]);
       }
@@ -153,7 +156,7 @@ function App() {
 
   useEffect(() => {
     populateMyIslands();
-  }, [state.deroBridgeApiRef, state.ipfs, state.activeWallet, state.scid]);
+  }, [state.deroBridgeApiRef, state.ipfs, state.walletMode, state.scid]);
 
   return (
     <div className="App">

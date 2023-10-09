@@ -6,7 +6,6 @@ export function useGetBalance() {
   const [state, setState] = useContext(LoginContext);
 
   const getBalanceRPC = useCallback(async (scid) => {
-    if (state.activeWallet !== 0) return;
     const deroBridgeApi = state.deroBridgeApiRef.current;
     const [err, res] = await to(
       deroBridgeApi.wallet('get-balance', {
