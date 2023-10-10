@@ -1,6 +1,6 @@
 import React from 'react';
 import to from 'await-to-js';
-import { useSendTransaction } from '../useSendTransaction';
+import { useSendTransaction } from './hooks/useSendTransaction';
 
 export default function AN(props) {
   const [sendTransaction] = useSendTransaction();

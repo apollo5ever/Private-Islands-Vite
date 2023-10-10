@@ -5,10 +5,10 @@ import RT from '@/components/RT.jsx';
 import Executer from '@/components/Executer.jsx';
 import N from '@/components/N.jsx';
 import Judge from '@/components/Judge.jsx';
-import { useSendTransaction } from '@/useSendTransaction';
+import { useSendTransaction } from '@/components/hooks/useSendTransaction';
 import GI from '@/components/getIslands';
 import { SupportBountyByERC20 } from '@/components/supportBountyByErc20';
-import { useNameLookup } from '@/useNameLookup';
+import { useNameLookup } from '@/components/hooks/useNameLookup';
 import { FlexBoxRow } from '@/components/common/FlexBoxRow.jsx';
 import { FlexBoxColumn } from '@/components/common/FlexBoxColumn.jsx';
 import { Button } from '@/components/common/Button.jsx';
@@ -154,9 +154,7 @@ export const Bounty = ({ bountyData }) => {
             {
               name: 'C',
               datatype: 'S',
-              value:
-                'Treasure Claim Submitted by: ' +
-                state.walletList[state.activeWallet].address,
+              value: 'Treasure Claim Submitted by: ' + state.userAddress,
             },
             {
               name: 'POC',
@@ -261,7 +259,7 @@ export const Bounty = ({ bountyData }) => {
             <FlexBoxColumn className="mt-20">
               <FlexBoxRow gap={2}>
                 <input
-                  className="input-bordered input w-full max-w-xs"
+                  className="input input-bordered w-full max-w-xs"
                   placeholder="name"
                   defaultValue={
                     treasure.Names && treasure.Names[treasure.Names.length - 1]
@@ -269,13 +267,13 @@ export const Bounty = ({ bountyData }) => {
                   id="Name"
                 />
                 <input
-                  className="input-bordered input w-full max-w-xs"
+                  className="input input-bordered w-full max-w-xs"
                   placeholder="image url"
                   defaultValue={Helpers.getTileImage(bountyData)}
                   id="Image"
                 />
                 <input
-                  className="input-bordered input w-full max-w-xs"
+                  className="input input-bordered w-full max-w-xs"
                   placeholder="tagline"
                   defaultValue={Helpers.getTileTagline(bountyData)}
                   id="Tagline"
@@ -547,7 +545,7 @@ export const Bounty = ({ bountyData }) => {
                         id="amount"
                         type="text"
                         placeholder="Amount (Dero)"
-                        className="input-bordered input w-full max-w-xs"
+                        className="input input-bordered w-full max-w-xs"
                       />
                     </div>
                     <div className="p-2">
@@ -563,7 +561,7 @@ export const Bounty = ({ bountyData }) => {
                         id="proof"
                         type="text"
                         placeholder="proof"
-                        className="input-bordered input w-full max-w-xs"
+                        className="input input-bordered w-full max-w-xs"
                       />
                     </div>
                     <div className="p-2">

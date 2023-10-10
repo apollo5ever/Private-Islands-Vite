@@ -2,7 +2,7 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import { LoginContext } from '../LoginContext';
 import getFundraisers from './getFundraisers';
-import { useSendTransaction } from '../useSendTransaction';
+import { useSendTransaction } from './hooks/useSendTransaction';
 import { Button } from '@/components/common/Button.jsx';
 import { DetailCard } from '@/components/smokeSignal/DetailCard.jsx';
 import { default as GI } from './getIslands';

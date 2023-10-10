@@ -1,11 +1,11 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import { LoginContext } from "../LoginContext";
-import { useParams, useSearchParams } from "react-router-dom";
-import CryptoJS, { x64 } from "crypto-js";
-import to from "await-to-js";
-import Success from "./success";
-import { useGetSC } from "../useGetSC";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { LoginContext } from '../LoginContext';
+import { useParams, useSearchParams } from 'react-router-dom';
+import CryptoJS, { x64 } from 'crypto-js';
+import to from 'await-to-js';
+import Success from './success';
+import { useGetSC } from './hooks/useGetSC';
 
 //REDESIGNING PUBLISH POSTS TO SUBSCRIBERS
 
@@ -159,24 +159,24 @@ export default function PublishPost(props) {
     const fee = encryptedPost.length * 3;
 
     const [err1, res1] = await to(
-      deroBridgeApi.wallet("start-transfer", {
-        scid: "8088b0089725de1d323276a0daa1f25cfab9c0b68ccb9318cbf6bf83f5a127c1",
+      deroBridgeApi.wallet('start-transfer', {
+        scid: '8088b0089725de1d323276a0daa1f25cfab9c0b68ccb9318cbf6bf83f5a127c1',
         ringsize: 2,
 
         sc_rpc: [
           {
-            name: "entrypoint",
-            datatype: "S",
-            value: "StoreKeyString",
+            name: 'entrypoint',
+            datatype: 'S',
+            value: 'StoreKeyString',
           },
           {
-            name: "k",
-            datatype: "S",
+            name: 'k',
+            datatype: 'S',
             value: `private.islands.${params.island}_${Date.now()}`,
           },
           {
-            name: "v",
-            datatype: "S",
+            name: 'v',
+            datatype: 'S',
             value: `00000${encryptedPost}00000`,
           },
         ],
@@ -192,13 +192,13 @@ export default function PublishPost(props) {
           amount: 1,
           payload_rpc: [
             {
-              name: "key",
-              datatype: "S",
+              name: 'key',
+              datatype: 'S',
               value: key,
             },
             {
-              name: "txid",
-              datatype: "S",
+              name: 'txid',
+              datatype: 'S',
               value: txid,
             },
           ],
@@ -206,13 +206,13 @@ export default function PublishPost(props) {
     );
 
     const [err, res] = await to(
-      deroBridgeApi.wallet("start-transfer", {
+      deroBridgeApi.wallet('start-transfer', {
         ringsize: 16,
         transfers: supporterList,
       })
     );
 
-    setSearchParams({ status: "success" });
+    setSearchParams({ status: 'success' });
   };
 
   React.useEffect(() => {
@@ -221,7 +221,7 @@ export default function PublishPost(props) {
 
   return (
     <div className="function">
-      {searchParams.get("status") == "success" ? (
+      {searchParams.get('status') == 'success' ? (
         <Success />
       ) : (
         <div>
@@ -239,7 +239,7 @@ export default function PublishPost(props) {
               }}
             />
             {randomKey ? (
-              ""
+              ''
             ) : (
               <input type="password" id="key" placeholder="encryption key" />
             )}
@@ -252,7 +252,7 @@ export default function PublishPost(props) {
               id="content"
             ></textarea>
 
-            <button type={"submit"}>Publish</button>
+            <button type={'submit'}>Publish</button>
           </form>
         </div>
       )}

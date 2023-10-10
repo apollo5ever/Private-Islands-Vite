@@ -1,11 +1,11 @@
 import React from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { LoginContext } from '../LoginContext';
-import { useSendTransaction } from '../useSendTransaction';
-import { useGetSC } from '../useGetSC';
+import { useSendTransaction } from './hooks/useSendTransaction';
+import { useGetSC } from './hooks/useGetSC';
 import dateString from '../utils/dateString';
 import hex2a from './hex2a';
-import { useGetGasEstimate } from '../useGetGasEstimate';
+import { useGetGasEstimate } from './hooks/useGetGasEstimate';
 
 export default function COCOLotto() {
   const [state, setState] = React.useContext(LoginContext);
@@ -56,7 +56,7 @@ export default function COCOLotto() {
         if (ticketCount == 0) break;
         if (
           hex2a(lotto.stringkeys[`TICKET_${totalTicketArray[i]}`]) ==
-          state.walletList[state.activeWallet].address
+          state.userAddress
         ) {
           ticketCount--;
           ticketArray.push(totalTicketArray[i]);
@@ -68,11 +68,7 @@ export default function COCOLotto() {
       //now count total tickets
     }
     fetchData();
-  }, [
-    state.activeWallet,
-    state.walletList,
-    state.walletList[state.activeWallet].address,
-  ]);
+  }, [state.userAddress]);
 
   const BuyTickets = React.useCallback(async (e) => {
     e.preventDefault();

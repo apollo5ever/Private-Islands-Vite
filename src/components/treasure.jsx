@@ -5,10 +5,10 @@ import RT from './RT';
 import Executer from './Executer';
 import N from './N';
 import Judge from './Judge';
-import { useSendTransaction } from '../useSendTransaction';
+import { useSendTransaction } from './hooks/useSendTransaction';
 import GI from './getIslands';
 import { SupportBountyByERC20 } from './supportBountyByErc20';
-import { useNameLookup } from '../useNameLookup';
+import { useNameLookup } from './hooks/useNameLookup';
 import { FlexBoxRow } from '@/components/common/FlexBoxRow.jsx';
 import { FlexBoxColumn } from '@/components/common/FlexBoxColumn.jsx';
 import { Button } from '@/components/common/Button.jsx';
@@ -151,9 +151,7 @@ export default function Treasure() {
             {
               name: 'C',
               datatype: 'S',
-              value:
-                'Treasure Claim Submitted by: ' +
-                state.walletList[state.activeWallet].address,
+              value: 'Treasure Claim Submitted by: ' + state.userAddress,
             },
             {
               name: 'POC',

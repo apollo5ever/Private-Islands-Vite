@@ -3,6 +3,8 @@ import { NavLink } from 'react-router-dom';
 import WalletSelectButton from '@/components/wallet/WalletSelectButton.jsx';
 import DeroIslandsLogo3 from '@/assets/images/DeroIslandsLogo3.jpg';
 import { ThemeToggle } from '@/components/common/ThemeToggle.jsx';
+import WalletToggle from '../walletToggle';
+import DaemonToggle from '../daemonToggle';
 
 export const PageHeader = () => {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
@@ -25,7 +27,6 @@ export const PageHeader = () => {
         </div>
       </div>
       <div className="navbar-center sm:flex lg:flex">
-        <WalletSelectButton />
         <ul className="menu menu-horizontal px-1">
           <li
             className={`dropdown ${isDropDownOpen ? 'open' : ''}`}
@@ -80,6 +81,8 @@ export const PageHeader = () => {
         </ul>
       </div>
       <div className="navbar-end">
+        <WalletToggle />
+        <DaemonToggle />
         <ThemeToggle />
       </div>
     </div>

@@ -8,8 +8,8 @@ import FundCard from './fundCard';
 import Feed from './feed';
 import FutureFeed from './futureFeed';
 import PublishPost from './publishPost';
-import { useSendTransaction } from '../useSendTransaction';
-import { useGetSC } from '../useGetSC';
+import { useSendTransaction } from './hooks/useSendTransaction';
+import { useGetSC } from './hooks/useGetSC';
 import { Button } from '@/components/common/Button.jsx';
 
 export default function MyIsland() {
@@ -62,14 +62,14 @@ export default function MyIsland() {
     if (event.target.edit.value.length > 380) fee = 10000;
 
     const metaDataData = {
-      scid: island.scid,
+      scid: island.SCID,
       ringsize: 2,
       fees: fee,
       transfers: [
         {
           destination: state.randomAddress,
           burn: 1,
-          scid: island.scid,
+          scid: island.SCID,
         },
       ],
       sc_rpc: [

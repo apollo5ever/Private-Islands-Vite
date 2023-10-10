@@ -8,18 +8,24 @@ import React, {
 import { Outlet, NavLink, Link } from 'react-router-dom';
 import './App.css';
 import { LoginContext } from './LoginContext';
-import { useGetSC } from './useGetSC';
+import { useGetSC } from './components/hooks/useGetSC';
 import { default as GI } from './components/getIslands';
 import hex2a from './components/hex2a';
-import { useGetBalance } from './useGetBalance';
+import { useGetBalance } from './components/hooks/useGetBalance';
 import LoggerContext, { LOG } from '@/components/providers/LoggerContext.jsx';
+import { useInitializeWallet } from './components/hooks/useInitializeWallet';
+import { useGetTransfers } from './components/hooks/useGetTransfers';
+import { useGetAddress } from './components/hooks/useGetAddress';
 
 function App() {
   const [menuActive, setMenuActive] = useState(false);
   const [state, setState] = useContext(LoginContext);
   const logger = useContext(LoggerContext);
   const [getSC] = useGetSC();
+  const [initializeWallet] = useInitializeWallet();
   const [getBalance] = useGetBalance();
+  const [getAddress] = useGetAddress();
+  const [getTransfers] = useGetTransfers();
   const [workerActive, setWorkerActive] = useState(false);
   const [bridgeInitText, setBridgeInitText] = useState(
     <a
@@ -73,13 +79,9 @@ function App() {
   });
 
   useEffect(() => {
+    initializeWallet();
     getCocoBalance();
-  }, [
-    state.scid,
-    state.activeWallet,
-    state.walletList[state.activeWallet].open,
-    state.walletList[state.activeWallet].address,
-  ]);
+  }, [state.walletMode]);
 
   async function run() {
     logger(LOG.INFO, COMPNAME, 'create worker');
@@ -89,13 +91,14 @@ function App() {
   }
 
   useEffect(() => {
+    initializeWallet();
     logger(LOG.INFO, COMPNAME, 'worker', workerActive);
     if (!workerActive) {
       run();
     }
   }, []);
 
-  async function createIPFSNode() {
+  /*   async function createIPFSNode() {
     const node = await window.Ipfs.create();
     logger(LOG.INFO, COMPNAME, 'ipfs node created', node);
     const validIp4 =
@@ -109,7 +112,7 @@ function App() {
 
   useEffect(() => {
     createIPFSNode();
-  }, []);
+  }, []); */
 
   useEffect(() => {
     async function fetchData() {
@@ -130,12 +133,15 @@ function App() {
     //we have list of assets, check wallet balance for each one
     const fullIslandList = await GI();
     logger(LOG.API, COMPNAME, 'full island list', fullIslandList);
+    console.log('populate my islands', fullIslandList);
     //perfect now we need to check balance but do we have a wallet agnostic way to do this yet?
     //looks like we do
     //first let's make empty array
     let myIslands = [];
     for (let i = 0; i < fullIslandList.length; i++) {
+      console.log('populate for loop ', i, fullIslandList[i].SCID);
       let balance = await getBalance(fullIslandList[i].SCID);
+      console.log('populate my islands balance ', i, balance);
       if (balance > 0) {
         myIslands.push(fullIslandList[i]);
       }
@@ -150,7 +156,7 @@ function App() {
 
   useEffect(() => {
     populateMyIslands();
-  }, [state.deroBridgeApiRef, state.ipfs, state.activeWallet, state.scid]);
+  }, [state.deroBridgeApiRef, state.ipfs, state.walletMode, state.scid]);
 
   return (
     <div className="App">
@@ -162,6 +168,16 @@ function App() {
         }}
       >
         State
+      </button>
+      <button
+        onClick={() => {
+          getTransfers({
+            incoming: false,
+            out: true,
+          });
+        }}
+      >
+        GetTransfers
       </button>
     </div>
   );

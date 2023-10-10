@@ -1,6 +1,6 @@
 import React from 'react';
-import { useSendTransaction } from '@/useSendTransaction.jsx';
-import { useGetSC } from '@/useGetSC.jsx';
+import { useSendTransaction } from '@/components/hooks/useSendTransaction.jsx';
+import { useGetSC } from '@/components/hooks/useGetSC.jsx';
 import { Button } from '@/components/common/Button.jsx';
 import { useTheme } from '@/components/hooks/useTheme.js';
 import { Divider } from '@/components/common/Divider.jsx';
@@ -52,7 +52,7 @@ export const Subscription = ({ subData }) => {
   const checkSubbed = React.useCallback(async () => {
     const res0 = await getSC(state.scid_subscriptions);
     var scData = res0.stringkeys;
-    var supporterSearch = `${state.walletList[state.activeWallet].address}_${
+    var supporterSearch = `${state.userAddress}_${
       subData.SCID + subData.Index
     }_E`;
     var expiry = scData[supporterSearch];
@@ -78,7 +78,7 @@ export const Subscription = ({ subData }) => {
     setError('');
 
     const TierHash = subData.SCID + subData.Index.toString();
-    const SupporterHash = state.walletList[state.activeWallet].address;
+    const SupporterHash = state.userAddress;
     const data = new Object({
       scid: state.scid_subscriptions,
       ringsize: 2,
@@ -114,7 +114,7 @@ export const Subscription = ({ subData }) => {
     setError('');
 
     const TierHash = subData.SCID + subData.Index.toString();
-    const SupporterHash = state.walletList[state.activeWallet].address;
+    const SupporterHash = state.userAddress;
     const data = new Object({
       scid: state.scid_subscriptions,
       ringsize: 2,
@@ -190,7 +190,7 @@ export const Subscription = ({ subData }) => {
               placeholder="Dero Amount"
               id="amount"
               type="text"
-              className="input-bordered input w-full max-w-xs"
+              className="input input-bordered w-full max-w-xs"
             />
             <Button size="small" type={'submit'}>
               Top Up
@@ -203,7 +203,7 @@ export const Subscription = ({ subData }) => {
                 placeholder="Dero Amount"
                 id="amount"
                 type="text"
-                className="input-bordered input w-full max-w-xs"
+                className="input input-bordered w-full max-w-xs"
               />
               <Button size="small" type={'submit'}>
                 Subscribe
@@ -225,7 +225,7 @@ export const Subscription = ({ subData }) => {
                 id="address"
                 type="text"
                 placeholder="Subscriber's Dero Address"
-                className="input-bordered input w-full max-w-xs"
+                className="input input-bordered w-full max-w-xs"
               />
               <Button size="small" type={'submit'}>
                 Get

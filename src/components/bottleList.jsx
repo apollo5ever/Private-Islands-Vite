@@ -23,7 +23,7 @@ export default function BottleList({ islands, state }) {
             description={key.Descriptions[key.Descriptions.length - 1]}
             amount={key.Amount}
             interval={key.Interval}
-            userAddress={state.walletList[state.activeWallet].address}
+            userAddress={state.userAddress}
             dba={state.deroBridgeApiRef}
             scid={state.scid_subscriptions}
             randomAddress={state.randomAddress}

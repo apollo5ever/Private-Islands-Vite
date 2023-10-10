@@ -18,7 +18,7 @@ export const useGetSubscriptions = (islands) => {
 
   useEffect(() => {
     getSubscriptions();
-  }, [islands, state.walletList, state.randomAddress, state.activeWallet]);
+  }, [islands, state.userWallet, state.randomAddress]);
 
   return { subscriptions };
 };

@@ -3,8 +3,8 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import { LoginContext } from '../LoginContext';
 import Success from './success.jsx';
 import hex2a from './hex2a.js';
-import { useSendTransaction } from '../useSendTransaction';
-import { useGetSC } from '../useGetSC';
+import { useSendTransaction } from './hooks/useSendTransaction';
+import { useGetSC } from './hooks/useGetSC';
 import { Button } from '@/components/common/Button.jsx';
 
 export default function BuryTreasure() {
