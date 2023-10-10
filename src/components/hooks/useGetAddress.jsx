@@ -1,21 +1,22 @@
 import React, { useState, useContext } from 'react';
-import { LoginContext } from '../LoginContext';
+import { LoginContext } from '../../LoginContext';
 import to from 'await-to-js';
 
 export function useGetAddress() {
   const [state, setState] = useContext(LoginContext);
 
-  const rpcGetAddress = React.useCallback(async () => {
-    const deroBridgeApi = state.deroBridgeApiRef.current;
+  const rpcGetAddress = React.useCallback(async (deroBridgeApiRef) => {
+    const deroBridgeApi = deroBridgeApiRef.current;
 
     const [err, res] = await to(deroBridgeApi.wallet('get-address', {}));
     console.log('rpc get address', res.data.result.address);
+    setState((state) => ({ ...state, userAddress: res.data.result.address }));
     return res.data.result.address;
   });
 
-  async function getAddress() {
+  async function getAddress(deroBridgeApiRef) {
     if (state.walletMode == 'rpc') {
-      return await rpcGetAddress();
+      return await rpcGetAddress(deroBridgeApiRef);
     } else if (state.walletMode == 'xswd') {
       return new Promise((resolve, reject) => {
         const payload = {
@@ -27,6 +28,10 @@ export function useGetAddress() {
         const handleResponse = (data) => {
           console.log('handling it', data.id);
           if (data.id == `"${payload.id}"`) {
+            setState((state) => ({
+              ...state,
+              userAddress: data.result.address,
+            }));
             resolve(data.result.address);
           }
         };

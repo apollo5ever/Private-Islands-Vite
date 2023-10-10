@@ -151,9 +151,7 @@ export default function Treasure() {
             {
               name: 'C',
               datatype: 'S',
-              value:
-                'Treasure Claim Submitted by: ' +
-                state.walletList[state.activeWallet].address,
+              value: 'Treasure Claim Submitted by: ' + state.userAddress,
             },
             {
               name: 'POC',

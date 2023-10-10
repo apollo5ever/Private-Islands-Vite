@@ -15,6 +15,7 @@ import { useGetBalance } from './components/hooks/useGetBalance';
 import LoggerContext, { LOG } from '@/components/providers/LoggerContext.jsx';
 import { useInitializeWallet } from './components/hooks/useInitializeWallet';
 import { useGetTransfers } from './components/hooks/useGetTransfers';
+import { useGetAddress } from './components/hooks/useGetAddress';
 
 function App() {
   const [menuActive, setMenuActive] = useState(false);
@@ -23,6 +24,7 @@ function App() {
   const [getSC] = useGetSC();
   const [initializeWallet] = useInitializeWallet();
   const [getBalance] = useGetBalance();
+  const [getAddress] = useGetAddress();
   const [getTransfers] = useGetTransfers();
   const [workerActive, setWorkerActive] = useState(false);
   const [bridgeInitText, setBridgeInitText] = useState(
@@ -78,11 +80,8 @@ function App() {
 
   useEffect(() => {
     initializeWallet();
-  }, [state.walletMode]);
-
-  useEffect(() => {
     getCocoBalance();
-  }, [state.scid, state.activeMode]);
+  }, [state.walletMode]);
 
   async function run() {
     logger(LOG.INFO, COMPNAME, 'create worker');
@@ -92,13 +91,14 @@ function App() {
   }
 
   useEffect(() => {
+    initializeWallet();
     logger(LOG.INFO, COMPNAME, 'worker', workerActive);
     if (!workerActive) {
       run();
     }
   }, []);
 
-  async function createIPFSNode() {
+  /*   async function createIPFSNode() {
     const node = await window.Ipfs.create();
     logger(LOG.INFO, COMPNAME, 'ipfs node created', node);
     const validIp4 =
@@ -112,7 +112,7 @@ function App() {
 
   useEffect(() => {
     createIPFSNode();
-  }, []);
+  }, []); */
 
   useEffect(() => {
     async function fetchData() {

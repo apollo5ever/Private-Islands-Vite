@@ -52,7 +52,7 @@ export const Subscription = ({ subData }) => {
   const checkSubbed = React.useCallback(async () => {
     const res0 = await getSC(state.scid_subscriptions);
     var scData = res0.stringkeys;
-    var supporterSearch = `${state.walletList[state.activeWallet].address}_${
+    var supporterSearch = `${state.userAddress}_${
       subData.SCID + subData.Index
     }_E`;
     var expiry = scData[supporterSearch];
@@ -78,7 +78,7 @@ export const Subscription = ({ subData }) => {
     setError('');
 
     const TierHash = subData.SCID + subData.Index.toString();
-    const SupporterHash = state.walletList[state.activeWallet].address;
+    const SupporterHash = state.userAddress;
     const data = new Object({
       scid: state.scid_subscriptions,
       ringsize: 2,
@@ -114,7 +114,7 @@ export const Subscription = ({ subData }) => {
     setError('');
 
     const TierHash = subData.SCID + subData.Index.toString();
-    const SupporterHash = state.walletList[state.activeWallet].address;
+    const SupporterHash = state.userAddress;
     const data = new Object({
       scid: state.scid_subscriptions,
       ringsize: 2,

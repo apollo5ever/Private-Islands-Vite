@@ -29,7 +29,7 @@ const WalletSelectButton = () => {
         color="text-default"
         handleClick={handleOpen}
       >
-        {state.walletList[state.activeWallet].address
+        {state.walletList
           ? `Wallet [${state.walletList[state.activeWallet].name}]`
           : 'Connect Wallet'}
       </Button>

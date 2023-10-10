@@ -180,9 +180,7 @@ export default function Island() {
                         }
                         amount={key.Amount}
                         interval={key.Interval}
-                        userAddress={
-                          state.walletList[state.activeWallet].address
-                        }
+                        userAddress={state.userAddress}
                         dba={state.deroBridgeApiRef}
                         scid={state.scid_subscriptions}
                         randomAddress={state.randomAddress}

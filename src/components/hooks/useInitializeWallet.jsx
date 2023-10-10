@@ -9,10 +9,12 @@ import { LoginContext } from '../../LoginContext';
 import DeroBridgeApi from 'dero-rpc-bridge-api';
 import to from 'await-to-js';
 import WebSocketService from '../../webSocketService';
+import { useGetAddress } from './useGetAddress';
 
 export function useInitializeWallet() {
   const [state, setState] = useContext(LoginContext);
   const deroBridgeApiRef = useRef();
+  const [getAddress] = useGetAddress();
 
   async function initXSWD() {
     const ws = new WebSocketService('ws://localhost:44326/xswd');
@@ -29,10 +31,11 @@ export function useInitializeWallet() {
         url: 'https://privateislands.fund',
       };
 
-      const handleResponse = (response) => {
+      const handleResponse = async (response) => {
         if (response === 'User has authorized the application') {
           console.log('authenticated!');
-          setState((state) => ({ ...state, ws: ws }));
+          const address = await getAddress();
+          setState((state) => ({ ...state, ws: ws, userAddress: address }));
         }
       };
 
@@ -48,6 +51,7 @@ export function useInitializeWallet() {
   }
 
   const initRPC = async () => {
+    console.log('initialize rpc wallet');
     if (state.ws) {
       state.ws.closeConnection();
     }
@@ -59,10 +63,12 @@ export function useInitializeWallet() {
     if (err) {
       console.log('ERR', err);
     } else {
+      const address = await getAddress(deroBridgeApiRef);
       setState((state) => ({
         ...state,
         deroBridgeApiRef: deroBridgeApiRef,
         ws: null,
+        userAddress: address,
       }));
     }
   };

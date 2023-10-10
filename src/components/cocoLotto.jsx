@@ -56,7 +56,7 @@ export default function COCOLotto() {
         if (ticketCount == 0) break;
         if (
           hex2a(lotto.stringkeys[`TICKET_${totalTicketArray[i]}`]) ==
-          state.walletList[state.activeWallet].address
+          state.userAddress
         ) {
           ticketCount--;
           ticketArray.push(totalTicketArray[i]);
@@ -68,11 +68,7 @@ export default function COCOLotto() {
       //now count total tickets
     }
     fetchData();
-  }, [
-    state.activeWallet,
-    state.walletList,
-    state.walletList[state.activeWallet].address,
-  ]);
+  }, [state.userAddress]);
 
   const BuyTickets = React.useCallback(async (e) => {
     e.preventDefault();

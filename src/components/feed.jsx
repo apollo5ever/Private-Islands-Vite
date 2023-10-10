@@ -37,9 +37,7 @@ export default function Feed() {
       })) */
     const res = await getSC(state.scid);
 
-    let tierSearch = new RegExp(
-      `${state.walletList[state.activeWallet].address}_`
-    );
+    let tierSearch = new RegExp(`${state.userAddress}_`);
 
     var scData = res.stringkeys;
 
@@ -58,7 +56,7 @@ export default function Feed() {
     console.log(islandNames);
     const subscriberPosts = await getSubscriberPosts(
       islandNames,
-      state.walletList[state.activeWallet].address,
+      state.userAddress,
       state
     );
     console.log(subscriberPosts);
