@@ -13,6 +13,7 @@ const WalletToggle = () => {
   const handleWalletToggle = (value) => {
     setWalletMode(value);
     setState((state) => ({ ...state, walletMode: value }));
+    console.log('changing wllet mode to ', value);
 
     if (value === walletModes.RPC && !isDaemonVisible) {
       setIsDaemonVisible(true);
@@ -38,7 +39,7 @@ const WalletToggle = () => {
           type="radio"
           value={walletModes.XSWD}
           className="hidden"
-          onChange={() => setWalletMode(walletModes.XSWD)}
+          onChange={() => handleWalletToggle(walletModes.XSWD)}
           checked={walletMode === walletModes.XSWD}
         />
         xswd

@@ -10,11 +10,13 @@ import DeroBridgeApi from 'dero-rpc-bridge-api';
 import to from 'await-to-js';
 import WebSocketService from '../../webSocketService';
 import { useGetAddress } from './useGetAddress';
+import { useGetRandomAddress } from './useGetRandomAddress';
 
 export function useInitializeWallet() {
   const [state, setState] = useContext(LoginContext);
   const deroBridgeApiRef = useRef();
   const [getAddress] = useGetAddress();
+  const [getRandomAddress] = useGetRandomAddress();
 
   async function initXSWD() {
     const ws = new WebSocketService('ws://localhost:44326/xswd');
@@ -75,10 +77,13 @@ export function useInitializeWallet() {
 
   async function initializeWallet() {
     if (state.walletMode == 'rpc') {
-      initRPC();
+      await initRPC();
     } else if (state.walletMode == 'xswd') {
-      initXSWD();
+      await initXSWD();
     }
+
+    const randomAddress = await getRandomAddress();
+    setState((state) => ({ ...state, randomAddress: randomAddress }));
   }
 
   return [initializeWallet];

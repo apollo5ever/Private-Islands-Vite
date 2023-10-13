@@ -25,7 +25,7 @@ export default function BuryTreasure() {
   const [getSC] = useGetSC();
 
   const getJudges = React.useCallback(async () => {
-    const res = await getSC(state.scid_registry);
+    const res = await getSC(state.scid_registry, false, true);
     console.log('get judges res', res);
     var search = new RegExp(`N::PRIVATE-ISLANDS::*`);
     var scData = res.stringkeys; //.map(x=>x.match(search))
@@ -277,7 +277,51 @@ export default function BuryTreasure() {
           </p>
 
           <form onSubmit={DoIt}>
-            <input placeholder="Buried Treasure Name" id="bountyName" />
+            {preview ? (
+              <>
+                <h1>{name}</h1>
+                <img src={image} />
+                <p>{tagline}</p>
+                <p dangerouslySetInnerHTML={{ __html: description }} />
+              </>
+            ) : (
+              <>
+                <input
+                  placeholder="Buried Treasure Name"
+                  id="bountyName"
+                  defaultValue={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+                <input
+                  onChange={(e) => setImage(e.target.value)}
+                  defaultValue={image}
+                  placeholder="Image URL"
+                  id="bountyPhoto"
+                />
+                <input
+                  onChange={(e) => setTagline(e.target.value)}
+                  defaultValue={tagline}
+                  placeholder="Tagline"
+                  id="tagline"
+                />
+                <textarea
+                  placeholder="Description"
+                  rows="44"
+                  cols="80"
+                  id="description"
+                  defaultValue={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                />
+              </>
+            )}
+
+            <Button size="small" type={'submit'}>
+              Create
+            </Button>
+
+            <button onClick={() => handlePreview()}>
+              {preview ? 'Edit' : 'Preview'}
+            </button>
 
             <p>
               Expiry (if the task isn't complete before this date, supporters
@@ -292,8 +336,7 @@ export default function BuryTreasure() {
             />
             <p>
               Nominate a Judge. This person sorts through treasure claims and
-              chooses who is entitled to the funds. The judge is paid 10% of the
-              treasure for this work. Backup judges can be nominated later.
+              chooses who is entitled to the funds.
             </p>
             <select id="judge">{judges}</select>
             <p>
