@@ -16,6 +16,7 @@ import { Divider } from '@/components/common/Divider.jsx';
 import { useTheme } from '@/components/hooks/useTheme.js';
 import { TileContext } from '@/components/providers/TileContext.jsx';
 import { Helpers } from '@/utils/helpers.js';
+import dateString from '../../../utils/dateString';
 
 export const Bounty = ({ bountyData }) => {
   const { proseClass } = useTheme();
@@ -40,16 +41,15 @@ export const Bounty = ({ bountyData }) => {
       (execObj) => execObj.SCID === state.myIslands[state.active].SCID
     );
 
-    if (matching.length === 1) setJudging(true);
+    if (matching.length > 0) setJudging(true);
     else setJudging(false);
   };
 
   const getExecuting = () => {
-    console.log('execList', treasure.execList, treasure.XN);
-    if (!state.myIslands || !treasure.execList || state.myIslands.length === 0)
+    if (!state.myIslands || !treasure.Execs || state.myIslands.length === 0)
       return;
-    const matching = treasure.execList.filter(
-      (execObj) => execObj.scid === state.myIslands[state.active].scid
+    const matching = treasure.Execs.filter(
+      (execObj) => execObj.SCID === state.myIslands[state.active].SCID
     );
 
     if (matching.length === 1) setExecuting(true);
@@ -122,18 +122,19 @@ export const Bounty = ({ bountyData }) => {
     setTreasure(profile.Bounties[index]);
     setIslandSCID(profile.SCID);
     if (
-      profile.bounties[index].recipientList &&
-      profile.bounties[index].recipientList.length > 0
+      profile.Bounties[index].RecipientList &&
+      profile.Bounties[index].RecipientList.length > 0
     ) {
-      let rawList = profile.bounties[index].recipientList;
+      let rawList = profile.Bounties[index].RecipientList;
       var totalWeight = 0;
       for (let i = 0; i < rawList.length; i++) {
-        totalWeight += rawList[i].weight;
+        totalWeight += rawList[i].Weight;
       }
 
       let formattedList = rawList.map((x) => (
-        <li>{`${x.address}: ${(100 * x.weight) / totalWeight}%`}</li>
+        <li>{`${x.Address}: ${(100 * x.Weight) / totalWeight}%`}</li>
       ));
+      console.log('formatted List', formattedList);
       setRecipients(formattedList);
     }
   });
@@ -243,7 +244,7 @@ export const Bounty = ({ bountyData }) => {
         {!editing &&
         state.myIslands &&
         state.myIslands.length > 0 &&
-        island === state.myIslands[state.active].name ? (
+        island === state.myIslands[state.active].SCID ? (
           <small
             onClick={() => {
               setEditing(true);
@@ -261,9 +262,7 @@ export const Bounty = ({ bountyData }) => {
                 <input
                   className="input-bordered input w-full max-w-xs"
                   placeholder="name"
-                  defaultValue={
-                    treasure.Names && treasure.Names[treasure.Names.length - 1]
-                  }
+                  defaultValue={treasure.Name}
                   id="Name"
                 />
                 <input
@@ -283,7 +282,7 @@ export const Bounty = ({ bountyData }) => {
                 placeholder="Description"
                 rows="20"
                 cols="80"
-                defaultValue={treasure.description}
+                defaultValue={treasure.Description}
                 id="Description"
                 className="my-2 rounded-md"
               />
@@ -303,7 +302,7 @@ export const Bounty = ({ bountyData }) => {
           <></>
         )}
 
-        {treasure.Names ? (
+        {treasure.Name ? (
           <>
             <div className="card-body break-words font-fell">
               <FlexBoxRow align="start" className="">
@@ -333,7 +332,8 @@ export const Bounty = ({ bountyData }) => {
                   </h3>
                   {treasure.Status === 0 ? (
                     <div className="mt-2">
-                      This treasure expires on{' ' + treasure.Expiry}. <br />
+                      This treasure expires on
+                      {' ' + dateString(treasure.Expiry)}. <br />
                       If treasure isn't released before this date, contributors
                       can return to this page to receive a 95% refund.
                     </div>
@@ -362,20 +362,20 @@ export const Bounty = ({ bountyData }) => {
                   ) : (
                     ''
                   )}
-                  {treasure.executer ? (
+                  {treasure.Executer ? (
                     <div className="mt-2 text-xl font-bold">
                       Active Executer:
                       <NavLink
-                        to={`/island/${treasure.executer.name}?view=main`}
+                        to={`/island/${treasure.Executer.SCID}?view=main`}
                       >
-                        {treasure.executer.name}
+                        {treasure.Executer.Name}
                       </NavLink>
                     </div>
                   ) : (
                     ''
                   )}
-                  {treasure.recipientList &&
-                  treasure.recipientList.length > 0 ? (
+                  {treasure.RecipientList &&
+                  treasure.RecipientList.length > 0 ? (
                     <>
                       These addresses have been nominated to receive the
                       treasure:
@@ -428,8 +428,8 @@ export const Bounty = ({ bountyData }) => {
                                 {treasure.XNeff == i ? (
                                   <b>
                                     {j.Name}
-                                    {treasure.execList &&
-                                    treasure.execList.length > 1 ? (
+                                    {treasure.Execs &&
+                                    treasure.Execs.length > 1 ? (
                                       <>
                                         {' '}
                                         (expires in{' '}
@@ -455,7 +455,7 @@ export const Bounty = ({ bountyData }) => {
                   {treasure.Status === 0 &&
                   state.myIslands &&
                   state.myIslands.length > 0 &&
-                  island === state.myIslands[state.active].name ? (
+                  island === state.myIslands[state.active].SCID ? (
                     <div className="">
                       <h3>Initiator Functions</h3>
                       <p>
@@ -490,7 +490,8 @@ export const Bounty = ({ bountyData }) => {
                   state.myIslands.length > 0 &&
                   judging ? (
                     <Judge
-                      active={treasure.Judges[treasure.JN]}
+                      JN={treasure.JN}
+                      judges={treasure.Judges}
                       userIsland={state.myIslands[state.active].SCID}
                       island={islandSCID}
                       index={index}
@@ -501,7 +502,7 @@ export const Bounty = ({ bountyData }) => {
                       scid={state.scid_bounties}
                       XE={treasure.JE}
                       solo={treasure.Judges.length === 1}
-                      recipientList={treasure.recipientList}
+                      recipientList={treasure.RecipientList}
                     />
                   ) : (
                     ''
@@ -512,17 +513,18 @@ export const Bounty = ({ bountyData }) => {
                   state.myIslands.length > 0 &&
                   executing ? (
                     <Executer
-                      active={treasure.execList[treasure.XN]}
-                      userIsland={state.myIslands[state.active].scid}
+                      XN={treasure.XN}
+                      userIsland={state.myIslands[state.active].SCID}
                       island={islandSCID}
                       index={index}
-                      executer={treasure.executer && treasure.executer.scid}
+                      execs={treasure.Execs}
+                      executer={treasure.Executer && treasure.Executer.SCID}
                       JF={treasure.JF}
                       deroBridgeApiRef={state.deroBridgeApiRef}
                       randomAddress={state.randomAddress}
                       scid={state.scid_bounties}
                       XE={treasure.XE}
-                      solo={treasure.execList.length == 1}
+                      solo={treasure.Execs.length == 1}
                     />
                   ) : (
                     ''

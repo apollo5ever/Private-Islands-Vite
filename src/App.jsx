@@ -16,6 +16,7 @@ import LoggerContext, { LOG } from '@/components/providers/LoggerContext.jsx';
 import { useInitializeWallet } from './components/hooks/useInitializeWallet';
 import { useGetTransfers } from './components/hooks/useGetTransfers';
 import { useGetAddress } from './components/hooks/useGetAddress';
+import { useGetContracts } from './components/hooks/useGetContracts';
 
 function App() {
   const [menuActive, setMenuActive] = useState(false);
@@ -26,6 +27,7 @@ function App() {
   const [getBalance] = useGetBalance();
   const [getAddress] = useGetAddress();
   const [getTransfers] = useGetTransfers();
+  const [getContracts] = useGetContracts();
   const [workerActive, setWorkerActive] = useState(false);
   const [bridgeInitText, setBridgeInitText] = useState(
     <a
@@ -171,13 +173,10 @@ function App() {
       </button>
       <button
         onClick={() => {
-          getTransfers({
-            incoming: false,
-            out: true,
-          });
+          getContracts();
         }}
       >
-        GetTransfers
+        Get Contracts
       </button>
     </div>
   );

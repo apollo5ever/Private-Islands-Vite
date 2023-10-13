@@ -11,7 +11,7 @@ export default function N(props) {
   const [execs, setExecs] = React.useState([]);
 
   const getJudges = React.useCallback(async () => {
-    const res = await getSC(props.scid_registry);
+    const res = await getSC(props.scid_registry, false, true);
     console.log('get judges res', res);
     var search = new RegExp(`N::PRIVATE-ISLANDS::*`);
     var scData = res.stringkeys; //.map(x=>x.match(search))

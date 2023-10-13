@@ -3,8 +3,9 @@ import to from 'await-to-js';
 import { useSendTransaction } from './hooks/useSendTransaction';
 
 export default function V(props) {
+  const [sendTransaction] = useSendTransaction();
+
   const accept = React.useCallback(async () => {
-    const [sendTransaction] = useSendTransaction();
     const data = new Object({
       scid: props.scid,
       ringsize: 2,
