@@ -46,8 +46,9 @@ export class Helpers {
   static getTileName = (tile) => {
     switch (tile.type) {
       case piAssetType.ISLAND:
+      case piAssetType.BOUNTY:  
         return tile.Name;
-      case piAssetType.BOUNTY:
+      
       case piAssetType.FUNDRAISER:
       case piAssetType.SUBSCRIPTION:
         return tile.Names[tile.Names.length - 1];
@@ -57,8 +58,9 @@ export class Helpers {
   static getTileTagline = (tile) => {
     switch (tile.type) {
       case piAssetType.ISLAND:
+      case piAssetType.BOUNTY:  
         return tile.Tagline;
-      case piAssetType.BOUNTY:
+      
       case piAssetType.FUNDRAISER:
       case piAssetType.SUBSCRIPTION:
         return tile.Taglines[tile.Taglines.length - 1];
@@ -68,8 +70,9 @@ export class Helpers {
   static getTileImage = (tile) => {
     switch (tile.type) {
       case piAssetType.ISLAND:
+      case piAssetType.BOUNTY:  
         return tile.Image;
-      case piAssetType.BOUNTY:
+      
       case piAssetType.FUNDRAISER:
       case piAssetType.SUBSCRIPTION:
         return tile.Images[tile.Images.length - 1];
@@ -79,8 +82,9 @@ export class Helpers {
   static getTileDescription = (tile) => {
     switch (tile.type) {
       case piAssetType.ISLAND:
+      case piAssetType.BOUNTY:  
         return tile.Description;
-      case piAssetType.BOUNTY:
+      
       case piAssetType.FUNDRAISER:
       case piAssetType.SUBSCRIPTION:
         return tile.Description[tile.Description.length - 1];

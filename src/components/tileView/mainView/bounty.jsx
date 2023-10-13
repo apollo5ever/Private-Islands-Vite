@@ -16,6 +16,7 @@ import { Divider } from '@/components/common/Divider.jsx';
 import { useTheme } from '@/components/hooks/useTheme.js';
 import { TileContext } from '@/components/providers/TileContext.jsx';
 import { Helpers } from '@/utils/helpers.js';
+import dateString from '../../../utils/dateString';
 
 export const Bounty = ({ bountyData }) => {
   const { proseClass } = useTheme();
@@ -243,7 +244,7 @@ export const Bounty = ({ bountyData }) => {
         {!editing &&
         state.myIslands &&
         state.myIslands.length > 0 &&
-        island === state.myIslands[state.active].name ? (
+        island === state.myIslands[state.active].SCID ? (
           <small
             onClick={() => {
               setEditing(true);
@@ -261,9 +262,7 @@ export const Bounty = ({ bountyData }) => {
                 <input
                   className="input-bordered input w-full max-w-xs"
                   placeholder="name"
-                  defaultValue={
-                    treasure.Names && treasure.Names[treasure.Names.length - 1]
-                  }
+                  defaultValue={treasure.Name}
                   id="Name"
                 />
                 <input
@@ -283,7 +282,7 @@ export const Bounty = ({ bountyData }) => {
                 placeholder="Description"
                 rows="20"
                 cols="80"
-                defaultValue={treasure.description}
+                defaultValue={treasure.Description}
                 id="Description"
                 className="my-2 rounded-md"
               />
@@ -303,7 +302,7 @@ export const Bounty = ({ bountyData }) => {
           <></>
         )}
 
-        {treasure.Names ? (
+        {treasure.Name ? (
           <>
             <div className="card-body break-words font-fell">
               <FlexBoxRow align="start" className="">
@@ -333,7 +332,8 @@ export const Bounty = ({ bountyData }) => {
                   </h3>
                   {treasure.Status === 0 ? (
                     <div className="mt-2">
-                      This treasure expires on{' ' + treasure.Expiry}. <br />
+                      This treasure expires on
+                      {' ' + dateString(treasure.Expiry)}. <br />
                       If treasure isn't released before this date, contributors
                       can return to this page to receive a 95% refund.
                     </div>

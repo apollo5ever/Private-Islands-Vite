@@ -6,6 +6,7 @@ import hex2a from './hex2a.js';
 import { useSendTransaction } from './hooks/useSendTransaction';
 import { useGetSC } from './hooks/useGetSC';
 import { Button } from '@/components/common/Button.jsx';
+import { useGetGasEstimate } from './hooks/useGetGasEstimate';
 
 export default function BuryTreasure() {
   const [state, setState] = React.useContext(LoginContext);
@@ -22,6 +23,7 @@ export default function BuryTreasure() {
   const [tagline, setTagline] = React.useState('');
   const [name, setName] = React.useState(searchParams.get('name'));
   const [sendTransaction] = useSendTransaction();
+  const [getGasEstimate] = useGetGasEstimate();
   const [getSC] = useGetSC();
 
   const getJudges = React.useCallback(async () => {
@@ -152,10 +154,11 @@ export default function BuryTreasure() {
       },
     ];
 
-    const txData = new Object({
+    var txData = new Object({
       scid: state.scid_bounties,
       ringsize: 2,
       transfers: transfers,
+      signer: state.userAddress,
       sc_rpc: [
         {
           name: 'entrypoint',
@@ -194,14 +197,48 @@ export default function BuryTreasure() {
           datatype: 'S',
           value: event.target.bountyName.value,
         },
+        {
+          name: 'image',
+          datatype: 'S',
+          value: event.target.bountyPhoto.value,
+        },
+        {
+          name: 'tagline',
+          datatype: 'S',
+          value: event.target.tagline.value,
+        },
+
+        {
+          name: 'desc',
+          datatype: 'S',
+          value: event.target.description.value,
+        },
       ],
     });
+    const gas_rpc = [
+      {
+        name: 'SC_ACTION',
+        datatype: 'U',
+        value: 0,
+      },
+      {
+        name: 'SC_ID',
+        datatype: 'H',
+        value: state.scid_bounties,
+      },
+    ].concat(txData.sc_rpc);
+
+    txData.gas_rpc = gas_rpc;
+
+    let fees = await getGasEstimate(txData);
+    txData.fees = fees;
+
     sendTransaction(txData);
 
-    setSearchParams({
+    /*  setSearchParams({
       status: 'metadata',
       name: event.target.bountyName.value,
-    });
+    }); */
   });
 
   return (
