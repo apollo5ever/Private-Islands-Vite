@@ -104,7 +104,7 @@ export default function ATR(props) {
         <form onSubmit={addRecipient}>
           <select id="index">
             {props.recipientList.map((x, i) => (
-              <option value={i}>Modify {x.address}</option>
+              <option value={i}>Modify {x.Address}</option>
             ))}
             <option value={props.recipientList.length}>Add New</option>
           </select>
