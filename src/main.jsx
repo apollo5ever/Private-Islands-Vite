@@ -10,18 +10,19 @@ import CEO from './components/ceo';
 import BountyList from './components/bountyList';
 import Treasure from './components/treasure';
 import MyIsland from './components/myIsland';
-import ClaimIsland from './components/claimIsland';
+import { ClaimIsland } from './components/tileView/claimIsland';
 import IslandList from './components/islandList';
 import Island from './components/island';
 import PublishPost from './components/publishPost';
 import ModifyTier from './components/modifyTier';
-import About from './components/about';
+import { About } from '@/components/tileView/about';
 import FundList from './components/fundList';
 import Fundraiser from './components/fundraiser';
 import CreateFund from './components/addFundraiser';
 import BuryTreasure from './components/buryTreasure';
 import Test from './components/simulatorTest';
-import { PageHeader } from '@/components/header/PageHeader.jsx';
+import { PageHeader } from '@/components/tileView/header/PageHeader.jsx';
+// import { PageHeader } from '@/components/header/PageHeader.jsx';
 import { ThemeProvider } from '@/components/providers/ThemeContext.jsx';
 
 import './polyfills';
@@ -102,7 +103,7 @@ createRoot(document.getElementById('root')).render(
                     <Route path="/ceo" element={<CEO />} />
                     <Route path="myisland" element={<MyIsland />} />
                     <Route path="claimisland" element={<ClaimIsland />} />
-                    <Route path="archipelago" element={<IslandList />} />
+                    <Route path="archipelago" element={<TileGrid />} />
                     <Route
                       path="/island/:island/compose"
                       element={<PublishPost />}

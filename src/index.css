@@ -26,6 +26,28 @@ input {
 }
 
 /* MTS Additions */
+/* Using this to so I can reference as vars for light/dark theme backgrounds in tailwind.config */
+:root {
+  --background-light: #B6DCE4;
+  --background-dark: linear-gradient(191deg, #e4e4e7 0%, #52525B 70%, #52525B 100%);
+}
+
+body[data-theme="light"] {
+  background-color: var(--background-light);
+}
+
+body[data-theme="dark"] {
+  background-image: var(--background-dark);
+}
+
+/*body[data-theme="light"] {*/
+/*  @apply bg-color-light;*/
+/*}*/
+
+/*body[data-theme="dark"] {*/
+/*  @apply bg-color-dark;*/
+/*}*/
+
 .my-important-class {
   @apply !important;
 }
@@ -43,4 +65,70 @@ input {
 .btn-black {
   background-color: black;
   color: white;
+}
+
+/* PageHeader for Tile view with background image */
+.page-header {
+  background: url('/src/assets/parallax/HeaderBackground.png') no-repeat center center;
+  background-size: cover;
+}
+
+/* Bubble Text for SeniorCoco */
+.bubble {
+  position: relative;
+  background: transparent;
+  border: 2px solid white;
+  border-radius: 5px;
+  padding: 10px;
+  display: inline-block;
+  bottom: 80px; /* Adjust this value to move the bubble above the image */
+}
+
+.bubble:after {
+  content: '';
+  position: absolute;
+  bottom: -10px; /* Adjusted: Changes the position of the arrow */
+  left: 75%; /* Adjust as needed to position the arrow horizontally */
+  border: 10px solid transparent;
+  border-top-color: white; /* Adjusted: Changes the arrow direction to point upwards */
+  border-bottom: 0;
+}
+
+.hexagon {
+  position: relative;
+  width: 100px;
+  padding-bottom: 115px;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  overflow: hidden;
+}
+
+.hex-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  z-index: 1;
+}
+
+/* For use in inline styling */
+.hidden {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Override dark mode styles for radio buttons with class "my-radio" */
+.my-radio {
+  background-color: white !important;
+  color: red !important;
+}
+
+.my-radio:checked {
+  background-color: red !important;
+  color: white  !important;
 }

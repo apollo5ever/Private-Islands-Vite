@@ -1,18 +1,18 @@
 import React from 'react';
 import { TruncatedText } from '@/components/common/TruncatedText.jsx';
 import { NavLink } from 'react-router-dom';
+import { FlexBoxRow } from '@/components/common/FlexBoxRow.jsx';
 
 export const DetailCard = ({ signal, deadline }) => {
   return (
-    <div className="card card-side my-3 flex-col whitespace-normal bg-info shadow-xl md:flex-row">
-      <figure className="min-w-[400px] max-w-[700px] md:pl-3">
+    <FlexBoxRow justify="start" align="start" className="font-fell text-lg">
+      <figure className="min-w-[400px] max-w-[700px] rounded-2xl md:pl-3">
         <img
           src={signal.Images && signal.Images[signal.Images.length - 1]}
-          className="rounded-2xl"
           alt={signal.Names && signal.Names[signal.Names.length - 1]}
         />
       </figure>
-      <div className="card-body break-words text-neutral">
+      <div className="card-body break-words">
         <h2 className="card-title">
           {signal.Names && signal.Names[signal.Names.length - 1]}
         </h2>
@@ -48,6 +48,6 @@ export const DetailCard = ({ signal, deadline }) => {
           }}
         />
       </div>
-    </div>
+    </FlexBoxRow>
   );
 };

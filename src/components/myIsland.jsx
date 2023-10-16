@@ -11,6 +11,8 @@ import PublishPost from './publishPost';
 import { useSendTransaction } from './hooks/useSendTransaction';
 import { useGetSC } from './hooks/useGetSC';
 import { Button } from '@/components/common/Button.jsx';
+import bgImage from '@/assets/parallax/TopBottomIslands.png';
+import { FullPageContainer } from '@/components/common/FullPageContainer.jsx';
 
 export default function MyIsland() {
   const [sendTransaction] = useSendTransaction();
@@ -212,360 +214,354 @@ export default function MyIsland() {
   };
 
   return (
-    <div className="function">
-      <div className="profile">
-        {state.myIslands ? (
-          <>
-            {state.myIslands.length === 0 ? (
-              <>
-                <Feed />
-                <FutureFeed />
-                <NavLink to="/claimIsland">
-                  Claim your own Private Island Here
-                </NavLink>
-              </>
-            ) : (
-              <div>
-                <div className="icons">
-                  {editing === 'Image' ? (
-                    <>
-                      <form onSubmit={SetMetadata}>
-                        <input
-                          id="edit"
-                          defaultValue={state.myIslands[state.active].Image}
-                        />
+    <FullPageContainer>
+      {state.myIslands ? (
+        <>
+          {state.myIslands.length === 0 ? (
+            <>
+              <Feed />
+              <FutureFeed />
+              <NavLink to="/claimIsland">
+                Claim your own Private Island Here
+              </NavLink>
+            </>
+          ) : (
+            <div>
+              <div className="icons">
+                {editing === 'Image' ? (
+                  <>
+                    <form onSubmit={SetMetadata}>
+                      <input
+                        id="edit"
+                        defaultValue={state.myIslands[state.active].Image}
+                      />
 
-                        <Button size="small" type="submit">
-                          Submit
-                        </Button>
-                      </form>
-                      <small onClick={() => setEditing('')}>cancel</small>
+                      <Button size="small" type="submit">
+                        Submit
+                      </Button>
+                    </form>
+                    <small onClick={() => setEditing('')}>cancel</small>
+                  </>
+                ) : (
+                  <>
+                    <img src={state.myIslands[state.active].Image} />
+                    <small onClick={() => setEditing('Image')}>edit</small>
+                  </>
+                )}{' '}
+                <h1
+                  onClick={() => {
+                    setView('main');
+                  }}
+                >
+                  {state.myIslands[state.active].Name}
+                </h1>
+              </div>
+
+              {view == 'main' ? (
+                <>
+                  <>
+                    {editing === 'Tagline' ? (
+                      <>
+                        <form onSubmit={SetMetadata}>
+                          <input
+                            id="edit"
+                            defaultValue={state.myIslands[state.active].Tagline}
+                          />
+                          <Button size="small" type="submit">
+                            Submit
+                          </Button>
+                        </form>
+                        <small onClick={() => setEditing('')}>cancel</small>
+                      </>
+                    ) : (
+                      <>
+                        <p>{state.myIslands[state.active].Tagline}</p>
+                        <small onClick={() => setEditing('Tagline')}>
+                          edit
+                        </small>
+                      </>
+                    )}
+                  </>
+                  <>
+                    {editing === 'Bio' ? (
+                      <>
+                        <form onSubmit={SetMetadata}>
+                          <textarea
+                            rows="44"
+                            cols="80"
+                            id="edit"
+                            defaultValue={
+                              state.myIslands[state.active].Description
+                            }
+                          />
+                          <Button size="small" type="submit">
+                            Submit
+                          </Button>
+                        </form>
+                        <small onClick={() => setEditing('')}>cancel</small>
+                      </>
+                    ) : (
+                      <>
+                        <p
+                          dangerouslySetInnerHTML={{
+                            __html: state.myIslands[state.active].Description,
+                          }}
+                        />
+                        <small onClick={() => setEditing('Bio')}>edit</small>
+                      </>
+                    )}
+                  </>
+                </>
+              ) : view == 'treasure' ? (
+                <>
+                  <NavLink
+                    to={`/burytreasure/${island.SCID}/${
+                      island.Bounties && island.Bounties.length
+                    }`}
+                  >
+                    Bury New Treasure
+                  </NavLink>
+                  {island.Bounties && island.Bounties.length > 0 ? (
+                    <>
+                      <h3>Bounties You Initiated</h3>
+                      <div className="card-grid">
+                        {island.Bounties.map((x) => (
+                          <TreasureCard
+                            className="mytreasure"
+                            executerList={x.Execs}
+                            name={x.Names && x.Names[x.Names.length - 1]}
+                            initiator={x.Initiator}
+                            tagline={
+                              x.Taglines && x.Taglines[x.Taglines.length - 1]
+                            }
+                            treasure={x.Amount}
+                            image={x.Images && x.Images[x.Images.length - 1]}
+                            judgeList={x.Judges}
+                            index={x.Index}
+                          />
+                        ))}
+                      </div>
+                    </>
+                  ) : (
+                    <p>No Buried Treasures yet</p>
+                  )}
+                  {judging.length > 0 ? (
+                    <>
+                      <h3>Nominated for Judge</h3>
+                      <div className="card-grid">
+                        {judging.map((x) => (
+                          <TreasureCard
+                            className="mytreasure"
+                            name={x.name}
+                            initiator={x.Initiator}
+                            tagline={x.tagline}
+                            treasure={x.treasure}
+                            image={x.image}
+                            judgeList={x.judgeList}
+                            index={x.index}
+                          />
+                        ))}
+                      </div>
+                    </>
+                  ) : (
+                    ''
+                  )}
+
+                  {island.Judging.length > 0 ? (
+                    <>
+                      <h3>Other Bounties You're Involved With</h3>
+                      <div className="card-grid">
+                        {island.Judging.map((x) => (
+                          <TreasureCard
+                            className="mytreasure"
+                            name={x.Names[x.Names.length - 1]}
+                            initiator={x.Initiator}
+                            tagline={x.Taglines[x.Taglines.length - 1]}
+                            treasure={x.Amount}
+                            image={x.Images[x.Images.length - 1]}
+                            executerList={x.judgeList}
+                            index={x.Index}
+                          />
+                        ))}
+                      </div>
+                    </>
+                  ) : (
+                    ''
+                  )}
+                </>
+              ) : view == 'signal' ? (
+                <>
+                  <NavLink
+                    to={`/newsignal/${island.SCID}/${
+                      island.Fundraisers ? island.Fundraisers.length : 0
+                    }`}
+                  >
+                    Start New Smoke Signal
+                  </NavLink>
+                  {island.Fundraisers && island.Fundraisers.length > 0 ? (
+                    <>
+                      {island.Fundraisers.map((x) => (
+                        <NavLink
+                          to={`/island/${island.SCID}/smokesignal/${x.Index}`}
+                        >
+                          <FundCard
+                            name={x.Names[x.Names.length - 1]}
+                            profile={x.island}
+                            tagline={x.Taglines[x.Taglines.length - 1]}
+                            goal={x.Goal}
+                            image={x.Images[x.Images.length - 1]}
+                            deadline={x.Deadline}
+                          />
+                        </NavLink>
+                      ))}
                     </>
                   ) : (
                     <>
-                      <img src={state.myIslands[state.active].Image} />
-                      <small onClick={() => setEditing('Image')}>edit</small>
+                      <p>No Smoke Signals Yet</p>
                     </>
-                  )}{' '}
-                  <h1
-                    onClick={() => {
-                      setView('main');
-                    }}
-                  >
-                    {state.myIslands[state.active].Name}
-                  </h1>
-                </div>
-
-                {view == 'main' ? (
-                  <>
-                    <>
-                      {editing === 'Tagline' ? (
-                        <>
-                          <form onSubmit={SetMetadata}>
-                            <input
-                              id="edit"
-                              defaultValue={
-                                state.myIslands[state.active].Tagline
-                              }
-                            />
-                            <Button size="small" type="submit">
-                              Submit
-                            </Button>
-                          </form>
-                          <small onClick={() => setEditing('')}>cancel</small>
-                        </>
-                      ) : (
-                        <>
-                          <p>{state.myIslands[state.active].Tagline}</p>
-                          <small onClick={() => setEditing('Tagline')}>
-                            edit
-                          </small>
-                        </>
-                      )}
-                    </>
-                    <>
-                      {editing === 'Bio' ? (
-                        <>
-                          <form onSubmit={SetMetadata}>
-                            <textarea
-                              rows="44"
-                              cols="80"
-                              id="edit"
-                              defaultValue={
-                                state.myIslands[state.active].Description
-                              }
-                            />
-                            <Button size="small" type="submit">
-                              Submit
-                            </Button>
-                          </form>
-                          <small onClick={() => setEditing('')}>cancel</small>
-                        </>
-                      ) : (
-                        <>
-                          <p
-                            dangerouslySetInnerHTML={{
-                              __html: state.myIslands[state.active].Description,
-                            }}
-                          />
-                          <small onClick={() => setEditing('Bio')}>edit</small>
-                        </>
-                      )}
-                    </>
-                  </>
-                ) : view == 'treasure' ? (
-                  <>
-                    <NavLink
-                      to={`/burytreasure/${island.SCID}/${
-                        island.Bounties && island.Bounties.length
-                      }`}
-                    >
-                      Bury New Treasure
-                    </NavLink>
-                    {island.Bounties && island.Bounties.length > 0 ? (
-                      <>
-                        <h3>Bounties You Initiated</h3>
-                        <div className="card-grid">
-                          {island.Bounties.map((x) => (
-                            <TreasureCard
-                              className="mytreasure"
-                              executerList={x.Execs}
-                              name={x.Names && x.Names[x.Names.length - 1]}
-                              initiator={x.Initiator}
-                              tagline={
-                                x.Taglines && x.Taglines[x.Taglines.length - 1]
-                              }
-                              treasure={x.Amount}
-                              image={x.Images && x.Images[x.Images.length - 1]}
-                              judgeList={x.Judges}
-                              index={x.Index}
-                            />
-                          ))}
-                        </div>
-                      </>
-                    ) : (
-                      <p>No Buried Treasures yet</p>
-                    )}
-                    {judging.length > 0 ? (
-                      <>
-                        <h3>Nominated for Judge</h3>
-                        <div className="card-grid">
-                          {judging.map((x) => (
-                            <TreasureCard
-                              className="mytreasure"
-                              name={x.name}
-                              initiator={x.Initiator}
-                              tagline={x.tagline}
-                              treasure={x.treasure}
-                              image={x.image}
-                              judgeList={x.judgeList}
-                              index={x.index}
-                            />
-                          ))}
-                        </div>
-                      </>
-                    ) : (
-                      ''
-                    )}
-
-                    {island.Judging.length > 0 ? (
-                      <>
-                        <h3>Other Bounties You're Involved With</h3>
-                        <div className="card-grid">
-                          {island.Judging.map((x) => (
-                            <TreasureCard
-                              className="mytreasure"
-                              name={x.Names[x.Names.length - 1]}
-                              initiator={x.Initiator}
-                              tagline={x.Taglines[x.Taglines.length - 1]}
-                              treasure={x.Amount}
-                              image={x.Images[x.Images.length - 1]}
-                              executerList={x.judgeList}
-                              index={x.Index}
-                            />
-                          ))}
-                        </div>
-                      </>
-                    ) : (
-                      ''
-                    )}
-                  </>
-                ) : view == 'signal' ? (
-                  <>
-                    <NavLink
-                      to={`/newsignal/${island.SCID}/${
-                        island.Fundraisers ? island.Fundraisers.length : 0
-                      }`}
-                    >
-                      Start New Smoke Signal
-                    </NavLink>
-                    {island.Fundraisers && island.Fundraisers.length > 0 ? (
-                      <>
-                        {island.Fundraisers.map((x) => (
-                          <NavLink
-                            to={`/island/${island.SCID}/smokesignal/${x.Index}`}
-                          >
-                            <FundCard
-                              name={x.Names[x.Names.length - 1]}
-                              profile={x.island}
-                              tagline={x.Taglines[x.Taglines.length - 1]}
-                              goal={x.Goal}
-                              image={x.Images[x.Images.length - 1]}
-                              deadline={x.Deadline}
-                            />
-                          </NavLink>
-                        ))}
-                      </>
-                    ) : (
-                      <>
-                        <p>No Smoke Signals Yet</p>
-                      </>
-                    )}
-                  </>
-                ) : view == 'mail-in' ? (
-                  <>
-                    <Button
-                      size="small"
-                      handleClick={() => {
-                        setView('mail-in');
-                      }}
-                    >
-                      Incoming
-                    </Button>
-                    <Button
-                      size="small"
-                      handleClick={() => {
-                        setView('mail-out');
-                      }}
-                    >
-                      Outgoing
-                    </Button>
-                    <Feed />
-                  </>
-                ) : view == 'mail-out' ? (
-                  <>
-                    <Button
-                      size="small"
-                      handleClick={() => {
-                        setView('mail-in');
-                      }}
-                    >
-                      Incoming
-                    </Button>
-                    <Button
-                      size="small"
-                      handleClick={() => {
-                        setView('mail-out');
-                      }}
-                    >
-                      Outgoing
-                    </Button>
-                    <h3>Your Subscription Tiers</h3>
-                    {state.myIslands[state.active].Tiers &&
-                      state.myIslands[state.active].Tiers.map((t) => (
-                        <p>
-                          {t.Names[t.Names.length - 1]}, subs:
-                          {t.Subscribers && t.Subscribers.length}
-                          <NavLink
-                            to={`/island/${
-                              state.myIslands[state.active].Name
-                            }/modifytier/${t.Index}`}
-                          >
-                            Edit
-                          </NavLink>
-                        </p>
-                      ))}
-                    <NavLink
-                      to={`/island/${
-                        state.myIslands[state.active].Name
-                      }/compose`}
-                    >
-                      Put a Message in a Bottle
-                    </NavLink>
-                    <Button
-                      size="small"
-                      handleClick={() => {
-                        setView('compose');
-                        setEditing('posts');
-                      }}
-                    >
-                      Compose Message
-                    </Button>
-                    <NavLink
-                      to={`/island/${
-                        state.myIslands[state.active].Name
-                      }/modifytier/${
-                        state.myIslands[state.active].Tiers
-                          ? state.myIslands[state.active].Tiers.length
-                          : 0
-                      }`}
-                    >
-                      New Subscription Tier
-                    </NavLink>
-                  </>
-                ) : view == 'compose' ? (
-                  <>
-                    <Button
-                      size="small"
-                      handleClick={() => {
-                        if (state.myIslands[state.active].posts) {
-                          console.log(state.myIslands[state.active].posts);
-                        }
-                      }}
-                    >
-                      State
-                    </Button>
-                    <PublishPost editIsland={editIsland} setView={setView} />
-                  </>
-                ) : view == 'success' ? (
-                  <>
-                    Success!
-                    <Button
-                      size="small"
-                      handleClick={() => {
-                        setView('main');
-                      }}
-                    >
-                      Return
-                    </Button>
-                  </>
-                ) : (
-                  ''
-                )}
-
-                <div className="icons">
-                  <div
-                    className="icons-treasure"
-                    onClick={() => {
-                      setView('treasure');
-                    }}
-                  >
-                    <div className="icons-text">Bounties</div>
-                  </div>
-                  <div
-                    className="icons-signal"
-                    onClick={() => {
-                      setView('signal');
-                    }}
-                  >
-                    <div className="icons-text">Fundraisers</div>
-                  </div>
-                  <div
-                    className="icons-mail"
-                    onClick={() => {
+                  )}
+                </>
+              ) : view == 'mail-in' ? (
+                <>
+                  <Button
+                    size="small"
+                    handleClick={() => {
                       setView('mail-in');
                     }}
                   >
-                    <div className="icons-text">Subscriptions</div>
-                  </div>
+                    Incoming
+                  </Button>
+                  <Button
+                    size="small"
+                    handleClick={() => {
+                      setView('mail-out');
+                    }}
+                  >
+                    Outgoing
+                  </Button>
+                  <Feed />
+                </>
+              ) : view == 'mail-out' ? (
+                <>
+                  <Button
+                    size="small"
+                    handleClick={() => {
+                      setView('mail-in');
+                    }}
+                  >
+                    Incoming
+                  </Button>
+                  <Button
+                    size="small"
+                    handleClick={() => {
+                      setView('mail-out');
+                    }}
+                  >
+                    Outgoing
+                  </Button>
+                  <h3>Your Subscription Tiers</h3>
+                  {state.myIslands[state.active].Tiers &&
+                    state.myIslands[state.active].Tiers.map((t) => (
+                      <p>
+                        {t.Names[t.Names.length - 1]}, subs:
+                        {t.Subscribers && t.Subscribers.length}
+                        <NavLink
+                          to={`/island/${
+                            state.myIslands[state.active].Name
+                          }/modifytier/${t.Index}`}
+                        >
+                          Edit
+                        </NavLink>
+                      </p>
+                    ))}
+                  <NavLink
+                    to={`/island/${state.myIslands[state.active].Name}/compose`}
+                  >
+                    Put a Message in a Bottle
+                  </NavLink>
+                  <Button
+                    size="small"
+                    handleClick={() => {
+                      setView('compose');
+                      setEditing('posts');
+                    }}
+                  >
+                    Compose Message
+                  </Button>
+                  <NavLink
+                    to={`/island/${
+                      state.myIslands[state.active].Name
+                    }/modifytier/${
+                      state.myIslands[state.active].Tiers
+                        ? state.myIslands[state.active].Tiers.length
+                        : 0
+                    }`}
+                  >
+                    New Subscription Tier
+                  </NavLink>
+                </>
+              ) : view == 'compose' ? (
+                <>
+                  <Button
+                    size="small"
+                    handleClick={() => {
+                      if (state.myIslands[state.active].posts) {
+                        console.log(state.myIslands[state.active].posts);
+                      }
+                    }}
+                  >
+                    State
+                  </Button>
+                  <PublishPost editIsland={editIsland} setView={setView} />
+                </>
+              ) : view == 'success' ? (
+                <>
+                  Success!
+                  <Button
+                    size="small"
+                    handleClick={() => {
+                      setView('main');
+                    }}
+                  >
+                    Return
+                  </Button>
+                </>
+              ) : (
+                ''
+              )}
+
+              <div className="icons">
+                <div
+                  className="icons-treasure"
+                  onClick={() => {
+                    setView('treasure');
+                  }}
+                >
+                  <div className="icons-text">Bounties</div>
+                </div>
+                <div
+                  className="icons-signal"
+                  onClick={() => {
+                    setView('signal');
+                  }}
+                >
+                  <div className="icons-text">Fundraisers</div>
+                </div>
+                <div
+                  className="icons-mail"
+                  onClick={() => {
+                    setView('mail-in');
+                  }}
+                >
+                  <div className="icons-text">Subscriptions</div>
                 </div>
               </div>
-            )}
-          </>
-        ) : (
-          <h3>Loading...</h3>
-        )}
-      </div>
-    </div>
+            </div>
+          )}
+        </>
+      ) : (
+        <div className="text-3xl">Loading...</div>
+      )}
+    </FullPageContainer>
   );
 }

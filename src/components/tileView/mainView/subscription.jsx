@@ -156,7 +156,7 @@ export const Subscription = ({ subData }) => {
 
   return (
     <FlexBoxRow
-      className={`${proseClass} align-center card card-side relative my-3 max-w-xs flex-col whitespace-normal bg-secondary shadow-xl md:flex-row`}
+      className={`${proseClass} align-center card card-side relative my-3 max-w-xs flex-col whitespace-normal bg-secondary font-fell text-xl shadow-xl md:flex-row`}
     >
       <img
         src={Helpers.getTileImage(subData)}

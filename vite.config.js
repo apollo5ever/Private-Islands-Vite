@@ -19,33 +19,33 @@ export default defineConfig({
   rollupInputOptions: {
     input: './src/index.js',
     plugins: [
-      {
-        name: 'wasm',
-        async load(id) {
-          if (path.extname(id) !== '.wasm') {
-            return null;
-          }
-          const wasmUrl = path.resolve(__dirname, 'public', path.basename(id));
-          const buffer = await require('fs').promises.readFile(wasmUrl);
-          const arrayBuffer = new Uint8Array(buffer).buffer;
-          return `export default new Uint8Array(${JSON.stringify(
-            Array.from(new Uint8Array(arrayBuffer))
-          )}).buffer;`;
-        },
-        transform(_, id) {
-          if (path.extname(id) !== '.go') {
-            return null;
-          }
-          return { code: '', moduleSideEffects: 'no-treeshake' };
-        },
-      },
+      // {
+      //   name: 'wasm',
+      //   async load(id) {
+      //     if (path.extname(id) !== '.wasm') {
+      //       return null;
+      //     }
+      //     const wasmUrl = path.resolve(__dirname, 'public', path.basename(id));
+      //     const buffer = await require('fs').promises.readFile(wasmUrl);
+      //     const arrayBuffer = new Uint8Array(buffer).buffer;
+      //     return `export default new Uint8Array(${JSON.stringify(
+      //       Array.from(new Uint8Array(arrayBuffer))
+      //     )}).buffer;`;
+      //   },
+      //   transform(_, id) {
+      //     if (path.extname(id) !== '.go') {
+      //       return null;
+      //     }
+      //     return { code: '', moduleSideEffects: 'no-treeshake' };
+      //   },
+      // },
     ],
   },
   configureWebpack: {
     plugins: [
-      new addAssetHtml({
-        filepath: path.resolve(__dirname, 'public', 'wasm_exec.js'),
-      }),
+      // new addAssetHtml({
+      //   filepath: path.resolve(__dirname, 'public', 'wasm_exec.js'),
+      // }),
     ],
   },
   build: {

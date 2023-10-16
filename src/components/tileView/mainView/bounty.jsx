@@ -16,6 +16,7 @@ import { Divider } from '@/components/common/Divider.jsx';
 import { useTheme } from '@/components/hooks/useTheme.js';
 import { TileContext } from '@/components/providers/TileContext.jsx';
 import { Helpers } from '@/utils/helpers.js';
+import dateString from '../../../utils/dateString';
 
 export const Bounty = ({ bountyData }) => {
   const { proseClass } = useTheme();
@@ -40,16 +41,15 @@ export const Bounty = ({ bountyData }) => {
       (execObj) => execObj.SCID === state.myIslands[state.active].SCID
     );
 
-    if (matching.length === 1) setJudging(true);
+    if (matching.length > 0) setJudging(true);
     else setJudging(false);
   };
 
   const getExecuting = () => {
-    console.log('execList', treasure.execList, treasure.XN);
-    if (!state.myIslands || !treasure.execList || state.myIslands.length === 0)
+    if (!state.myIslands || !treasure.Execs || state.myIslands.length === 0)
       return;
-    const matching = treasure.execList.filter(
-      (execObj) => execObj.scid === state.myIslands[state.active].scid
+    const matching = treasure.Execs.filter(
+      (execObj) => execObj.SCID === state.myIslands[state.active].SCID
     );
 
     if (matching.length === 1) setExecuting(true);
@@ -122,18 +122,19 @@ export const Bounty = ({ bountyData }) => {
     setTreasure(profile.Bounties[index]);
     setIslandSCID(profile.SCID);
     if (
-      profile.bounties[index].recipientList &&
-      profile.bounties[index].recipientList.length > 0
+      profile.Bounties[index].RecipientList &&
+      profile.Bounties[index].RecipientList.length > 0
     ) {
-      let rawList = profile.bounties[index].recipientList;
+      let rawList = profile.Bounties[index].RecipientList;
       var totalWeight = 0;
       for (let i = 0; i < rawList.length; i++) {
-        totalWeight += rawList[i].weight;
+        totalWeight += rawList[i].Weight;
       }
 
       let formattedList = rawList.map((x) => (
-        <li>{`${x.address}: ${(100 * x.weight) / totalWeight}%`}</li>
+        <li>{`${x.Address}: ${(100 * x.Weight) / totalWeight}%`}</li>
       ));
+      console.log('formatted List', formattedList);
       setRecipients(formattedList);
     }
   });
@@ -243,7 +244,7 @@ export const Bounty = ({ bountyData }) => {
         {!editing &&
         state.myIslands &&
         state.myIslands.length > 0 &&
-        island === state.myIslands[state.active].name ? (
+        island === state.myIslands[state.active].SCID ? (
           <small
             onClick={() => {
               setEditing(true);
@@ -259,21 +260,19 @@ export const Bounty = ({ bountyData }) => {
             <FlexBoxColumn className="mt-20">
               <FlexBoxRow gap={2}>
                 <input
-                  className="input input-bordered w-full max-w-xs"
+                  className="input-bordered input w-full max-w-xs"
                   placeholder="name"
-                  defaultValue={
-                    treasure.Names && treasure.Names[treasure.Names.length - 1]
-                  }
+                  defaultValue={treasure.Name}
                   id="Name"
                 />
                 <input
-                  className="input input-bordered w-full max-w-xs"
+                  className="input-bordered input w-full max-w-xs"
                   placeholder="image url"
                   defaultValue={Helpers.getTileImage(bountyData)}
                   id="Image"
                 />
                 <input
-                  className="input input-bordered w-full max-w-xs"
+                  className="input-bordered input w-full max-w-xs"
                   placeholder="tagline"
                   defaultValue={Helpers.getTileTagline(bountyData)}
                   id="Tagline"
@@ -283,7 +282,7 @@ export const Bounty = ({ bountyData }) => {
                 placeholder="Description"
                 rows="20"
                 cols="80"
-                defaultValue={treasure.description}
+                defaultValue={treasure.Description}
                 id="Description"
                 className="my-2 rounded-md"
               />
@@ -303,10 +302,10 @@ export const Bounty = ({ bountyData }) => {
           <></>
         )}
 
-        {treasure.Names ? (
+        {treasure.Name ? (
           <>
-            <div className="card-body break-words">
-              <FlexBoxRow>
+            <div className="card-body break-words font-fell">
+              <FlexBoxRow align="start" className="">
                 <figure className="mr-4 min-w-[200px] max-w-[300px] content-center rounded-lg">
                   <img
                     src={Helpers.getTileImage(bountyData)}
@@ -333,7 +332,8 @@ export const Bounty = ({ bountyData }) => {
                   </h3>
                   {treasure.Status === 0 ? (
                     <div className="mt-2">
-                      This treasure expires on{' ' + treasure.Expiry}. <br />
+                      This treasure expires on
+                      {' ' + dateString(treasure.Expiry)}. <br />
                       If treasure isn't released before this date, contributors
                       can return to this page to receive a 95% refund.
                     </div>
@@ -352,228 +352,234 @@ export const Bounty = ({ bountyData }) => {
                   ) : (
                     <p>This bounty was a success.</p>
                   )}
+                  {treasure.Judge ? (
+                    <div className="mt-3 text-xl font-bold">
+                      Active Judge:
+                      <NavLink to={`/island/${treasure.Judge.SCID}?view=main`}>
+                        {treasure.Judge.Name}
+                      </NavLink>
+                    </div>
+                  ) : (
+                    ''
+                  )}
+                  {treasure.Executer ? (
+                    <div className="mt-2 text-xl font-bold">
+                      Active Executer:
+                      <NavLink
+                        to={`/island/${treasure.Executer.SCID}?view=main`}
+                      >
+                        {treasure.Executer.Name}
+                      </NavLink>
+                    </div>
+                  ) : (
+                    ''
+                  )}
+                  {treasure.RecipientList &&
+                  treasure.RecipientList.length > 0 ? (
+                    <>
+                      These addresses have been nominated to receive the
+                      treasure:
+                      <ul>{recipients}</ul>
+                    </>
+                  ) : (
+                    ''
+                  )}
+
+                  <div className="">
+                    <span>
+                      <h3 className="font-bold">Nominated judges: </h3>
+                      <ol>
+                        {treasure.Judges.map((j, i) => (
+                          <li>
+                            <NavLink to={`/island/${j.SCID}?view=main`}>
+                              {treasure.JNeff == i ? (
+                                <b>
+                                  {j.Name}
+                                  {treasure.Judges &&
+                                  treasure.Judges.length > 1 ? (
+                                    <>
+                                      {' '}
+                                      (expires in{' '}
+                                      {Math.round(
+                                        treasure.JEeff / (60 * 60 * 24)
+                                      )}{' '}
+                                      days)
+                                    </>
+                                  ) : (
+                                    ''
+                                  )}
+                                </b>
+                              ) : (
+                                j.Name
+                              )}
+                            </NavLink>
+                          </li>
+                        ))}
+                      </ol>
+                    </span>
+
+                    <span>
+                      <h3 className="font-bold">Nominated executors: </h3>
+                      <ol>
+                        {treasure.Execs &&
+                          treasure.Execs.map((j, i) => (
+                            <li>
+                              <NavLink to={`/island/${j.SCID}?view=main`}>
+                                {treasure.XNeff == i ? (
+                                  <b>
+                                    {j.Name}
+                                    {treasure.Execs &&
+                                    treasure.Execs.length > 1 ? (
+                                      <>
+                                        {' '}
+                                        (expires in{' '}
+                                        {Math.round(
+                                          treasure.XEeff / (60 * 60 * 24)
+                                        )}{' '}
+                                        days)
+                                      </>
+                                    ) : (
+                                      ''
+                                    )}
+                                  </b>
+                                ) : (
+                                  j.Name
+                                )}
+                              </NavLink>
+                            </li>
+                          ))}
+                      </ol>
+                    </span>
+                  </div>
+                  <span className="divider" />
+                  {treasure.Status === 0 &&
+                  state.myIslands &&
+                  state.myIslands.length > 0 &&
+                  island === state.myIslands[state.active].SCID ? (
+                    <div className="">
+                      <h3>Initiator Functions</h3>
+                      <p>
+                        You initiated this bounty. You may nominate backup
+                        judges and executers.
+                      </p>
+                      <N
+                        island={island}
+                        index={index}
+                        randomAddress={state.randomAddress}
+                        dba={state.deroBridgeApiRef}
+                        l="X"
+                        scid_registry={state.scid_registry}
+                        scid_bounties={state.scid_bounties}
+                      />
+                      <N
+                        island={island}
+                        index={index}
+                        dba={state.deroBridgeApiRef}
+                        l="J"
+                        randomAddress={state.randomAddress}
+                        scid_registry={state.scid_registry}
+                        scid_bounties={state.scid_bounties}
+                      />
+                    </div>
+                  ) : (
+                    ''
+                  )}
+
+                  {treasure.Status === 0 &&
+                  state.myIslands &&
+                  state.myIslands.length > 0 &&
+                  judging ? (
+                    <Judge
+                      JN={treasure.JN}
+                      judges={treasure.Judges}
+                      userIsland={state.myIslands[state.active].SCID}
+                      island={islandSCID}
+                      index={index}
+                      judge={treasure.Judge && treasure.Judge.SCID}
+                      JF={treasure.JF}
+                      deroBridgeApiRef={state.deroBridgeApiRef}
+                      randomAddress={state.randomAddress}
+                      scid={state.scid_bounties}
+                      XE={treasure.JE}
+                      solo={treasure.Judges.length === 1}
+                      recipientList={treasure.RecipientList}
+                    />
+                  ) : (
+                    ''
+                  )}
+
+                  {treasure.Status === 0 &&
+                  state.myIslands &&
+                  state.myIslands.length > 0 &&
+                  executing ? (
+                    <Executer
+                      XN={treasure.XN}
+                      userIsland={state.myIslands[state.active].SCID}
+                      island={islandSCID}
+                      index={index}
+                      execs={treasure.Execs}
+                      executer={treasure.Executer && treasure.Executer.SCID}
+                      JF={treasure.JF}
+                      deroBridgeApiRef={state.deroBridgeApiRef}
+                      randomAddress={state.randomAddress}
+                      scid={state.scid_bounties}
+                      XE={treasure.XE}
+                      solo={treasure.Execs.length == 1}
+                    />
+                  ) : (
+                    ''
+                  )}
+
+                  <div className={`${proseClass} text-zinc-900`}>
+                    <p
+                      dangerouslySetInnerHTML={{
+                        __html: Helpers.getTileDescription(bountyData),
+                      }}
+                    />{' '}
+                  </div>
+
+                  {treasure.Status === 0 ? (
+                    <FlexBoxColumn align="start" className="w-full">
+                      <form onSubmit={AddTreasure} className="my-2 flex w-1/2">
+                        <div className="flex-grow px-2">
+                          <input
+                            id="amount"
+                            type="text"
+                            placeholder="Amount (Dero)"
+                            className="input-bordered input w-full max-w-xs"
+                          />
+                        </div>
+                        <div className="p-2">
+                          <Button size="small" type={'submit'}>
+                            Add Treasure
+                          </Button>
+                        </div>
+                      </form>
+
+                      <form
+                        onSubmit={ClaimTreasure}
+                        className="my-2 flex w-1/2"
+                      >
+                        <div className="flex-grow p-2">
+                          <input
+                            id="proof"
+                            type="text"
+                            placeholder="proof"
+                            className="input-bordered input w-full max-w-xs"
+                          />
+                        </div>
+                        <div className="p-2">
+                          <Button size="small" type={'submit'}>
+                            Claim Treasure
+                          </Button>
+                        </div>
+                      </form>
+                    </FlexBoxColumn>
+                  ) : (
+                    ''
+                  )}
                 </FlexBoxColumn>
               </FlexBoxRow>
-
-              {treasure.Judge ? (
-                <h3>
-                  Active Judge:
-                  <NavLink to={`/island/${treasure.Judge.SCID}?view=main`}>
-                    {treasure.Judge.Name}
-                  </NavLink>
-                </h3>
-              ) : (
-                ''
-              )}
-              {treasure.executer ? (
-                <h3>
-                  Active Executer:
-                  <NavLink to={`/island/${treasure.executer.name}?view=main`}>
-                    {treasure.executer.name}
-                  </NavLink>
-                </h3>
-              ) : (
-                ''
-              )}
-
-              {treasure.recipientList && treasure.recipientList.length > 0 ? (
-                <>
-                  These addresses have been nominated to receive the treasure:
-                  <ul>{recipients}</ul>
-                </>
-              ) : (
-                ''
-              )}
-
-              <span className="divider" />
-              <div className="">
-                <span>
-                  <h3 className="font-bold">Nominated judges: </h3>
-                  <ol>
-                    {treasure.Judges.map((j, i) => (
-                      <li>
-                        <NavLink to={`/island/${j.SCID}?view=main`}>
-                          {treasure.JNeff == i ? (
-                            <b>
-                              {j.Name}
-                              {treasure.Judges && treasure.Judges.length > 1 ? (
-                                <>
-                                  {' '}
-                                  (expires in{' '}
-                                  {Math.round(
-                                    treasure.JEeff / (60 * 60 * 24)
-                                  )}{' '}
-                                  days)
-                                </>
-                              ) : (
-                                ''
-                              )}
-                            </b>
-                          ) : (
-                            j.Name
-                          )}
-                        </NavLink>
-                      </li>
-                    ))}
-                  </ol>
-                </span>
-
-                <span>
-                  <h3 className="font-bold">Nominated executors: </h3>
-                  <ol>
-                    {treasure.Execs &&
-                      treasure.Execs.map((j, i) => (
-                        <li>
-                          <NavLink to={`/island/${j.SCID}?view=main`}>
-                            {treasure.XNeff == i ? (
-                              <b>
-                                {j.Name}
-                                {treasure.execList &&
-                                treasure.execList.length > 1 ? (
-                                  <>
-                                    {' '}
-                                    (expires in{' '}
-                                    {Math.round(
-                                      treasure.XEeff / (60 * 60 * 24)
-                                    )}{' '}
-                                    days)
-                                  </>
-                                ) : (
-                                  ''
-                                )}
-                              </b>
-                            ) : (
-                              j.Name
-                            )}
-                          </NavLink>
-                        </li>
-                      ))}
-                  </ol>
-                </span>
-              </div>
-
-              {treasure.Status === 0 &&
-              state.myIslands &&
-              state.myIslands.length > 0 &&
-              island === state.myIslands[state.active].name ? (
-                <div className="">
-                  <h3>Initiator Functions</h3>
-                  <p>
-                    You initiated this bounty. You may nominate backup judges
-                    and executers.
-                  </p>
-                  <N
-                    island={island}
-                    index={index}
-                    randomAddress={state.randomAddress}
-                    dba={state.deroBridgeApiRef}
-                    l="X"
-                    scid_registry={state.scid_registry}
-                    scid_bounties={state.scid_bounties}
-                  />
-                  <N
-                    island={island}
-                    index={index}
-                    dba={state.deroBridgeApiRef}
-                    l="J"
-                    randomAddress={state.randomAddress}
-                    scid_registry={state.scid_registry}
-                    scid_bounties={state.scid_bounties}
-                  />
-                </div>
-              ) : (
-                ''
-              )}
-
-              {treasure.Status === 0 &&
-              state.myIslands &&
-              state.myIslands.length > 0 &&
-              judging ? (
-                <Judge
-                  active={treasure.Judges[treasure.JN]}
-                  userIsland={state.myIslands[state.active].SCID}
-                  island={islandSCID}
-                  index={index}
-                  judge={treasure.Judge && treasure.Judge.SCID}
-                  JF={treasure.JF}
-                  deroBridgeApiRef={state.deroBridgeApiRef}
-                  randomAddress={state.randomAddress}
-                  scid={state.scid_bounties}
-                  XE={treasure.JE}
-                  solo={treasure.Judges.length === 1}
-                  recipientList={treasure.recipientList}
-                />
-              ) : (
-                ''
-              )}
-
-              {treasure.Status === 0 &&
-              state.myIslands &&
-              state.myIslands.length > 0 &&
-              executing ? (
-                <Executer
-                  active={treasure.execList[treasure.XN]}
-                  userIsland={state.myIslands[state.active].scid}
-                  island={islandSCID}
-                  index={index}
-                  executer={treasure.executer && treasure.executer.scid}
-                  JF={treasure.JF}
-                  deroBridgeApiRef={state.deroBridgeApiRef}
-                  randomAddress={state.randomAddress}
-                  scid={state.scid_bounties}
-                  XE={treasure.XE}
-                  solo={treasure.execList.length == 1}
-                />
-              ) : (
-                ''
-              )}
-
-              <div className={`${proseClass} text-zinc-900`}>
-                <p
-                  dangerouslySetInnerHTML={{
-                    __html: Helpers.getTileDescription(bountyData),
-                  }}
-                />{' '}
-              </div>
-              <Divider />
-
-              {treasure.Status === 0 ? (
-                <FlexBoxColumn>
-                  <form onSubmit={AddTreasure} className="my-2 flex w-1/2">
-                    <div className="flex-grow px-2">
-                      <input
-                        id="amount"
-                        type="text"
-                        placeholder="Amount (Dero)"
-                        className="input input-bordered w-full max-w-xs"
-                      />
-                    </div>
-                    <div className="p-2">
-                      <Button size="small" type={'submit'}>
-                        Add Treasure
-                      </Button>
-                    </div>
-                  </form>
-
-                  <form onSubmit={ClaimTreasure} className="my-2 flex w-1/2">
-                    <div className="flex-grow p-2">
-                      <input
-                        id="proof"
-                        type="text"
-                        placeholder="proof"
-                        className="input input-bordered w-full max-w-xs"
-                      />
-                    </div>
-                    <div className="p-2">
-                      <Button size="small" type={'submit'}>
-                        Claim Treasure
-                      </Button>
-                    </div>
-                  </form>
-                </FlexBoxColumn>
-              ) : (
-                ''
-              )}
             </div>
           </>
         ) : (
