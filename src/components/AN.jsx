@@ -1,11 +1,13 @@
 import React from 'react';
 import to from 'await-to-js';
 import { useSendTransaction } from './hooks/useSendTransaction';
+import { Button } from '@/components/common/Button.jsx';
 
 export default function AN(props) {
   const [sendTransaction] = useSendTransaction();
 
-  const accept = React.useCallback(async () => {
+  const accept = React.useCallback(async (e) => {
+    e.preventDefault();
     const data = new Object({
       scid: props.scid,
       ringsize: 2,
@@ -46,9 +48,11 @@ export default function AN(props) {
   return (
     <>
       <div>
-        <button onClick={() => accept()}>
-          Accept {props.l == 'J' ? 'Judge' : 'Executer'} Nomination
-        </button>
+        <form onSubmit={accept}>
+          <Button type={'submit'}>
+            Accept {props.l == 'J' ? 'Judge' : 'Executer'} Nomination
+          </Button>
+        </form>
       </div>
     </>
   );

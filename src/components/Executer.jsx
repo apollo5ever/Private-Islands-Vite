@@ -33,7 +33,7 @@ export default function Executer(props) {
 
   return (
     <div className="subscribe">
-      <h3>Executer Functions</h3>
+      <div className="mt-3 text-xl font-bold">Executer Functions</div>
       <p>You have been nominated as executer for this bounty.</p>
 
       {props.solo ? (
@@ -66,9 +66,11 @@ export default function Executer(props) {
                   />
                   <V
                     dba={props.deroBridgeApiRef}
+                    randomAddress={props.randomAddress}
                     scid={props.scid}
                     island={props.island}
                     index={props.index}
+                    executer={props.userIsland}
                   />
                 </>
               ) : (
@@ -96,6 +98,7 @@ export default function Executer(props) {
                   />
                   <RT
                     dba={props.deroBridgeApiRef}
+                    randomAddress={props.randomAddress}
                     scid={props.scid}
                     island={props.island}
                     index={props.index}

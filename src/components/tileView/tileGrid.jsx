@@ -51,7 +51,9 @@ export const TileGrid = () => {
   useEffect(() => {
     const filtered = allElements.filter((element) => {
       let typeCondition =
-        selectedFilter === piAssetType.ALL || element.type === selectedFilter;
+        selectedFilter === piAssetType.ALL ||
+        element.type === selectedFilter ||
+        element.SCID === selectedFilter;
 
       let statusCondition = true;
 

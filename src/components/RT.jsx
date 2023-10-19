@@ -1,10 +1,12 @@
 import React from 'react';
 import to from 'await-to-js';
 import { useSendTransaction } from './hooks/useSendTransaction';
+import { Button } from '@/components/common/Button.jsx';
 
 export default function RT(props) {
   const [sendTransaction] = useSendTransaction();
-  const accept = React.useCallback(async () => {
+  const accept = React.useCallback(async (e) => {
+    e.preventDefault();
     let data;
 
     if (props.refund) {
@@ -75,7 +77,11 @@ export default function RT(props) {
   return (
     <>
       <div>
-        <button onClick={() => accept()}>Release Treasure</button>
+        <form onSubmit={accept}>
+          <Button size="small" type={'submit'}>
+            Release Treasure
+          </Button>
+        </form>
       </div>
     </>
   );
