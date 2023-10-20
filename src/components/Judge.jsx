@@ -5,6 +5,7 @@ import AN from './AN';
 export default function Judge(props) {
   const [expiry, setExpiry] = React.useState(0);
   const [active, setActive] = React.useState('');
+  const [userIsland, setUserIsland] = React.useState('');
 
   const getExpiry = () => {
     if (props.JE > new Date().getTime() / 1000) setExpiry(props.JE);
@@ -16,6 +17,25 @@ export default function Judge(props) {
       );
     }
   };
+  const getUserIsland = () => {
+    if (props.userIslands.includes(active)) {
+      setUserIsland(active);
+    } else if (props.userIslands.includes(props.judge)) {
+      setUserIsland(props.judge);
+    } else {
+      let array1 = props.userIslands;
+      let array2 = props.judges.map((x) => x.SCID);
+      for (let i = 0; i < array1.length; i++) {
+        for (let j = 0; j < array2.length; j++) {
+          if (array1[i] === array2[j]) {
+            setUserIsland(array1[i]);
+            return;
+          }
+        }
+      }
+    }
+  };
+
   const getActiveJudge = () => {
     for (var j of props.judges) {
       if (j.Index == props.JN) {
@@ -29,6 +49,10 @@ export default function Judge(props) {
     getActiveJudge();
   }, []);
 
+  React.useEffect(() => {
+    getUserIsland();
+  }, [active]);
+
   return (
     <div className="subscribe">
       <div className="mt-3 text-xl font-bold">Judge Functions</div>
@@ -37,14 +61,14 @@ export default function Judge(props) {
       {props.solo ? (
         <>
           {' '}
-          {props.judge != props.userIsland ? (
+          {props.judge != userIsland ? (
             <>
               <AN
                 dba={props.deroBridgeApiRef}
                 randomAddress={props.randomAddress}
                 scid={props.scid}
                 l="J"
-                JX={props.userIsland}
+                JX={userIsland}
                 island={props.island}
                 index={props.index}
               />
@@ -59,7 +83,7 @@ export default function Judge(props) {
                 <>
                   <ATR
                     dba={props.deroBridgeApiRef}
-                    judge={props.userIsland}
+                    judge={userIsland}
                     randomAddress={props.randomAddress}
                     scid={props.scid}
                     island={props.island}
@@ -73,7 +97,7 @@ export default function Judge(props) {
         </>
       ) : (
         <>
-          {active == props.userIsland ? (
+          {active == userIsland ? (
             <>
               {props.JF == 1 || props.JF == 2 ? (
                 <>
@@ -86,13 +110,13 @@ export default function Judge(props) {
                     randomAddress={props.randomAddress}
                     scid={props.scid}
                     l="J"
-                    JX={props.userIsland}
+                    JX={userIsland}
                     island={props.island}
                     index={props.index}
                   />
                   <ATR
                     dba={props.deroBridgeApiRef}
-                    judge={props.userIsland}
+                    judge={userIsland}
                     scid={props.scid}
                     island={props.island}
                     index={props.index}

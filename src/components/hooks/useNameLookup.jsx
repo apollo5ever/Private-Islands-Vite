@@ -11,13 +11,13 @@ export function useNameLookup() {
 
   async function nameLookup(want, have) {
     let contract = await getSC(state.scid_registry);
-    if (want == 'name' && contract.stringkeys[`N::PRIVATE-ISLANDS::${have}`]) {
-      return hex2a(contract.stringkeys[`N::PRIVATE-ISLANDS::${have}`]);
+    if (want == 'name' && contract.stringkeys[`nPRIVATE-ISLANDS${have}`]) {
+      return hex2a(contract.stringkeys[`nPRIVATE-ISLANDS${have}`]);
     } else if (
       want == 'scid' &&
-      contract.stringkeys[`S::PRIVATE-ISLANDS::${have}`]
+      contract.stringkeys[`aPRIVATE-ISLANDS${have}`]
     ) {
-      return hex2a(contract.stringkeys[`S::PRIVATE-ISLANDS::${have}`]);
+      return hex2a(contract.stringkeys[`aPRIVATE-ISLANDS${have}`]);
     } else return;
   }
   return [nameLookup];

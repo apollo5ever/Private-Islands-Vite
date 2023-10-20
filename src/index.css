@@ -25,6 +25,12 @@ input {
   color: #c0c0c0;
 }
 
+.prose {
+  font-size:1.2rem;
+  max-width: 100ch;
+  
+}
+
 /* MTS Additions */
 /* Using this to so I can reference as vars for light/dark theme backgrounds in tailwind.config */
 :root {

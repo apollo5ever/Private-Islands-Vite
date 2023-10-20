@@ -37,8 +37,8 @@ export const Bounty = ({ bountyData }) => {
     console.log('myslands', state);
     if (!state.myIslands || !treasure.Judges || state.myIslands.length === 0)
       return;
-    const matching = treasure.Judges.filter(
-      (execObj) => execObj.SCID === state.myIslands[state.active].SCID
+    const matching = treasure.Judges.filter((execObj) =>
+      state.myIslands.map((x) => x.SCID).includes(execObj.SCID)
     );
 
     if (matching.length > 0) setJudging(true);
@@ -48,11 +48,11 @@ export const Bounty = ({ bountyData }) => {
   const getExecuting = () => {
     if (!state.myIslands || !treasure.Execs || state.myIslands.length === 0)
       return;
-    const matching = treasure.Execs.filter(
-      (execObj) => execObj.SCID === state.myIslands[state.active].SCID
+    const matching = treasure.Execs.filter((execObj) =>
+      state.myIslands.map((x) => x.SCID).includes(execObj.SCID)
     );
 
-    if (matching.length === 1) setExecuting(true);
+    if (matching.length > 0) setExecuting(true);
     else setExecuting(false);
   };
 
@@ -244,7 +244,7 @@ export const Bounty = ({ bountyData }) => {
         {!editing &&
         state.myIslands &&
         state.myIslands.length > 0 &&
-        island === state.myIslands[state.active].SCID ? (
+        state.myIslands.map((x) => x.SCID).includes(island) ? (
           <small
             onClick={() => {
               setEditing(true);
@@ -455,7 +455,7 @@ export const Bounty = ({ bountyData }) => {
                   {treasure.Status === 0 &&
                   state.myIslands &&
                   state.myIslands.length > 0 &&
-                  island === state.myIslands[state.active].SCID ? (
+                  state.myIslands.map((x) => x.SCID).includes(island) ? (
                     <div className="">
                       <h3>Initiator Functions</h3>
                       <p>
@@ -492,7 +492,7 @@ export const Bounty = ({ bountyData }) => {
                     <Judge
                       JN={treasure.JN}
                       judges={treasure.Judges}
-                      userIsland={state.myIslands[state.active].SCID}
+                      userIslands={state.myIslands.map((x) => x.SCID)}
                       island={islandSCID}
                       index={index}
                       judge={treasure.Judge && treasure.Judge.SCID}
@@ -514,7 +514,7 @@ export const Bounty = ({ bountyData }) => {
                   executing ? (
                     <Executer
                       XN={treasure.XN}
-                      userIsland={state.myIslands[state.active].SCID}
+                      userIslands={state.myIslands.map((x) => x.SCID)}
                       island={islandSCID}
                       index={index}
                       execs={treasure.Execs}
@@ -530,7 +530,10 @@ export const Bounty = ({ bountyData }) => {
                     ''
                   )}
 
-                  <div className={`${proseClass} text-zinc-900`}>
+                  <div
+                    className={`${proseClass} text-zinc-900`}
+                    style={{ fontSize: '1.5 rem' }}
+                  >
                     <p
                       dangerouslySetInnerHTML={{
                         __html: Helpers.getTileDescription(bountyData),

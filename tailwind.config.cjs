@@ -4,6 +4,7 @@ module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}", 'node_modules/daisyui/dist/**/*.js'],
   theme: {
     extend: {
+      
       fontFamily: {
         'fell': ['IM FELL Double Pica SC', 'serif'],
       },

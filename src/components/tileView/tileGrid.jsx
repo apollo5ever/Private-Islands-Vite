@@ -53,7 +53,7 @@ export const TileGrid = () => {
       let typeCondition =
         selectedFilter === piAssetType.ALL ||
         element.type === selectedFilter ||
-        element.SCID === selectedFilter;
+        selectedFilter.includes(element.SCID);
 
       let statusCondition = true;
 
