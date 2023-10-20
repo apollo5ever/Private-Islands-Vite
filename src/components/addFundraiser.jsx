@@ -5,12 +5,14 @@ import to from 'await-to-js';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { useSendTransaction } from './hooks/useSendTransaction';
 import { useGetSC } from './hooks/useGetSC';
+import { useGetGasEstimate } from './hooks/useGetGasEstimate';
 
 import { LoginContext } from '../LoginContext';
 import Success from './success.jsx';
 
 export default function CreateFund() {
   const [sendTransaction] = useSendTransaction();
+  const [getGasEstimate] = useGetGasEstimate();
   const [state, setState] = React.useContext(LoginContext);
   const [searchParams, setSearchParams] = useSearchParams();
   const [getSC] = useGetSC();
@@ -77,6 +79,22 @@ export default function CreateFund() {
           datatype: 'S',
           value: '',
         },
+        {
+          name: 'image',
+          datatype: 'S',
+          value: event.target.fundPhoto.value,
+        },
+        {
+          name: 'tagline',
+          datatype: 'S',
+          value: event.target.tagline.value,
+        },
+
+        {
+          name: 'desc',
+          datatype: 'S',
+          value: event.target.description.value,
+        },
       ],
     });
     sendTransaction(txData);
@@ -86,8 +104,6 @@ export default function CreateFund() {
 
   const SetMetadata = React.useCallback(async (event) => {
     event.preventDefault();
-    let fee;
-    if (event.target.description.value.length > 380) fee = 10000;
 
     const transfers = [
       {
@@ -141,34 +157,29 @@ export default function CreateFund() {
         },
       ],
     });
-    sendTransaction(txData);
+    const gas_rpc = [
+      {
+        name: 'SC_ACTION',
+        datatype: 'U',
+        value: 0,
+      },
+      {
+        name: 'SC_ID',
+        datatype: 'H',
+        value: state.scid_fundraisers,
+      },
+    ].concat(txData.sc_rpc);
 
-    setSearchParams({ status: 'success' });
+    txData.gas_rpc = gas_rpc;
+
+    let fees = await getGasEstimate(txData);
+    txData.fees = fees;
+    sendTransaction(txData);
   });
 
   return (
     <div className="function">
-      {searchParams.get('status') == 'metadata' ? (
-        <form onSubmit={SetMetadata}>
-          <input
-            placeholder="Name"
-            id="fundName"
-            type="text"
-            defaultValue={searchParams.get('name')}
-          />
-          <input placeholder="Image URL" id="fundPhoto" type="text" />
-          <input placeholder="Tagline" id="tagline" type="text" />
-
-          <textarea
-            placeholder="Description"
-            rows="44"
-            cols="80"
-            id="description"
-          />
-
-          <button type={'submit'}>Launch</button>
-        </form>
-      ) : searchParams.get('status') == 'success' ? (
+      {searchParams.get('status') == 'success' ? (
         <Success />
       ) : (
         <div className="profile">
@@ -182,6 +193,16 @@ export default function CreateFund() {
 
             <input placeholder="Goal" id="goal" type="text" />
             <input placeholder="Address" id="address" type="text" />
+
+            <input placeholder="Image URL" id="fundPhoto" type="text" />
+            <input placeholder="Tagline" id="tagline" type="text" />
+
+            <textarea
+              placeholder="Description"
+              rows="44"
+              cols="80"
+              id="description"
+            />
 
             <button type={'submit'}>Launch</button>
           </form>

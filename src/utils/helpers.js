@@ -47,9 +47,10 @@ export class Helpers {
     switch (tile.type) {
       case piAssetType.ISLAND:
       case piAssetType.BOUNTY:  
+      case piAssetType.FUNDRAISER:
         return tile.Name;
       
-      case piAssetType.FUNDRAISER:
+      
       case piAssetType.SUBSCRIPTION:
         return tile.Names[tile.Names.length - 1];
     }
@@ -59,9 +60,10 @@ export class Helpers {
     switch (tile.type) {
       case piAssetType.ISLAND:
       case piAssetType.BOUNTY:  
+      case piAssetType.FUNDRAISER:
         return tile.Tagline;
       
-      case piAssetType.FUNDRAISER:
+      
       case piAssetType.SUBSCRIPTION:
         return tile.Taglines[tile.Taglines.length - 1];
     }
@@ -71,9 +73,10 @@ export class Helpers {
     switch (tile.type) {
       case piAssetType.ISLAND:
       case piAssetType.BOUNTY:  
+       case piAssetType.FUNDRAISER:
         return tile.Image;
       
-      case piAssetType.FUNDRAISER:
+     
       case piAssetType.SUBSCRIPTION:
         return tile.Images[tile.Images.length - 1];
     }
@@ -83,9 +86,10 @@ export class Helpers {
     switch (tile.type) {
       case piAssetType.ISLAND:
       case piAssetType.BOUNTY:  
+      case piAssetType.FUNDRAISER:
         return tile.Description;
       
-      case piAssetType.FUNDRAISER:
+      
       case piAssetType.SUBSCRIPTION:
         return tile.Description[tile.Description.length - 1];
     }
