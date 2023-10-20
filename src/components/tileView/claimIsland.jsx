@@ -27,7 +27,7 @@ export const ClaimIsland = () => {
   const Mint = useCallback(async (event) => {
     event.preventDefault();
     //check registry to see if name is taken
-    const res0 = await getSC(state.scid_registry);
+    const res0 = await getSC(state.scid_registry, false, true);
     var search = `S::PRIVATE-ISLANDS::${event.target.island.value}`;
     var island_scid = res0.stringkeys[search];
     //----------Errors--------------------------
@@ -81,7 +81,7 @@ export const ClaimIsland = () => {
 
   const registerIsland = async () => {
     //check registry to see if name is taken
-    const res0 = await getSC(state.scid_registry);
+    const res0 = await getSC(state.scid_registry, false, true);
     var search = `S::PRIVATE-ISLANDS::${islandName}`;
     var island_scid = res0.stringkeys[search];
     //----------Errors--------------------------
