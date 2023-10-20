@@ -3,8 +3,10 @@ import { Button } from '@/components/common/Button.jsx';
 import { FlexBoxRow } from '@/components/common/FlexBoxRow.jsx';
 import { TileContext } from '@/components/providers/TileContext.jsx';
 import { useContext, useEffect, useState } from 'react';
+import { LoginContext } from '../../../LoginContext';
 
 export const HeaderButtons = ({ type }) => {
+  const [state, setState] = useContext(LoginContext);
   const { selectedTile, setSelectedTile, initiatorTile } =
     useContext(TileContext);
   const [counts, setCounts] = useState({
@@ -22,7 +24,7 @@ export const HeaderButtons = ({ type }) => {
         bounty: bountiesCount,
         subscription: tiersCount,
         fundraiser: fundraisersCount,
-        island: 1,
+        island: state.myIslands?.length,
       });
     }
   }, [initiatorTile]);

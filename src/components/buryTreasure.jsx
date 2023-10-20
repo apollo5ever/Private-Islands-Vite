@@ -29,13 +29,13 @@ export default function BuryTreasure() {
   const getJudges = React.useCallback(async () => {
     const res = await getSC(state.scid_registry, false, true);
     console.log('get judges res', res);
-    var search = new RegExp(`N::PRIVATE-ISLANDS::*`);
+    var search = new RegExp(`nPRIVATE-ISLANDS*`);
     var scData = res.stringkeys; //.map(x=>x.match(search))
 
     const judgeList = Object.keys(scData)
       .filter((key) => search.test(key))
       .map((key) => (
-        <option value={key.substring(20)}>{hex2a(scData[key])}</option>
+        <option value={key.substring(16)}>{hex2a(scData[key])}</option>
       ));
 
     setJudges(judgeList);
@@ -124,7 +124,7 @@ export default function BuryTreasure() {
       return;
     }
 
-    const res0 = await getSC(state.scid_registry);
+    const res0 = await getSC(state.scid_registry, false, true);
     var executer = event.target.executer.value;
 
     if (executer === 'self') executer = event.target.island.value;
@@ -261,7 +261,9 @@ export default function BuryTreasure() {
                 <h1>{name}</h1>
                 <img src={image} />
                 <p>{tagline}</p>
-                <p dangerouslySetInnerHTML={{ __html: description }} />
+                <div className={`${proseClass} text-zinc-900`}>
+                  <p dangerouslySetInnerHTML={{ __html: description }} />
+                </div>
               </>
             ) : (
               <>

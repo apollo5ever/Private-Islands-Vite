@@ -13,13 +13,13 @@ export default function N(props) {
   const getJudges = React.useCallback(async () => {
     const res = await getSC(props.scid_registry, false, true);
     console.log('get judges res', res);
-    var search = new RegExp(`N::PRIVATE-ISLANDS::*`);
+    var search = new RegExp(`nPRIVATE-ISLANDS*`);
     var scData = res.stringkeys; //.map(x=>x.match(search))
 
     const judgeList = Object.keys(scData)
       .filter((key) => search.test(key))
       .map((key) => (
-        <option value={key.substring(20)}>{hex2a(scData[key])}</option>
+        <option value={key.substring(16)}>{hex2a(scData[key])}</option>
       ));
 
     setJudges(judgeList);

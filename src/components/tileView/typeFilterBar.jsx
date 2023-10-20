@@ -10,13 +10,13 @@ export const TypeFilterBar = ({
 }) => {
   const [hoveredButton, setHoveredButton] = useState(null);
   const [state, setState] = useContext(LoginContext);
-  const [scid, setSCID] = useState('');
+  const [scidArray, setSCIDArray] = useState('');
 
   useEffect(() => {
     if (!state.myIslands || state.myIslands.length == 0) {
       return;
     }
-    setSCID(state.myIslands[0].SCID);
+    setSCIDArray(state.myIslands.map((x) => x.SCID));
   }, [state.myIslands]);
 
   // Primary filter based on type
@@ -26,7 +26,7 @@ export const TypeFilterBar = ({
     { label: 'Subscriptions', value: piAssetType.SUBSCRIPTION },
     { label: 'Fundraisers', value: piAssetType.FUNDRAISER },
     { label: 'Bounties', value: piAssetType.BOUNTY },
-    { label: 'My Island', value: scid },
+    { label: 'My Island', value: scidArray },
   ];
 
   // Secondary hover filters for bounty & fundraiser

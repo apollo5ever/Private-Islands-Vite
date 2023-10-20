@@ -155,8 +155,6 @@ export const Fundraiser = ({ fundData }) => {
       ],
     });
     sendTransaction(txData);
-
-    setSearchParams({ status: 'success' });
   });
 
   return (
@@ -165,7 +163,7 @@ export const Fundraiser = ({ fundData }) => {
         {!editing &&
         state.myIslands &&
         state.myIslands.length > 0 &&
-        fundData.SCID === state.myIslands[state.active].SCID ? (
+        state.myIslands.map((x) => x.SCID).includes(fundData.SCID) ? (
           <small
             onClick={() => {
               setEditing(true);
@@ -242,9 +240,10 @@ export const Fundraiser = ({ fundData }) => {
                   >
                     Initiated by {Helpers.getInitiatorName(fundData)}
                   </h3>
-                  <h3 className="font-bold">
-                    Raised: {fundData.Raised / 100000}/{fundData.Goal / 100000}
-                  </h3>
+                  <h1 className=" font-bold" style={{ fontSize: '2.2rem' }}>
+                    Raised: {fundData.Raised / 100000}/{fundData.Goal / 100000}{' '}
+                    DERO
+                  </h1>
                   <div className={`${proseClass} text-zinc-900`}>
                     <p
                       dangerouslySetInnerHTML={{

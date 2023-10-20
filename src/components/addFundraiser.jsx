@@ -37,6 +37,7 @@ export default function CreateFund() {
       scid: state.scid_fundraisers,
       ringsize: 2,
       transfers: transfers,
+      signer: state.userAddress,
       sc_rpc: [
         {
           name: 'entrypoint',
@@ -97,9 +98,24 @@ export default function CreateFund() {
         },
       ],
     });
-    sendTransaction(txData);
+    const gas_rpc = [
+      {
+        name: 'SC_ACTION',
+        datatype: 'U',
+        value: 0,
+      },
+      {
+        name: 'SC_ID',
+        datatype: 'H',
+        value: state.scid_fundraisers,
+      },
+    ].concat(txData.sc_rpc);
+    txData.gas_rpc = gas_rpc;
 
-    setSearchParams({ status: 'metadata', name: event.target.fundName.value });
+    let fees = await getGasEstimate(txData);
+    txData.fees = fees;
+
+    sendTransaction(txData);
   });
 
   const SetMetadata = React.useCallback(async (event) => {

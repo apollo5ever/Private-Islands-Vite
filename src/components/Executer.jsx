@@ -6,6 +6,7 @@ import V from './V';
 export default function Executer(props) {
   const [expiry, setExpiry] = React.useState(0);
   const [active, setActive] = React.useState('');
+  const [userIsland, setUserIsland] = React.useState('');
 
   const getExpiry = () => {
     if (props.XE > new Date().getTime() / 1000) setExpiry(props.XE);
@@ -15,6 +16,25 @@ export default function Executer(props) {
           1209600 - ((new Date().getTime() / 1000 - props.XE) % 1209600)
         )
       );
+    }
+  };
+
+  const getUserIsland = () => {
+    if (props.userIslands.includes(active)) {
+      setUserIsland(active);
+    } else if (props.userIslands.includes(props.executer)) {
+      setUserIsland(props.executer);
+    } else {
+      let array1 = props.userIslands;
+      let array2 = props.execs.map((x) => x.SCID);
+      for (let i = 0; i < array1.length; i++) {
+        for (let j = 0; j < array2.length; j++) {
+          if (array1[i] === array2[j]) {
+            setUserIsland(array1[i]);
+            return;
+          }
+        }
+      }
     }
   };
 
@@ -29,6 +49,7 @@ export default function Executer(props) {
   React.useEffect(() => {
     getExpiry();
     getActiveExec();
+    getUserIsland();
   }, []);
 
   return (
@@ -39,14 +60,14 @@ export default function Executer(props) {
       {props.solo ? (
         <>
           {' '}
-          {props.executer != props.userIsland ? (
+          {props.executer != userIsland ? (
             <>
               <AN
                 dba={props.deroBridgeApiRef}
                 randomAddress={props.randomAddress}
                 scid={props.scid}
                 l="X"
-                JX={props.userIsland}
+                JX={userIsland}
                 island={props.island}
                 index={props.index}
               />
@@ -59,7 +80,7 @@ export default function Executer(props) {
                   <RT
                     dba={props.deroBridgeApiRef}
                     randomAddress={props.randomAddress}
-                    executer={props.userIsland}
+                    executer={userIsland}
                     scid={props.scid}
                     island={props.island}
                     index={props.index}
@@ -70,7 +91,7 @@ export default function Executer(props) {
                     scid={props.scid}
                     island={props.island}
                     index={props.index}
-                    executer={props.userIsland}
+                    executer={userIsland}
                   />
                 </>
               ) : (
@@ -83,7 +104,7 @@ export default function Executer(props) {
         </>
       ) : (
         <>
-          {active == props.userIsland ? (
+          {active == userIsland ? (
             <>
               {props.JF == 1 ? (
                 <>
@@ -92,7 +113,7 @@ export default function Executer(props) {
                     randomAddress={props.randomAddress}
                     scid={props.scid}
                     l="X"
-                    JX={props.userIsland}
+                    JX={userIsland}
                     island={props.island}
                     index={props.index}
                   />
@@ -102,7 +123,7 @@ export default function Executer(props) {
                     scid={props.scid}
                     island={props.island}
                     index={props.index}
-                    executer={props.userIsland}
+                    executer={userIsland}
                   />
                   <V
                     dba={props.deroBridgeApiRef}
@@ -110,7 +131,7 @@ export default function Executer(props) {
                     scid={props.scid}
                     island={props.island}
                     index={props.index}
-                    executer={props.userIsland}
+                    executer={userIsland}
                   />
                 </>
               ) : (
@@ -120,7 +141,7 @@ export default function Executer(props) {
                     randomAddress={props.randomAddress}
                     scid={props.scid}
                     l="X"
-                    JX={props.userIsland}
+                    JX={userIsland}
                     island={props.island}
                     index={props.index}
                   />
