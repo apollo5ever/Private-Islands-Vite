@@ -132,3 +132,8 @@ body[data-theme="dark"] {
   background-color: red !important;
   color: white  !important;
 }
+
+.subscribe {
+  border: 2px groove rgb(88, 85, 85,0.2);
+  border-radius: 5px;
+}

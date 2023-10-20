@@ -243,65 +243,7 @@ export default function BuryTreasure() {
 
   return (
     <div className="hero mt-3 min-h-screen rounded-lg bg-secondary px-20">
-      {searchParams.get('status') == 'metadata' ? (
-        <div className="profile">
-          <h3>Bury Treasure</h3>
-          <p>
-            When you bury treasure on your private island, you are creating a
-            bounty for some specific goal. Specify the criteria for release of
-            treasure, and appoint a judge (it can be you) to decide when that
-            criteria has been met.
-          </p>
-          <h4>Set Metadata</h4>
-          <form onSubmit={updateMetaData}>
-            {preview ? (
-              <>
-                <h1>{name}</h1>
-                <img src={image} />
-                <p>{tagline}</p>
-                <p dangerouslySetInnerHTML={{ __html: description }} />
-              </>
-            ) : (
-              <>
-                <input
-                  placeholder="Buried Treasure Name"
-                  id="bountyName"
-                  defaultValue={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-                <input
-                  onChange={(e) => setImage(e.target.value)}
-                  defaultValue={image}
-                  placeholder="Image URL"
-                  id="bountyPhoto"
-                />
-                <input
-                  onChange={(e) => setTagline(e.target.value)}
-                  defaultValue={tagline}
-                  placeholder="Tagline"
-                  id="tagline"
-                />
-                <textarea
-                  placeholder="Description"
-                  rows="44"
-                  cols="80"
-                  id="description"
-                  defaultValue={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                />
-              </>
-            )}
-
-            <Button size="small" type={'submit'}>
-              Create
-            </Button>
-          </form>
-          <button onClick={() => handlePreview()}>
-            {preview ? 'Edit' : 'Preview'}
-          </button>
-          {error}
-        </div>
-      ) : searchParams.get('status') == 'success' ? (
+      {searchParams.get('status') == 'success' ? (
         <Success />
       ) : (
         <div className="profile">
@@ -351,10 +293,6 @@ export default function BuryTreasure() {
                 />
               </>
             )}
-
-            <Button size="small" type={'submit'}>
-              Create
-            </Button>
 
             <button onClick={() => handlePreview()}>
               {preview ? 'Edit' : 'Preview'}

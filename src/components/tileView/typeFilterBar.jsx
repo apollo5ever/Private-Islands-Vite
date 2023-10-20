@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { piAssetType, statusFilter } from '@/utils/helpers.js';
+import { LoginContext } from '../../LoginContext';
 
 export const TypeFilterBar = ({
   selectedFilter,
@@ -8,6 +9,15 @@ export const TypeFilterBar = ({
   setSelectedStatus,
 }) => {
   const [hoveredButton, setHoveredButton] = useState(null);
+  const [state, setState] = useContext(LoginContext);
+  const [scid, setSCID] = useState('');
+
+  useEffect(() => {
+    if (!state.myIslands || state.myIslands.length == 0) {
+      return;
+    }
+    setSCID(state.myIslands[0].SCID);
+  }, [state.myIslands]);
 
   // Primary filter based on type
   const typeFilterButtons = [
@@ -16,6 +26,7 @@ export const TypeFilterBar = ({
     { label: 'Subscriptions', value: piAssetType.SUBSCRIPTION },
     { label: 'Fundraisers', value: piAssetType.FUNDRAISER },
     { label: 'Bounties', value: piAssetType.BOUNTY },
+    { label: 'My Island', value: scid },
   ];
 
   // Secondary hover filters for bounty & fundraiser

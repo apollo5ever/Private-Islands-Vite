@@ -31,7 +31,7 @@ export default function Judge(props) {
 
   return (
     <div className="subscribe">
-      <h3>Judge Functions</h3>
+      <div className="mt-3 text-xl font-bold">Judge Functions</div>
       <p>You have been nominated as judge for this bounty.</p>
 
       {props.solo ? (

@@ -374,11 +374,11 @@ export default function MyIsland() {
                         {island.Judging.map((x) => (
                           <TreasureCard
                             className="mytreasure"
-                            name={x.Names[x.Names.length - 1]}
+                            name={x.Name}
                             initiator={x.Initiator}
-                            tagline={x.Taglines[x.Taglines.length - 1]}
+                            tagline={x.Tagline}
                             treasure={x.Amount}
-                            image={x.Images[x.Images.length - 1]}
+                            image={x.Image}
                             executerList={x.judgeList}
                             index={x.Index}
                           />

@@ -1,9 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import to from 'await-to-js';
 import { useSendTransaction } from './hooks/useSendTransaction';
+import { Button } from '@/components/common/Button.jsx';
 
 export default function ATR(props) {
   const [sendTransaction] = useSendTransaction();
+  const [recipient, setRecipient] = useState();
+
+  const handleRecipientChange = (e) => {
+    let index = e.target.value;
+
+    if (index >= props.recipientList.length) {
+      setRecipient('');
+    } else {
+      setRecipient(props.recipientList[index].Address);
+    }
+  };
 
   const addRecipient = React.useCallback(async (e) => {
     e.preventDefault();
@@ -101,25 +113,33 @@ export default function ATR(props) {
   return (
     <>
       <div>
+        Choose one or more Dero addresses to receive the bounty.
         <form onSubmit={addRecipient}>
-          <select id="index">
+          <select onChange={(e) => handleRecipientChange(e)} id="index">
             {props.recipientList.map((x, i) => (
               <option value={i}>Modify {x.Address}</option>
             ))}
             <option value={props.recipientList.length}>Add New</option>
           </select>
+          <br />
           <input
+            style={{ width: '33vw' }}
             id="recipient"
             placeholder="recipient dero address"
             type="text"
+            defaultValue={recipient}
           />
-          <input id="weight" placeholder="weight" type="text" />
+          <br />
+          <input id="weight" placeholder="weight" type="number" />
+
           <p>
             Check Box if this is final recipient and treasure is ready to be
-            released.
+            released. <input id="final" type="checkbox" />
           </p>
-          <input id="final" type="checkbox" />
-          <button type="submit">Add Recipient</button>
+
+          <Button size="small" type="submit">
+            Add Recipient
+          </Button>
         </form>
       </div>
     </>
