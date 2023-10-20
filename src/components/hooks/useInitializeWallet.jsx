@@ -37,7 +37,13 @@ export function useInitializeWallet() {
         if (response === 'User has authorized the application') {
           console.log('authenticated!');
           const address = await getAddress();
-          setState((state) => ({ ...state, ws: ws, userAddress: address }));
+          const randomAddress = await getRandomAddress();
+          setState((state) => ({
+            ...state,
+            ws: ws,
+            userAddress: address,
+            randomAddress: randomAddress,
+          }));
         }
       };
 
@@ -66,11 +72,13 @@ export function useInitializeWallet() {
       console.log('ERR', err);
     } else {
       const address = await getAddress(deroBridgeApiRef);
+      const randomAddress = await getRandomAddress(deroBridgeApiRef);
       setState((state) => ({
         ...state,
         deroBridgeApiRef: deroBridgeApiRef,
         ws: null,
         userAddress: address,
+        randomAddress: randomAddress,
       }));
     }
   };
@@ -81,9 +89,6 @@ export function useInitializeWallet() {
     } else if (state.walletMode == 'xswd') {
       await initXSWD();
     }
-
-    const randomAddress = await getRandomAddress();
-    setState((state) => ({ ...state, randomAddress: randomAddress }));
   }
 
   return [initializeWallet];
