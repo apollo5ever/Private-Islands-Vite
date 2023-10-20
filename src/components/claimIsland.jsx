@@ -26,7 +26,7 @@ export default function ClaimIsland() {
     event.preventDefault();
     //check registry to see if name is taken
     const res0 = await getSC(state.scid_registry);
-    var search = `S::PRIVATE-ISLANDS::${event.target.island.value}`;
+    var search = `aPRIVATE-ISLANDS${event.target.island.value}`;
     var island_scid = res0.stringkeys[search];
     //----------Errors--------------------------
     if (island_scid) {
@@ -131,7 +131,7 @@ export default function ClaimIsland() {
   const registerIsland = async () => {
     //check registry to see if name is taken
     const res0 = await getSC(state.scid_registry);
-    var search = `S::PRIVATE-ISLANDS::${islandName}`;
+    var search = `aPRIVATE-ISLANDS${islandName}`;
     var island_scid = res0.stringkeys[search];
     //----------Errors--------------------------
     if (island_scid) {
@@ -160,19 +160,24 @@ export default function ClaimIsland() {
           value: 'RegisterAsset',
         },
         {
-          name: 'name',
-          datatype: 'S',
-          value: islandName,
-        },
-        {
           name: 'collection',
           datatype: 'S',
           value: 'PRIVATE-ISLANDS',
         },
         {
+          name: 'name',
+          datatype: 'S',
+          value: islandName,
+        },
+        {
           name: 'scid',
           datatype: 'S',
           value: islandSCID,
+        },
+        {
+          name: 'index',
+          datatype: 'U',
+          value: 0,
         },
       ],
     };
