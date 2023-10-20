@@ -52,7 +52,6 @@ export const Button = ({
     className
   );
 
-  console.log('BTN CLASSNAMES', classNames);
   return (
     <button className={classNames} onClick={handleClick}>
       {children}

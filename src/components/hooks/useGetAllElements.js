@@ -8,7 +8,8 @@ import { useContext, useMemo } from 'react';
 
 export const useGetAllElements = (state, isFirstVisit = true) => {
   const logger = useContext(LoggerContext);
-  const { islands, shuffledIslands, getIslands } = useGetIslands(state);
+  const { islands, shuffledIslands, getIslands, myIslands, setMyIslands } =
+    useGetIslands(state);
   const { bounties } = useGetBounties(islands);
   const { fundraisers } = useGetFundraisers(islands);
   const { subscriptions } = useGetSubscriptions(islands);
@@ -28,15 +29,23 @@ export const useGetAllElements = (state, isFirstVisit = true) => {
       })),
     ];
 
+    logger(LOG.DEBUG, COMPNAME, 'ISLANDS', islands);
+    console.log('My Islands in get all elements', myIslands);
+    // logger(LOG.DEBUG, COMPNAME, 'BOUNTIES', bounties);
+    // logger(LOG.DEBUG, COMPNAME, 'FUNDRAISERS', fundraisers);
+    // logger(LOG.DEBUG, COMPNAME, 'SUBSCRIPTIONS', subscriptions);
+
+    console.log('USE GET ALL my Isle', myIslands);
+
     // TODO MST - had trouble with the state mgmt as this is called from TileContext so think I had a timing issue?  It never shuffled
     // For now, isFirstVisit doesnt exist or isn't being used -- but want to do something with this at some ponit to limit shuffle
     return isFirstVisit ? Helpers.shuffleArray(elements) : elements;
   }, [islands, bounties, fundraisers, subscriptions, isFirstVisit]);
 
-  logger(LOG.DEBUG, COMPNAME, 'ISLANDS', islands);
-  logger(LOG.DEBUG, COMPNAME, 'BOUNTIES', bounties);
-  logger(LOG.DEBUG, COMPNAME, 'FUNDRAISERS', fundraisers);
-  logger(LOG.DEBUG, COMPNAME, 'SUBSCRIPTIONS', subscriptions);
-
-  return { allElements: allElements, getIslands: getIslands };
+  return {
+    allElements: allElements,
+    getIslands: getIslands,
+    myIslands: myIslands,
+    setMyIslands: setMyIslands,
+  };
 };

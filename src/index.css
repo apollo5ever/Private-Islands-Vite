@@ -21,10 +21,6 @@ button {
   cursor: pointer;
 }
 
-input {
-  color: #c0c0c0;
-}
-
 .prose {
   font-size:1.2rem;
   max-width: 100ch;
@@ -46,13 +42,14 @@ body[data-theme="dark"] {
   background-image: var(--background-dark);
 }
 
-/*body[data-theme="light"] {*/
-/*  @apply bg-color-light;*/
-/*}*/
+body[data-theme="dark"] .input {
+  color: white;
+}
 
-/*body[data-theme="dark"] {*/
-/*  @apply bg-color-dark;*/
-/*}*/
+/* Override font-fell for inputs */
+input, textarea {
+  font-family: 'Font Name', serif !important;
+}
 
 .my-important-class {
   @apply !important;

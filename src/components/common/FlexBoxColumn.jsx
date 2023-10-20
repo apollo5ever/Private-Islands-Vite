@@ -8,7 +8,6 @@ export const FlexBoxColumn = ({
   maxHeight = '',
   overflow = '',
 }) => {
-  console.log('JUSTIFY FOR COL', justify);
   const Justify = Helpers.twFlexJustify(justify);
   const Align = Helpers.twFlexAlignItems(align);
 
