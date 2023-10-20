@@ -7,6 +7,7 @@ import { useSendTransaction } from '@/components/hooks/useSendTransaction';
 import { Button } from '@/components/common/Button.jsx';
 import { DetailCard } from '@/components/smokeSignal/DetailCard.jsx';
 import { FlexBoxColumn } from '@/components/common/FlexBoxColumn.jsx';
+import { FlexBoxRow } from '@/components/common/FlexBoxRow.jsx';
 
 export const Fundraiser = ({ fundData }) => {
   const { proseClass } = useTheme();
@@ -86,7 +87,7 @@ export const Fundraiser = ({ fundData }) => {
   });
 
   if (fundData) {
-    let deadline = new Date(fundData.Deadline * 1000);
+    let deadline = new Date(fundData.Expiry * 1000);
     var deadlinestring =
       (deadline.getMonth() + 1).toString() +
       '/' +
@@ -159,12 +160,12 @@ export const Fundraiser = ({ fundData }) => {
   });
 
   return (
-    <div className="card card-side my-3 flex flex-col items-end whitespace-normal bg-secondary shadow-xl md:flex-row">
-      <div className="mx-10 mt-4">
+    <FlexBoxRow className="align-center card card-side my-3 whitespace-normal bg-secondary shadow-xl">
+      <div>
         {!editing &&
         state.myIslands &&
         state.myIslands.length > 0 &&
-        fundData.SCID === state.myIslands[state.active].name ? (
+        fundData.SCID === state.myIslands[state.active].SCID ? (
           <small
             onClick={() => {
               setEditing(true);
@@ -177,110 +178,151 @@ export const Fundraiser = ({ fundData }) => {
         )}
         {fundData && editing ? (
           <form onSubmit={SetMetaData}>
-            <small
-              onClick={() => {
-                setEditing(false);
-              }}
-            >
-              cancel
-            </small>
-            <input
-              placeholder="name"
-              defaultValue={Helpers.getTileName(fundData)}
-              id="Name"
-            />
-            <input
-              placeholder="image url"
-              defaultValue={Helpers.getTileImage(fundData)}
-              id="Image"
-            />
-            <input
-              placeholder="tagline"
-              defaultValue={Helpers.getTileTagline(fundData)}
-              id="Tagline"
-            />
-            <textarea
-              placeholder="description"
-              rows="44"
-              cols="80"
-              defaultValue={Helpers.getTileDescription(fundData)}
-              id="Description"
-            />
-            <button type={'submit'}>Submit</button>
+            <FlexBoxColumn className="mt-20">
+              <FlexBoxRow gap={2}>
+                <input
+                  placeholder="name"
+                  defaultValue={Helpers.getTileName(fundData)}
+                  id="Name"
+                />
+                <input
+                  placeholder="image url"
+                  defaultValue={Helpers.getTileImage(fundData)}
+                  id="Image"
+                />
+                <input
+                  placeholder="tagline"
+                  defaultValue={Helpers.getTileTagline(fundData)}
+                  id="Tagline"
+                />
+              </FlexBoxRow>
+              <textarea
+                placeholder="description"
+                rows="44"
+                cols="80"
+                defaultValue={Helpers.getTileDescription(fundData)}
+                id="Description"
+              />
+
+              <Button size="small" type={'submit'}>
+                Submit
+              </Button>
+              <small
+                onClick={() => {
+                  setEditing(false);
+                }}
+              >
+                cancel
+              </small>
+            </FlexBoxColumn>
           </form>
         ) : (
           <></>
         )}
         {fundData ? (
-          <FlexBoxColumn align="end" className="mb-2">
-            <DetailCard signal={fundData} deadline={deadlinestring} />
-            <div className="">
-              {fundData.Status === 0 ? (
-                <FlexBoxColumn align="end" className="mb-2">
-                  <form onSubmit={supportGoal}>
+          <>
+            <div className="card-body break-words font-fell">
+              <FlexBoxColumn align="start" className="">
+                <figure className="mr-4 min-w-[200px] max-w-[300px] content-center rounded-lg">
+                  <img
+                    src={Helpers.getTileImage(fundData)}
+                    alt={Helpers.getTileName(fundData)}
+                  />
+                </figure>
+
+                <FlexBoxColumn className="" align="start">
+                  <h1 className="card-title">
+                    {Helpers.getTileName(fundData)}
+                  </h1>
+                  <h3
+                    className="cursor-pointer font-bold"
+                    onClick={() =>
+                      gotoIslandTile(Helpers.getInitiatorScid(fundData))
+                    }
+                  >
+                    Initiated by {Helpers.getInitiatorName(fundData)}
+                  </h3>
+                  <h3 className="font-bold">
+                    Raised: {fundData.Raised / 100000}/{fundData.Goal / 100000}
+                  </h3>
+                  <div className={`${proseClass} text-zinc-900`}>
+                    <p
+                      dangerouslySetInnerHTML={{
+                        __html: Helpers.getTileDescription(fundData),
+                      }}
+                    />{' '}
+                  </div>
+
+                  {fundData.Status === 0 ? (
                     <FlexBoxColumn align="end" className="mb-2">
-                      <input
-                        id="amount"
-                        className="input input-bordered w-full max-w-xs"
-                        placeholder="Dero amount to donate"
-                        type="text"
-                      />
-                      <div>
-                        <label htmlFor="refundable">Refundable?</label> &nbsp;
-                        <input
-                          id="refundable"
-                          type="checkbox"
-                          className="mr-2"
-                        />
-                      </div>
-                      <Button size="sm" type={'submit'}>
-                        Support
-                      </Button>
+                      <form onSubmit={supportGoal}>
+                        <FlexBoxColumn align="end" className="mb-2">
+                          <input
+                            id="amount"
+                            className="input-bordered input w-full max-w-xs"
+                            placeholder="Dero amount to donate"
+                            type="text"
+                          />
+                          <div>
+                            <label htmlFor="refundable">Refundable?</label>{' '}
+                            &nbsp;
+                            <input
+                              id="refundable"
+                              type="checkbox"
+                              className="mr-2"
+                            />
+                          </div>
+                          <Button size="sm" type={'submit'}>
+                            Support
+                          </Button>
+                        </FlexBoxColumn>
+                      </form>
+                      {fundData.Raised >= fundData.Goal ? (
+                        <form onSubmit={withdraw}>
+                          <Button size="sm" type={'submit'}>
+                            Withdraw
+                          </Button>
+                        </form>
+                      ) : (
+                        ''
+                      )}
                     </FlexBoxColumn>
-                  </form>
-                  {fundData.Raised >= fundData.Goal ? (
-                    <form onSubmit={withdraw}>
-                      <Button size="sm" type={'submit'}>
-                        Withdraw
-                      </Button>
-                    </form>
+                  ) : fundData.Status === 1 ? (
+                    <>
+                      <p>
+                        This Smoke Signal has met its fundraiser goal! If you
+                        are the owner, you can withdraw the funds to the fundee
+                        now.
+                      </p>
+                      <form onSubmit={withdraw}>
+                        <Button size="sm" type={'submit'}>
+                          Withdraw
+                        </Button>
+                      </form>
+                    </>
+                  ) : fundData.Status === 2 ? (
+                    <>
+                      <p>
+                        This Smoke Signal failed to meet its goal. If you made a
+                        refundable donation, you can withdraw those funds now.
+                      </p>
+                      <form onSubmit={withdraw}>
+                        <Button size="sm" type={'submit'}>
+                          Withdraw
+                        </Button>
+                      </form>
+                    </>
                   ) : (
                     ''
                   )}
                 </FlexBoxColumn>
-              ) : fundData.Status === 1 ? (
-                <>
-                  <p>
-                    This Smoke Signal has met its fundraiser goal! If you are
-                    the owner, you can withdraw the funds to the fundee now.
-                  </p>
-                  <form onSubmit={withdraw}>
-                    <Button size="sm" type={'submit'}>
-                      Withdraw
-                    </Button>
-                  </form>
-                </>
-              ) : fundData.Status === 2 ? (
-                <>
-                  <p>
-                    This Smoke Signal failed to meet its goal. If you made a
-                    refundable donation, you can withdraw those funds now.
-                  </p>
-                  <form onSubmit={withdraw}>
-                    <Button size="sm" type={'submit'}>
-                      Withdraw
-                    </Button>
-                  </form>
-                </>
-              ) : (
-                ''
-              )}
+              </FlexBoxColumn>
             </div>
-          </FlexBoxColumn>
+          </>
         ) : (
           <p>Loading...</p>
         )}
       </div>
-    </div>
+    </FlexBoxRow>
   );
 };

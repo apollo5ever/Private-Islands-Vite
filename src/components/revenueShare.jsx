@@ -23,35 +23,19 @@ export default function RevenueShare() {
 
   React.useEffect(() => {
     async function fetchData() {
-      let registry = await getSC(state.scid_registry);
+      let registry = await getSC(state.scid_registry, false, true);
       // console.log("registry ", registry.stringkeys.T_DERO);
       setRegistryTreasury(registry.stringkeys.T_DERO);
-      if (
-        registry.stringkeys[
-          `${state.walletList[state.activeWallet].address}_SHARES`
-        ]
-      ) {
-        setRegistryShares(
-          registry.stringkeys[
-            `${state.walletList[state.activeWallet].address}_SHARES`
-          ]
-        );
+      if (registry.stringkeys[`${state.userAddress}_SHARES`]) {
+        setRegistryShares(registry.stringkeys[`${state.userAddress}_SHARES`]);
       } else {
         setRegistryShares(0);
       }
       let bounty = await getSC(state.scid_bounties);
       console.log('bounty ', bounty.stringkeys.T_DERO);
       setBountyTreasury(bounty.stringkeys.T_DERO);
-      if (
-        bounty.stringkeys[
-          `${state.walletList[state.activeWallet].address}_SHARES`
-        ]
-      ) {
-        setBountyShares(
-          bounty.stringkeys[
-            `${state.walletList[state.activeWallet].address}_SHARES`
-          ]
-        );
+      if (bounty.stringkeys[`${state.userAddress}_SHARES`]) {
+        setBountyShares(bounty.stringkeys[`${state.userAddress}_SHARES`]);
       } else {
         setBountyShares(0);
       }
@@ -59,16 +43,8 @@ export default function RevenueShare() {
       let fund = await getSC(state.scid_fundraisers);
       console.log('fund ', fund.stringkeys.T_DERO);
       setFundTreasury(fund.stringkeys.T_DERO);
-      if (
-        fund.stringkeys[
-          `${state.walletList[state.activeWallet].address}_SHARES`
-        ]
-      ) {
-        setFundShares(
-          fund.stringkeys[
-            `${state.walletList[state.activeWallet].address}_SHARES`
-          ]
-        );
+      if (fund.stringkeys[`${state.userAddress}_SHARES`]) {
+        setFundShares(fund.stringkeys[`${state.userAddress}_SHARES`]);
       } else {
         setFundShares(0);
       }
@@ -76,24 +52,14 @@ export default function RevenueShare() {
       let sub = await getSC(state.scid_subscriptions);
       console.log('sub ', sub.stringkeys.T_DERO);
       setSubTreasury(sub.stringkeys.T_DERO);
-      if (
-        sub.stringkeys[`${state.walletList[state.activeWallet].address}_SHARES`]
-      ) {
-        setSubShares(
-          sub.stringkeys[
-            `${state.walletList[state.activeWallet].address}_SHARES`
-          ]
-        );
+      if (sub.stringkeys[`${state.userAddress}_SHARES`]) {
+        setSubShares(sub.stringkeys[`${state.userAddress}_SHARES`]);
       } else {
         setSubShares(0);
       }
     }
     fetchData();
-  }, [
-    state.activeWallet,
-    state.walletList,
-    state.walletList[state.activeWallet].address,
-  ]);
+  }, [state.walletMode, state.userAddress]);
 
   const BountyBuyShares = React.useCallback(async (e) => {
     e.preventDefault();

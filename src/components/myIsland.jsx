@@ -405,12 +405,12 @@ export default function MyIsland() {
                           to={`/island/${island.SCID}/smokesignal/${x.Index}`}
                         >
                           <FundCard
-                            name={x.Names[x.Names.length - 1]}
+                            name={x.Name}
                             profile={x.island}
-                            tagline={x.Taglines[x.Taglines.length - 1]}
+                            tagline={x.Tagline}
                             goal={x.Goal}
-                            image={x.Images[x.Images.length - 1]}
-                            deadline={x.Deadline}
+                            image={x.Image}
+                            deadline={x.Expiry}
                           />
                         </NavLink>
                       ))}

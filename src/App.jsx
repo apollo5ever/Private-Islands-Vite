@@ -122,7 +122,7 @@ function App() {
       // do something with the result
     }
 
-    fetchData();
+    // fetchData();
   }, [state.daemon]);
 
   const populateMyIslands = async () => {
