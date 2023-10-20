@@ -17,6 +17,7 @@ import { useInitializeWallet } from './components/hooks/useInitializeWallet';
 import { useGetTransfers } from './components/hooks/useGetTransfers';
 import { useGetAddress } from './components/hooks/useGetAddress';
 import { useGetContracts } from './components/hooks/useGetContracts';
+import { useGetRandomAddress } from './components/hooks/useGetRandomAddress';
 
 function App() {
   const [menuActive, setMenuActive] = useState(false);
@@ -27,6 +28,7 @@ function App() {
   const [getBalance] = useGetBalance();
   const [getAddress] = useGetAddress();
   const [getTransfers] = useGetTransfers();
+  const [getRandomAddress] = useGetRandomAddress();
   const [getContracts] = useGetContracts();
   const [workerActive, setWorkerActive] = useState(false);
   const [bridgeInitText, setBridgeInitText] = useState(
@@ -85,6 +87,14 @@ function App() {
     getCocoBalance();
   }, [state.walletMode]);
 
+  const handleDaemonToggle = async () => {
+    const randomAddress = await getRandomAddress();
+    setState((state) => ({ ...state, randomAddress: randomAddress }));
+  };
+  useEffect(() => {
+    handleDaemonToggle();
+  }, [state.daemonMode]);
+
   async function run() {
     logger(LOG.INFO, COMPNAME, 'create worker');
     const worker = new Worker('worker.jsx');
@@ -92,13 +102,13 @@ function App() {
     setState((state) => ({ ...state, worker: worker }));
   }
 
-  useEffect(() => {
+  /*  useEffect(() => {
     initializeWallet();
     logger(LOG.INFO, COMPNAME, 'worker', workerActive);
     if (!workerActive) {
       run();
     }
-  }, []);
+  }, []); */
 
   /*   async function createIPFSNode() {
     const node = await window.Ipfs.create();
@@ -116,14 +126,14 @@ function App() {
     createIPFSNode();
   }, []); */
 
-  useEffect(() => {
+  /*  useEffect(() => {
     async function fetchData() {
       const result = await getSCID();
       // do something with the result
     }
 
     // fetchData();
-  }, [state.daemon]);
+  }, [state.daemon]); */
 
   const populateMyIslands = async () => {
     //okay so we can get array of island objects from backend
