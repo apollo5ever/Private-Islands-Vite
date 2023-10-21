@@ -8,6 +8,7 @@ import { Button } from '@/components/common/Button.jsx';
 import { DetailCard } from '@/components/smokeSignal/DetailCard.jsx';
 import { FlexBoxColumn } from '@/components/common/FlexBoxColumn.jsx';
 import { FlexBoxRow } from '@/components/common/FlexBoxRow.jsx';
+import dateString from '@/utils/dateString';
 
 export const Fundraiser = ({ fundData }) => {
   const { proseClass } = useTheme();
@@ -76,7 +77,7 @@ export const Fundraiser = ({ fundData }) => {
           value: HashAndIndex,
         },
         {
-          name: 'R',
+          name: 'Refundable',
           datatype: 'U',
           value: refundable,
         },
@@ -86,7 +87,7 @@ export const Fundraiser = ({ fundData }) => {
     sendTransaction(data);
   });
 
-  if (fundData) {
+  /*   if (fundData) {
     let deadline = new Date(fundData.Expiry * 1000);
     var deadlinestring =
       (deadline.getMonth() + 1).toString() +
@@ -94,7 +95,7 @@ export const Fundraiser = ({ fundData }) => {
       deadline.getDate().toString() +
       '/' +
       deadline.getUTCFullYear().toString();
-  }
+  } */
 
   const SetMetaData = useCallback(async (event) => {
     event.preventDefault();
@@ -244,6 +245,7 @@ export const Fundraiser = ({ fundData }) => {
                     Raised: {fundData.Raised / 100000}/{fundData.Goal / 100000}{' '}
                     DERO
                   </h1>
+                  <h3>Deadline: {dateString(fundData.Expiry)}</h3>
                   <div className={`${proseClass} text-zinc-900`}>
                     <p
                       dangerouslySetInnerHTML={{
