@@ -82,6 +82,27 @@ export const Fundraiser = ({ fundData }) => {
     await sendTransaction(data);
   });
 
+  const getTokens = useCallback(async () => {
+    const data = new Object({
+      scid: state.scid_fundraisers,
+      ringsize: 2,
+      sc_rpc: [
+        {
+          name: 'entrypoint',
+          datatype: 'S',
+          value: 'GetTokens',
+        },
+        {
+          name: 'H',
+          datatype: 'S',
+          value: (fundData.SCID + fundData.Index).toString(),
+        },
+      ],
+    });
+
+    await sendTransaction(data);
+  });
+
   const supportGoal = useCallback(async (event) => {
     event.preventDefault();
     let HashAndIndex = fundData.SCID + fundData.Index;
@@ -376,7 +397,7 @@ export const Fundraiser = ({ fundData }) => {
                           <Button
                             size="sm"
                             handleClick={() => {
-                              console.log('get tokens');
+                              getTokens();
                             }}
                           >
                             Get Tokens
