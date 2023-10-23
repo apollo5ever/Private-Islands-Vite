@@ -25,7 +25,7 @@ export const SidebarCard = ({ data }) => {
           height: '80%',
           backgroundSize: 'contain',
           backgroundRepeat: 'no-repeat',
-          zIndex: 2,
+          zIndex: 1,
         }}
       ></div>
       <SidebarHeader data={data} />

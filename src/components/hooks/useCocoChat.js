@@ -4,8 +4,6 @@ export const useCocoChat = (type) => {
   const [messageType, setMessageType] = useState('primary');
   const [index, setIndex] = useState(0);
 
-  console.log('COOCCHATE TYPE', type);
-
   const chats = {
     bounty: {
       primary: {
@@ -66,13 +64,12 @@ export const useCocoChat = (type) => {
       }, 20000);
       return () => clearTimeout(timer);
     } else if (generalMessages) {
-      // Added an additional check here
       const timer = setInterval(() => {
         setIndex((prevIndex) => (prevIndex + 1) % generalMessages.length);
       }, 20000);
       return () => clearInterval(timer);
     }
-  }, [messageType, generalMessages?.length]); // Used optional chaining to avoid error if generalMessages is undefined
+  }, [messageType, generalMessages?.length]);
 
   return messages instanceof Array ? messages[index] : messages;
 };

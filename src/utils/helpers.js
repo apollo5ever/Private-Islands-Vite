@@ -46,11 +46,10 @@ export class Helpers {
   static getTileName = (tile) => {
     switch (tile.type) {
       case piAssetType.ISLAND:
-      case piAssetType.BOUNTY:  
+      case piAssetType.BOUNTY:
       case piAssetType.FUNDRAISER:
         return tile.Name;
-      
-      
+
       case piAssetType.SUBSCRIPTION:
         return tile.Names[tile.Names.length - 1];
     }
@@ -59,11 +58,10 @@ export class Helpers {
   static getTileTagline = (tile) => {
     switch (tile.type) {
       case piAssetType.ISLAND:
-      case piAssetType.BOUNTY:  
+      case piAssetType.BOUNTY:
       case piAssetType.FUNDRAISER:
         return tile.Tagline;
-      
-      
+
       case piAssetType.SUBSCRIPTION:
         return tile.Taglines[tile.Taglines.length - 1];
     }
@@ -72,11 +70,10 @@ export class Helpers {
   static getTileImage = (tile) => {
     switch (tile.type) {
       case piAssetType.ISLAND:
-      case piAssetType.BOUNTY:  
-       case piAssetType.FUNDRAISER:
+      case piAssetType.BOUNTY:
+      case piAssetType.FUNDRAISER:
         return tile.Image;
-      
-     
+
       case piAssetType.SUBSCRIPTION:
         return tile.Images[tile.Images.length - 1];
     }
@@ -85,11 +82,10 @@ export class Helpers {
   static getTileDescription = (tile) => {
     switch (tile.type) {
       case piAssetType.ISLAND:
-      case piAssetType.BOUNTY:  
+      case piAssetType.BOUNTY:
       case piAssetType.FUNDRAISER:
         return tile.Description;
-      
-      
+
       case piAssetType.SUBSCRIPTION:
         return tile.Description[tile.Description.length - 1];
     }
@@ -160,6 +156,19 @@ export class Helpers {
     return otherSubscriptions;
   };
 
+  static getAssociatedIslands = (island, myIslands) => {
+    let otherIslands = [];
+    if (myIslands.length > 1 && island && island.SCID) {
+      otherIslands = myIslands
+        .filter((item) => {
+          return item.SCID !== island.SCID;
+        })
+        .map((item) => ({ ...item, type: piAssetType.ISLAND }));
+    }
+
+    return otherIslands;
+  };
+
   static getItemTypeName = (type) => {
     switch (type) {
       case piAssetType.BOUNTY:
@@ -168,6 +177,8 @@ export class Helpers {
         return { singular: 'Subscription', plural: 'Subscriptions' };
       case piAssetType.FUNDRAISER:
         return { singular: 'Fundraiser', plural: 'Fundraisers' };
+      case piAssetType.ISLAND:
+        return { singular: 'Island', plural: 'Islands' };
     }
   };
 

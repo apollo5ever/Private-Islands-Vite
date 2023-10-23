@@ -1,9 +1,10 @@
 import { Helpers, piAssetType } from '@/utils/helpers.js';
 
-export const useGetAssociatedItems = (island, type, index) => {
+export const useGetAssociatedItems = (island, type, index, myIslands = []) => {
   let otherBounties = [];
   let otherFundraisers = [];
   let otherSubscriptions = [];
+  let otherIslands = [];
 
   switch (type) {
     case piAssetType.BOUNTY:
@@ -14,7 +15,9 @@ export const useGetAssociatedItems = (island, type, index) => {
       break;
     case piAssetType.SUBSCRIPTION:
       otherSubscriptions = Helpers.getAssociatedSubscriptions(island, index);
-      console.log('YO FOUND SUBS', otherSubscriptions);
+      break;
+    case piAssetType.ISLAND:
+      otherIslands = Helpers.getAssociatedIslands(island, myIslands);
       break;
   }
 
@@ -22,5 +25,6 @@ export const useGetAssociatedItems = (island, type, index) => {
     OtherBounties: otherBounties,
     OtherFundraisers: otherFundraisers,
     OtherSubscriptions: otherSubscriptions,
+    OtherIslands: otherIslands,
   };
 };

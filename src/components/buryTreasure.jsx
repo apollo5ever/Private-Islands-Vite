@@ -7,8 +7,13 @@ import { useSendTransaction } from './hooks/useSendTransaction';
 import { useGetSC } from './hooks/useGetSC';
 import { Button } from '@/components/common/Button.jsx';
 import { useGetGasEstimate } from './hooks/useGetGasEstimate';
+import { useTheme } from '@/components/hooks/useTheme.js';
+import { FlexBoxColumn } from '@/components/common/FlexBoxColumn.jsx';
+import { FlexBoxRow } from '@/components/common/FlexBoxRow.jsx';
+import { Divider } from '@/components/common/Divider.jsx';
 
 export default function BuryTreasure() {
+  const { proseClass } = useTheme();
   const [state, setState] = React.useContext(LoginContext);
   const params = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -230,8 +235,7 @@ export default function BuryTreasure() {
 
     txData.gas_rpc = gas_rpc;
 
-    let fees = await getGasEstimate(txData);
-    txData.fees = fees;
+    txData.fees = await getGasEstimate(txData);
 
     sendTransaction(txData);
 
@@ -243,92 +247,130 @@ export default function BuryTreasure() {
 
   return (
     <div className="hero mt-3 min-h-screen rounded-lg bg-secondary px-20">
-      {searchParams.get('status') == 'success' ? (
+      {searchParams.get('status') === 'success' ? (
         <Success />
       ) : (
-        <div className="profile">
-          <h3>Bury Treasure</h3>
-          <p>
+        <div className={`$(proseClass) font-serif`}>
+          <div className="py-3 text-3xl">Bury Treasure</div>
+          <div className="py-2 text-xl">
             When you bury treasure on your private island, you are creating a
             bounty for some specific goal. Specify the criteria for release of
             treasure, and appoint a judge (it can be you) to decide when that
             criteria has been met.
-          </p>
+          </div>
 
           <form onSubmit={DoIt}>
             {preview ? (
-              <>
+              <FlexBoxColumn
+                align="start"
+                className={`${proseClass} card card-side my-3 whitespace-normal bg-info p-4 shadow-xl`}
+              >
+                <div className="self-center font-serif text-2xl">
+                  Preview Mode
+                </div>
                 <h1>{name}</h1>
                 <img src={image} />
                 <p>{tagline}</p>
-                <div className={`${proseClass} text-zinc-900`}>
+                <div className="text-zinc-900">
                   <p dangerouslySetInnerHTML={{ __html: description }} />
                 </div>
-              </>
+                <Divider color="accent" size="1" />
+                <Button size="small" handleClick={() => handlePreview()}>
+                  {preview ? 'Return To Edit' : 'Description Preview'}
+                </Button>
+              </FlexBoxColumn>
             ) : (
-              <>
-                <input
-                  placeholder="Buried Treasure Name"
-                  id="bountyName"
-                  defaultValue={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-                <input
-                  onChange={(e) => setImage(e.target.value)}
-                  defaultValue={image}
-                  placeholder="Image URL"
-                  id="bountyPhoto"
-                />
-                <input
-                  onChange={(e) => setTagline(e.target.value)}
-                  defaultValue={tagline}
-                  placeholder="Tagline"
-                  id="tagline"
-                />
-                <textarea
-                  placeholder="Description"
-                  rows="44"
-                  cols="80"
-                  id="description"
-                  defaultValue={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                />
-              </>
+              <FlexBoxColumn>
+                <FlexBoxRow className="mb-3">
+                  <input
+                    className="input input-bordered w-full max-w-xs"
+                    placeholder="Buried Treasure Name"
+                    id="bountyName"
+                    defaultValue={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                  <input
+                    className="input input-bordered w-full max-w-xs"
+                    onChange={(e) => setImage(e.target.value)}
+                    defaultValue={image}
+                    placeholder="Image URL"
+                    id="bountyPhoto"
+                  />
+                  <input
+                    className="input input-bordered w-full max-w-xs"
+                    onChange={(e) => setTagline(e.target.value)}
+                    defaultValue={tagline}
+                    placeholder="Tagline"
+                    id="tagline"
+                  />
+                </FlexBoxRow>
+                <FlexBoxRow gap={2} align="end">
+                  <textarea
+                    className="rounded"
+                    placeholder="Description"
+                    rows="20"
+                    cols="100"
+                    id="description"
+                    defaultValue={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                  />
+                  <Button size="small" handleClick={() => handlePreview()}>
+                    {preview ? 'Edit' : 'Preview Description'}
+                  </Button>
+                </FlexBoxRow>
+              </FlexBoxColumn>
             )}
 
-            <button onClick={() => handlePreview()}>
-              {preview ? 'Edit' : 'Preview'}
-            </button>
+            <FlexBoxColumn className="my-3 rounded border border-accent p-2">
+              <FlexBoxRow justify="start" align="start">
+                <div className="mt-3 w-1/2 text-2xl">
+                  Expiry (if the task isn't complete before this date,
+                  supporters can retrieve their funds)
+                </div>
+                <FlexBoxColumn align="center">
+                  <input
+                    className="input input-bordered w-full max-w-xs"
+                    type="date"
+                    id="expiry"
+                    name="expiry"
+                  />
+                  <input
+                    className="input input-bordered w-full max-w-xs"
+                    placeholder="Initial Treasure (Dero Amount)"
+                    id="treasure"
+                    type="text"
+                  />
+                </FlexBoxColumn>
+              </FlexBoxRow>
+              <Divider color="accent" size="1" />
+              <FlexBoxRow justify="start" align="start" gap={2}>
+                <div className="w-1/2 text-2xl">
+                  Nominate a Judge. This person sorts through treasure claims
+                  and chooses who is entitled to the funds.
+                </div>
+                <select id="judge">{judges}</select>
+              </FlexBoxRow>
+              <Divider color="accent" size="1" />
+              <FlexBoxRow justify="start" align="start" gap={2}>
+                <div className="w-1/2 text-2xl">
+                  Nominate an Executor. This person releases the treasure
+                  according to the judge's judgement, or he may veto the
+                  decision if he believes it to be in error. He is not paid.
+                  Backup executors can be nominated later.
+                </div>
+                <select id="executer">{judges}</select>
+              </FlexBoxRow>
 
-            <p>
-              Expiry (if the task isn't complete before this date, supporters
-              can retrieve their funds)
-            </p>
-            <input type="date" id="expiry" name="expiry"></input>
-
-            <input
-              placeholder="Initial Treasure (Dero Amount)"
-              id="treasure"
-              type="text"
-            />
-            <p>
-              Nominate a Judge. This person sorts through treasure claims and
-              chooses who is entitled to the funds.
-            </p>
-            <select id="judge">{judges}</select>
-            <p>
-              Nominate an Executer. This person releases the treasure according
-              to the judge's judgement, or he may veto the decision if he
-              believes it to be in error. He is not paid. Backup executers can
-              be nominated later.
-            </p>
-            <select id="executer">{judges}</select>
-
-            <Button size="small" type={'submit'}>
-              Create
-            </Button>
+              <Button size="small" type={'submit'} className="self-end">
+                Create
+              </Button>
+            </FlexBoxColumn>
           </form>
-          {error}
+          {error && (
+            <FlexBoxRow className="my-3 rounded border border-error bg-info text-2xl text-error">
+              {error}
+            </FlexBoxRow>
+          )}
         </div>
       )}
     </div>
