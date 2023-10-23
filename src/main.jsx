@@ -103,7 +103,7 @@ createRoot(document.getElementById('root')).render(
                     <Route path="/ceo" element={<CEO />} />
                     <Route path="myisland" element={<MyIsland />} />
                     <Route path="claimisland" element={<ClaimIsland />} />
-                    <Route path="archipelago" element={<TileGrid />} />
+                    <Route path="/archipelago" element={<TileGrid />} />
                     <Route
                       path="/island/:island/compose"
                       element={<PublishPost />}

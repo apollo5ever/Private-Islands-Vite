@@ -30,7 +30,6 @@ export const useGetAllElements = (isFirstVisit = true) => {
     ];
 
     logger(LOG.DEBUG, COMPNAME, 'ISLANDS', islands);
-    console.log('My Islands in get all elements', myIslands);
     // logger(LOG.DEBUG, COMPNAME, 'BOUNTIES', bounties);
     // logger(LOG.DEBUG, COMPNAME, 'FUNDRAISERS', fundraisers);
     // logger(LOG.DEBUG, COMPNAME, 'SUBSCRIPTIONS', subscriptions);

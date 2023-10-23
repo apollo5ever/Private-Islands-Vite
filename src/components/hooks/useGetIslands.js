@@ -3,9 +3,11 @@ import { default as GI } from '../getIslands.js';
 import LoggerContext, { LOG } from '@/components/providers/LoggerContext.jsx';
 import { Helpers } from '@/utils/helpers.js';
 import { useGetBalance } from '@/components/hooks/useGetBalance';
+import { LoginContext } from '@/LoginContext.jsx';
 
 export const useGetIslands = () => {
   const logger = useContext(LoggerContext);
+  const [state, setState] = useContext(LoginContext);
   const [getBalance] = useGetBalance();
   const [islands, setIslands] = useState([]);
   const [myIslands, setMyIslands] = useState();
@@ -15,11 +17,13 @@ export const useGetIslands = () => {
   const getIslands = useCallback(async () => {
     try {
       const islandsData = await GI();
+      console.log('USE GET ISLE island data', islandsData);
       setIslands(islandsData);
       let myisles = await Promise.all(
         islandsData.map(async (island) => {
-          let balance = await getBalance(island.SCID);
-          console.log('USE GET ISL - Balance for scid', balance, island);
+          console.log('USE GET ISLE - GETTING BALANCE FOR', island.SCID);
+          const balance = await getBalance(island.SCID);
+          console.log('USE GET ISLE - Balance for scid', balance, island);
           if (balance > 0) {
             return { ...island, type: 'island' };
           } else {
@@ -34,19 +38,12 @@ export const useGetIslands = () => {
     } catch (error) {
       logger(LOG.ERROR, COMPNAME, 'Error fetching islands', error);
     }
-  }, [logger]);
+  }, [state.walletMode, logger]);
 
   useEffect(() => {
-    let isMounted = true;
-
-    if (isMounted) {
-      getIslands();
-    }
-
-    return () => {
-      isMounted = false;
-    };
-  }, [getIslands]);
+    console.log('USE GET ISL - getting islands', state.walletMode);
+    getIslands();
+  }, [getIslands, state.walletMode]);
 
   return {
     islands,

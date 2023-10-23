@@ -6,7 +6,6 @@ import {
   useEffect,
 } from 'react';
 import { useGetAllElements } from '@/components/hooks/useGetAllElements.js';
-import { LoginContext } from '@/LoginContext.jsx';
 import { Helpers, piAssetType } from '@/utils/helpers.js';
 
 export const TileContext = createContext();

@@ -7,12 +7,17 @@ export function useGetBalance() {
 
   const getBalanceRPC = useCallback(async (scid) => {
     const deroBridgeApi = state.deroBridgeApiRef.current;
+    console.log(
+      'USE GET ISL - IN USE GET BAL HOOK - scid =',
+      scid,
+      deroBridgeApi
+    );
     const [err, res] = await to(
       deroBridgeApi.wallet('get-balance', {
         scid: scid,
       })
     );
-    console.log('rpc balance check', scid, res);
+    console.log('USE GET ISL - HOOK RES', res);
     return res.data.result.balance;
   });
 
@@ -43,57 +48,11 @@ export function useGetBalance() {
   };
 
   async function getBalance(scid) {
-    if (state.walletMode == 'xswd') {
+    if (state.walletMode === 'xswd') {
       return await getBalanceXSWD(scid);
-    } else if (state.walletMode == 'rpc') {
+    } else if (state.walletMode === 'rpc') {
       return await getBalanceRPC(scid);
     }
-
-    /*  if (state.activeWallet === 0) {
-      let balance = await getBalanceRPC(scid);
-      return balance;
-    } else {
-      let balance = await getBalanceWasm(scid);
-      return balance;
-    } */
-    /*  if (!state.walletList[state.activeWallet].open) return
-
-      const tx = await new Promise((resolve) => {
-        state.worker.onmessage = (event) => {
-          resolve(event.data);
-        };
-
-        state.worker.postMessage({
-          functionName: "WalletGetBalance",
-          args: ["key", state.walletList[state.activeWallet].name, scid]
-        });
-      });
-
-     // console.log(scid,'balance',tx.key.matureBalance)
-     // return (tx.key.matureBalance)
-     //return(69)
-
-
-      const interval = setInterval(async () => {
-        if (tx) {
-          clearInterval(interval);
-          console.log(tx)
-
-          let asyncKey2 = "sent";
-
-          const send = await new Promise((resolve) => {
-            state.worker.onmessage = (event) => {
-              resolve(event.data);
-            };
-
-
-          });
-          console.log("send", send)
-          return send.key.matureBalance
-
-        }
-      }, 100); // check every 100ms
-    } */
   }
 
   return [getBalance];

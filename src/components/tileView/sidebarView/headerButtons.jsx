@@ -46,12 +46,21 @@ export const HeaderButtons = ({ type }) => {
             selectedTile.Bounties && selectedTile.Bounties.length
           }`
         );
+        break;
       case piAssetType.FUNDRAISER:
         navigate(
           `/newsignal/${selectedTile.SCID}/${
             selectedTile.Fundraisers && selectedTile.Fundraisers.length
           }`
         );
+        break;
+      case piAssetType.SUBSCRIPTION:
+        navigate(
+          `/island/${selectedTile.SCID}/modifyTier/${
+            (selectedTile.Tiers && selectedTile.Tiers.length) || 0
+          }`
+        );
+        break;
     }
   };
 
