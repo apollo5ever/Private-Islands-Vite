@@ -21,6 +21,13 @@ import { TileContext } from '@/components/providers/TileContext.jsx';
 //         & if they click to see that one, set it as selectedTile so it will show in main window
 // TODO - DONE -- get rid of scroll bar for primary window
 // TODO - DONE -- convert styling for old styled stuff reachable from other menu options
+// TODO - DONE -- When navigate to any url (away from tilegrid), need to setSelectedIsland to null to clear things out
+// TODO - DONE -- Review PopulateMyIslands (in app.jsx to see how to get island count) & update sidebar header buttons to have island count
+// TODO - DONE -- show other islands in sidebar if more than one
+// TODO - ERROR - Not populating myIslands properly - works originally - maybe breaks wehn I create bounty??
+// TODO - Claim Island -- add explainer text (step 1, step 2... ) - Once registered, set as selected tile in tilegrid view
+// TODO - review bounties to see the 'edit' link & do similar for other stuff - start with island
+// TODO - figure out how to poll status of dero txn to know when its complete (for claim island process)
 // TODO - add 'promote to twitter' as the hover button and have a share link for twitter - use X logo
 // TODO - for X, might need to create a way to have scid or island id in query param and a way to read that & load a specific tile
 // TODO - add up/down chevrons to filter buttons for fundraisers & bounties
@@ -47,6 +54,13 @@ export const TileGrid = () => {
     tilesPerRow === 8
       ? 'h-[calc(100vw/8)] w-[calc(100vw/8)]'
       : 'h-[calc(100vw/6)] w-[calc(100vw/6)]';
+
+  useEffect(() => {
+    return () => {
+      // When component is unmounted, lets reset this so when we come back we see all the tiles
+      setSelectedTile(null);
+    };
+  }, []);
 
   useEffect(() => {
     const filtered = allElements.filter((element) => {
@@ -121,7 +135,7 @@ export const TileGrid = () => {
         {filteredElements &&
           filteredElements.map((tile, index) => (
             <div
-              key={tile.id}
+              key={tile.Name}
               onClick={() => {
                 setSelectedTile(tile);
                 setSelectedIndex(filteredElements.indexOf(tile));
@@ -137,7 +151,8 @@ export const TileGrid = () => {
                   : tile.Names[tile.Names.length - 1]}
               </h2>
 
-              {/* Buttons on hover */}
+              {/* Buttons on hover
+              Add these back if/when we have a good purpose for them
               <div className="absolute bottom-0 right-0 z-10 space-x-2 p-2 opacity-0 group-hover:opacity-100">
                 <button className="rounded bg-blue-500 px-2 py-1 text-white">
                   Button1
@@ -146,6 +161,7 @@ export const TileGrid = () => {
                   Button2
                 </button>
               </div>
+               */}
 
               <Tile
                 key={tile.SCID + '_' + index}

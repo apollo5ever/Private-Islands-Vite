@@ -1,16 +1,19 @@
-import { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import bgImage from '@/assets/parallax/CoolIsland.png';
 import { FullPageContainer } from '@/components/common/FullPageContainer.jsx';
 import { useSearchParams } from 'react-router-dom';
 import { useSendTransaction } from '/src/components/hooks/useSendTransaction';
 import { useGetSC } from '/src/components/hooks/useGetSC';
 import { LoginContext } from '@/LoginContext';
-import Success from '@/components/success';
 import { Button } from '@/components/common/Button.jsx';
 import { useGetBalance } from '/src/components/hooks/useGetBalance';
+import { FlexBoxRow } from '@/components/common/FlexBoxRow.jsx';
+import { FlexBoxColumn } from '@/components/common/FlexBoxColumn.jsx';
+import { useNavigate } from 'react-router-dom';
 
 export const ClaimIsland = () => {
   let [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [state, setState] = useContext(LoginContext);
   const [addition, setAddition] = useState('');
   const [custom, setCustom] = useState(false);
@@ -68,6 +71,8 @@ export const ClaimIsland = () => {
   const checkWalletForIsland = async () => {
     if (!islandSCID) return;
     const islandBalance = await getBalance(islandSCID);
+
+    console.log('ISLAND BALANCE FOR WALLEt CHECK', islandBalance, islandSCID);
 
     setIslandInWallet(islandBalance);
     if (islandBalance === 1) {
@@ -195,69 +200,110 @@ export const ClaimIsland = () => {
       <h1 className="mb-6 text-4xl font-bold">Mint Your Private Island</h1>
       <div className="">
         {searchParams.get('status') === 'success' ? (
-          <Success />
+          navigate('/archipelago')
         ) : searchParams.get('status') === 'minted' ? (
-          <div className="profile">
-            <h3>Wait For Asset to Appear in Your Wallet</h3>
-            <p>
-              Wait a block or two and check your wallet for the newly minted
-              Island asset.
-            </p>
-            <button onClick={() => checkWalletForIsland()}>Check Wallet</button>
+          <div className="rounded-2xl border border-accent p-4 text-xl">
+            Step 2 of 3:
+            <div className="py-2">Wait For Asset to Appear in Your Wallet</div>
+            <div className="py-2">
+              Blocks average 18 seconds so give it a minute or so & check your
+              wallet for the newly minted Island asset.
+            </div>
+            <Button size="small" handleClick={() => checkWalletForIsland()}>
+              Check Wallet
+            </Button>
           </div>
         ) : searchParams.get('status') === 'inWallet' ? (
-          <div className="profile">
-            <h3>Register your Island to the Private Islands Archipelago</h3>
-            <p>
+          <div className="rounded-2xl border border-accent p-4 text-xl">
+            Step 3 of 3:
+            <div className="py-2">
+              Register your Island to the Private Islands Archipelago
+            </div>
+            <div className="py-2">
               This will register your island to the Private Islands Archipelago.
-              Registration costs 0.1 Dero.
-            </p>
-
-            <button onClick={() => registerIsland()}>Register</button>
-            {error}
+            </div>
+            <FlexBoxRow justify="start">
+              <div className="px-3 font-bold">
+                Registration costs
+                <span className="font-serif text-2xl"> 0.1 </span> Dero.
+              </div>
+              <Button size="small" handleClick={() => registerIsland()}>
+                Register
+              </Button>
+            </FlexBoxRow>
+            {error && (
+              <FlexBoxRow className="my-3 rounded border border-error bg-info text-2xl text-error">
+                {error}
+              </FlexBoxRow>
+            )}
           </div>
         ) : searchParams.get('status') === 'registered' ? (
           <div className="profile">
-            <h3>Update Your Private Island Metadata</h3>
-            <p>
-              This will create a native Dero asset and send it to your wallet.
-              This asset is the key to your Private Island.
-            </p>
+            <div className="text-2xl">Update Your Private Island Metadata</div>
+            <div>This asset is the key to your Private Island.</div>
+            {islandSCID &&
+              "This is your islands smart contract id (you don't need to save this) " +
+                islandSCID}
             <form onSubmit={updateMetaData}>
-              <input placeholder="Image URL" id="image" type="text" />
-              <input placeholder="Tagline" id="tagline" type="text" />
-              <textarea
-                placeholder="Description"
-                rows="44"
-                cols="80"
-                id="bio"
-              />
-
-              <p>&nbsp;</p>
-              <Button size="small" type={'submit'}>
-                Create
-              </Button>
+              <FlexBoxColumn align="start">
+                <input
+                  className="input input-bordered mx-2 w-full max-w-xs"
+                  placeholder="Image URL"
+                  id="image"
+                  type="text"
+                />
+                <input
+                  className="input input-bordered mx-2 w-full max-w-xs"
+                  placeholder="Tagline"
+                  id="tagline"
+                  type="text"
+                />
+                <textarea
+                  className="mb-2 rounded"
+                  placeholder="Description (Can embed HTML)"
+                  rows="20"
+                  cols="80"
+                  id="bio"
+                />
+                <Button size="small" type={'submit'} className="self-center">
+                  Create
+                </Button>
+              </FlexBoxColumn>
             </form>
-            {islandSCID && "here's the scid for your island " + islandSCID}
-            {error}
+            {error && (
+              <FlexBoxRow className="my-3 rounded border border-error bg-info text-2xl text-error">
+                {error}
+              </FlexBoxRow>
+            )}
           </div>
         ) : (
-          <div className="profile">
-            <h3>Mint Your Private Island</h3>
-            <p>
+          <div className="">
+            <div className="text-2xl">Mint Your Private Island</div>
+            <div className="text-xl">
               This will create a native Dero asset and send it to your wallet.
               This asset is the key to your Private Island.
-            </p>
-            <form onSubmit={Mint}>
-              <input placeholder="Island Name" id="island" type="text" />
+            </div>
 
-              <p>&nbsp;</p>
-              <Button size="small" type={'submit'}>
-                Create
-              </Button>
-            </form>
-            {islandSCID && "here's the scid for your island " + islandSCID}
-            {error}
+            <div className="rounded-2xl border border-accent p-4 text-xl">
+              Step 1 of 3: <br />
+              Name Your Island
+              <form onSubmit={Mint}>
+                <input
+                  className="input input-bordered mx-2 w-full max-w-xs"
+                  placeholder="Island Name"
+                  id="island"
+                  type="text"
+                />
+                <Button size="small" type={'submit'}>
+                  Create
+                </Button>
+              </form>
+              {error && (
+                <FlexBoxRow className="my-3 rounded border border-error bg-info text-2xl text-error">
+                  {error}
+                </FlexBoxRow>
+              )}
+            </div>
           </div>
         )}
       </div>

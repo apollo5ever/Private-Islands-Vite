@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { LoginContext } from '@/LoginContext.jsx';
 import RT from '@/components/RT.jsx';
@@ -32,6 +32,10 @@ export const Bounty = ({ bountyData }) => {
   const [islandSCID, setIslandSCID] = useState('');
   const [recipients, setRecipients] = useState([]);
   const [editing, setEditing] = useState(false);
+
+  const toggleEdit = () => {
+    setEditing((prevEditing) => !prevEditing);
+  };
 
   const getJudging = () => {
     console.log('myslands', state);
@@ -245,13 +249,9 @@ export const Bounty = ({ bountyData }) => {
         state.myIslands &&
         state.myIslands.length > 0 &&
         state.myIslands.map((x) => x.SCID).includes(island) ? (
-          <small
-            onClick={() => {
-              setEditing(true);
-            }}
-          >
-            edit
-          </small>
+          <Button size="small" handleClick={toggleEdit} className="mx-3 mb-4">
+            Edit Bounty
+          </Button>
         ) : (
           <></>
         )}
@@ -260,19 +260,19 @@ export const Bounty = ({ bountyData }) => {
             <FlexBoxColumn className="mt-20">
               <FlexBoxRow gap={2}>
                 <input
-                  className="input-bordered input w-full max-w-xs"
+                  className="input input-bordered w-full max-w-xs"
                   placeholder="name"
                   defaultValue={treasure.Name}
                   id="Name"
                 />
                 <input
-                  className="input-bordered input w-full max-w-xs"
+                  className="input input-bordered w-full max-w-xs"
                   placeholder="image url"
                   defaultValue={Helpers.getTileImage(bountyData)}
                   id="Image"
                 />
                 <input
-                  className="input-bordered input w-full max-w-xs"
+                  className="input input-bordered w-full max-w-xs"
                   placeholder="tagline"
                   defaultValue={Helpers.getTileTagline(bountyData)}
                   id="Tagline"
@@ -286,23 +286,21 @@ export const Bounty = ({ bountyData }) => {
                 id="Description"
                 className="my-2 rounded-md"
               />
-              <Button size="small" type={'submit'}>
-                Submit
-              </Button>
-              <small
-                onClick={() => {
-                  setEditing(false);
-                }}
-              >
-                cancel
-              </small>
+              <FlexBoxRow>
+                <Button size="small" type={'submit'} className="mr-3">
+                  Submit
+                </Button>
+                <Button size="small" handleClick={toggleEdit}>
+                  Cancel
+                </Button>
+              </FlexBoxRow>
             </FlexBoxColumn>
           </form>
         ) : (
           <></>
         )}
 
-        {treasure.Name ? (
+        {!editing && treasure.Name ? (
           <>
             <div className="card-body break-words font-fell">
               <FlexBoxRow align="start" className="">
@@ -549,7 +547,7 @@ export const Bounty = ({ bountyData }) => {
                             id="amount"
                             type="text"
                             placeholder="Amount (Dero)"
-                            className="input-bordered input w-full max-w-xs"
+                            className="input input-bordered w-full max-w-xs"
                           />
                         </div>
                         <div className="p-2">
@@ -568,7 +566,7 @@ export const Bounty = ({ bountyData }) => {
                             id="proof"
                             type="text"
                             placeholder="proof"
-                            className="input-bordered input w-full max-w-xs"
+                            className="input input-bordered w-full max-w-xs"
                           />
                         </div>
                         <div className="p-2">

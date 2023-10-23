@@ -13,7 +13,7 @@ export const TypeFilterBar = ({
   const [scidArray, setSCIDArray] = useState('');
 
   useEffect(() => {
-    if (!state.myIslands || state.myIslands.length == 0) {
+    if (!state.myIslands || state.myIslands.length === 0) {
       return;
     }
     setSCIDArray(state.myIslands.map((x) => x.SCID));
@@ -44,7 +44,7 @@ export const TypeFilterBar = ({
   };
 
   return (
-    <div className="fixed bottom-16 left-1/2 z-10 flex w-full max-w-lg -translate-x-1/2 transform justify-between rounded-2xl bg-black shadow-md sm:w-2/3">
+    <div className="fixed bottom-16 left-1/2 z-10 flex w-full max-w-3xl -translate-x-1/2 transform justify-between rounded-2xl bg-black shadow-md sm:w-2/3">
       {typeFilterButtons.map((filter, index) => (
         <div
           className="group relative flex-1"
@@ -60,7 +60,7 @@ export const TypeFilterBar = ({
           key={filter.value}
         >
           <button
-            className={`w-full py-2 text-center text-base sm:text-xs md:text-sm
+            className={`w-full px-2 py-2 text-center text-base sm:text-xs md:text-sm
             ${
               selectedFilter === filter.value
                 ? 'bg-white text-black'
@@ -81,6 +81,23 @@ export const TypeFilterBar = ({
             onClick={() => handleFilterChange(filter.value)}
           >
             {filter.label}
+            {(filter.value === piAssetType.FUNDRAISER ||
+              filter.value === piAssetType.BOUNTY) &&
+              selectedFilter === filter.value && (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  className="bi bi-chevron-up ml-2 inline-block"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M1.646 11.854a.5.5 0 0 0 .708 0L8 6.207l5.646 5.647a.5.5 0 0 0 .708-.708l-6-6a.5.5 0 0 0-.708 0l-6 6a.5.5 0 0 0 0 .708z"
+                  />
+                </svg>
+              )}
           </button>
 
           {hoveredButton === filter.value &&

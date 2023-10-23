@@ -1,7 +1,5 @@
 import { Helpers } from '@/utils/helpers.js';
 import { FlexBoxColumn } from '@/components/common/FlexBoxColumn.jsx';
-import { FlexBoxRow } from '@/components/common/FlexBoxRow.jsx';
-import { Button } from '@/components/common/Button.jsx';
 import { HeaderButtons } from '@/components/tileView/sidebarView/headerButtons.jsx';
 
 export const SidebarHeader = (data) => {
