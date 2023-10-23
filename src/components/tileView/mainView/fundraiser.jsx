@@ -48,6 +48,40 @@ export const Fundraiser = ({ fundData }) => {
     await sendTransaction(data);
   });
 
+  const oaoWithdraw = useCallback(async (event) => {
+    event.preventDefault();
+
+    const data = new Object({
+      scid: state.scid_fundraisers,
+      ringsize: 2,
+      transfers: [
+        {
+          scid: fundData.WithdrawlToken,
+          burn: parseInt(event.target.amount.value),
+        },
+      ],
+      sc_rpc: [
+        {
+          name: 'entrypoint',
+          datatype: 'S',
+          value: 'OAOWithdrawFromFundraiser',
+        },
+        {
+          name: 'H',
+          datatype: 'S',
+          value: (fundData.SCID + fundData.Index).toString(),
+        },
+        {
+          name: 'amount',
+          datatype: 'U',
+          value: 0,
+        },
+      ],
+    });
+
+    await sendTransaction(data);
+  });
+
   const supportGoal = useCallback(async (event) => {
     event.preventDefault();
     let HashAndIndex = fundData.SCID + fundData.Index;
@@ -241,10 +275,31 @@ export const Fundraiser = ({ fundData }) => {
                   >
                     Initiated by {Helpers.getInitiatorName(fundData)}
                   </h3>
+                  <h3>
+                    {fundData.WithdrawlType == 'token' ? (
+                      <>
+                        Funds can only be accessed by burning withdrawl token:{' '}
+                        {fundData.WithdrawlToken}
+                      </>
+                    ) : (
+                      <>
+                        Funds can only be withdrawn by Dero address:{' '}
+                        {fundData.Address}
+                      </>
+                    )}
+                  </h3>
                   <h1 className=" font-bold" style={{ fontSize: '2.2rem' }}>
                     Raised: {fundData.Raised / 100000}/{fundData.Goal / 100000}{' '}
                     DERO
                   </h1>
+                  {fundData.ICO ? (
+                    <h3 className=" font-bold">
+                      Supporters of this fundraiser split a reward of{' '}
+                      {fundData.IcoAmount} tokens.
+                    </h3>
+                  ) : (
+                    ''
+                  )}
                   <h3>Deadline: {dateString(fundData.Expiry)}</h3>
                   <div className={`${proseClass} text-zinc-900`}>
                     <p
@@ -278,8 +333,24 @@ export const Fundraiser = ({ fundData }) => {
                           </Button>
                         </FlexBoxColumn>
                       </form>
-                      {fundData.Raised >= fundData.Goal ? (
+                      {fundData.WithdrawlType == 'address' &&
+                      fundData.Raised >= fundData.Goal ? (
                         <form onSubmit={withdraw}>
+                          <Button size="sm" type={'submit'}>
+                            Withdraw
+                          </Button>
+                        </form>
+                      ) : (
+                        ''
+                      )}
+                      {fundData.WithdrawlType == 'token' &&
+                      fundData.Raised >= fundData.Goal ? (
+                        <form onSubmit={oaoWithdraw}>
+                          <input
+                            type="number"
+                            placeholder="amount"
+                            id="amount"
+                          />
                           <Button size="sm" type={'submit'}>
                             Withdraw
                           </Button>
@@ -300,6 +371,20 @@ export const Fundraiser = ({ fundData }) => {
                           Withdraw
                         </Button>
                       </form>
+                      {fundData.ICO ? (
+                        <>
+                          <Button
+                            size="sm"
+                            handleClick={() => {
+                              console.log('get tokens');
+                            }}
+                          >
+                            Get Tokens
+                          </Button>
+                        </>
+                      ) : (
+                        ''
+                      )}
                     </>
                   ) : fundData.Status === 2 ? (
                     <>
