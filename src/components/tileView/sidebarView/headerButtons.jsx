@@ -14,7 +14,7 @@ export const HeaderButtons = ({ type }) => {
     bounty: 0,
     subscription: 0,
     fundraiser: 0,
-    island: 0,
+    island: 1,
   });
 
   useEffect(() => {

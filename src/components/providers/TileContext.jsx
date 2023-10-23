@@ -12,12 +12,11 @@ import { Helpers, piAssetType } from '@/utils/helpers.js';
 export const TileContext = createContext();
 
 export const TileProvider = ({ children }) => {
-  const [state, setState] = useContext(LoginContext);
   const [selectedTile, setSelectedTile] = useState(null);
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [initiatorTile, setInitiatorTile] = useState();
   const [isMyTile, setIsMyTile] = useState(false);
-  const { allElements, getIslands, myIslands } = useGetAllElements(state);
+  const { allElements, getIslands, myIslands } = useGetAllElements();
 
   useEffect(() => {
     getIslands();

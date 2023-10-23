@@ -6,10 +6,10 @@ import { piAssetType, Helpers } from '@/utils/helpers.js';
 import LoggerContext, { LOG } from '@/components/providers/LoggerContext.jsx';
 import { useContext, useMemo } from 'react';
 
-export const useGetAllElements = (state, isFirstVisit = true) => {
+export const useGetAllElements = (isFirstVisit = true) => {
   const logger = useContext(LoggerContext);
   const { islands, shuffledIslands, getIslands, myIslands, setMyIslands } =
-    useGetIslands(state);
+    useGetIslands();
   const { bounties } = useGetBounties(islands);
   const { fundraisers } = useGetFundraisers(islands);
   const { subscriptions } = useGetSubscriptions(islands);

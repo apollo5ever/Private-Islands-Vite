@@ -4,17 +4,17 @@ import LoggerContext, { LOG } from '@/components/providers/LoggerContext.jsx';
 import { Helpers } from '@/utils/helpers.js';
 import { useGetBalance } from '@/components/hooks/useGetBalance';
 
-export const useGetIslands = (state) => {
+export const useGetIslands = () => {
   const logger = useContext(LoggerContext);
   const [getBalance] = useGetBalance();
   const [islands, setIslands] = useState([]);
-  const [myIslands, setMyIslands] = useState(state.myIslands);
+  const [myIslands, setMyIslands] = useState();
   const [shuffledIslands, setShuffledIslands] = useState([]);
   const COMPNAME = 'useGetIslands.js';
 
   const getIslands = useCallback(async () => {
     try {
-      const islandsData = await GI(state);
+      const islandsData = await GI();
       setIslands(islandsData);
       let myisles = await Promise.all(
         islandsData.map(async (island) => {
@@ -34,7 +34,7 @@ export const useGetIslands = (state) => {
     } catch (error) {
       logger(LOG.ERROR, COMPNAME, 'Error fetching islands', error);
     }
-  }, [state, logger]);
+  }, [logger]);
 
   useEffect(() => {
     let isMounted = true;
@@ -46,7 +46,7 @@ export const useGetIslands = (state) => {
     return () => {
       isMounted = false;
     };
-  }, [state, getIslands]);
+  }, [getIslands]);
 
   return {
     islands,
