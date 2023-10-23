@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useState,
+  useEffect,
+} from 'react';
 import { useGetAllElements } from '@/components/hooks/useGetAllElements.js';
 import { LoginContext } from '@/LoginContext.jsx';
 import { Helpers, piAssetType } from '@/utils/helpers.js';
@@ -38,14 +44,17 @@ export const TileProvider = ({ children }) => {
     }
   }, [allElements, selectedTile, myIslands]);
 
-  const gotoIslandTile = (scid) => {
-    const island = allElements.find(
-      (item) => item?.SCID === scid && item.type === piAssetType.ISLAND
-    );
-    if (island) {
-      setSelectedTile(island);
-    }
-  };
+  const gotoIslandTile = useCallback(
+    (scid) => {
+      const island = allElements.find(
+        (item) => item?.SCID === scid && item.type === piAssetType.ISLAND
+      );
+      if (island) {
+        setSelectedTile(island);
+      }
+    },
+    [allElements, setSelectedTile]
+  );
 
   return (
     <TileContext.Provider

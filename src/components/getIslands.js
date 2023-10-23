@@ -10,6 +10,7 @@ export default async function getIslands(state, i) {
         const islanddata = await fetch(`/api/islands/${i}`);
         const island = await islanddata.json();
         if (islanddata.status !== 200) throw Error(island.message);
+        console.log('Localhost isalnd found', island);
         return island;
       } else {
         const response = await fetch('/api/islands');
@@ -17,6 +18,7 @@ export default async function getIslands(state, i) {
         const islands = await response.json();
 
         if (response.status !== 200) throw Error(islands.message);
+        console.log('local host IslandS found', islands);
         return islands;
       }
     } catch {
@@ -27,12 +29,14 @@ export default async function getIslands(state, i) {
         );
         const island = await islanddata.json();
         if (islanddata.status !== 200) throw Error(island.message);
+        console.log('127 island found', island);
         return island;
       } else {
         const response = await fetch('http://127.0.0.1:5000/api/islands');
         const islands = await response.json();
 
         if (response.status !== 200) throw Error(islands.message);
+        console.log('127 IslandS found', islands);
         return islands;
       }
     }
@@ -105,7 +109,7 @@ export default async function getIslands(state, i) {
           console.log('ipfs failed');
           console.log('islandList[i].toString()', islandList[i].toString());
           if (i) {
-            return islands.filter((x) => x.name == i);
+            return islands.filter((x) => x.name === i);
           } else return islands;
         }
       }
@@ -113,7 +117,7 @@ export default async function getIslands(state, i) {
 
     console.log('islands final', islands);
     if (i) {
-      return islands.filter((x) => x.name == i);
+      return islands.filter((x) => x.name === i);
     } else return islands;
   }
 }

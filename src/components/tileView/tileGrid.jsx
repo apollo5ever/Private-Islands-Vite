@@ -24,9 +24,12 @@ import { TileContext } from '@/components/providers/TileContext.jsx';
 // TODO - DONE -- When navigate to any url (away from tilegrid), need to setSelectedIsland to null to clear things out
 // TODO - DONE -- Review PopulateMyIslands (in app.jsx to see how to get island count) & update sidebar header buttons to have island count
 // TODO - DONE -- show other islands in sidebar if more than one
-// TODO - ERROR - Not populating myIslands properly - works originally - maybe breaks wehn I create bounty??
-// TODO - Claim Island -- add explainer text (step 1, step 2... ) - Once registered, set as selected tile in tilegrid view
-// TODO - review bounties to see the 'edit' link & do similar for other stuff - start with island
+// TODO - DONE -- Claim Island -- add explainer text (step 1, step 2... ) - Once registered, set as selected tile in tilegrid view
+// TODO - DONE PARTIALLY -- for island & bounties -- review bounties to see the 'edit' link & do similar for other stuff - start with island
+// TODO - fix island coutn for no-islander -- set default to 1 I think so its clickable
+// TODO - PReview for bounty - allow to create from there
+// TODO - Create for bounty -- navigate to archipelago on click (so can't click twice and fuck things up)
+// TODO - create route to hand links to items wiht a scid so we can share links and bring up the right thing with those links
 // TODO - figure out how to poll status of dero txn to know when its complete (for claim island process)
 // TODO - add 'promote to twitter' as the hover button and have a share link for twitter - use X logo
 // TODO - for X, might need to create a way to have scid or island id in query param and a way to read that & load a specific tile

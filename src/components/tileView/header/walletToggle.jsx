@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useCallback, useState, useContext } from 'react';
 import { LoginContext } from '@/LoginContext.jsx';
 import { useRPCWallet } from '../../hooks/useRPCWallet.jsx';
 import { walletModes, daemonModes } from '@/utils/helpers.js';
@@ -10,21 +10,27 @@ const WalletToggle = () => {
   const [daemonMode, setDaemonMode] = useState(daemonModes.POOLS);
   const [isDaemonVisible, setIsDaemonVisible] = useState(false);
 
-  const handleWalletToggle = (value) => {
-    setWalletMode(value);
-    setState((state) => ({ ...state, walletMode: value }));
-    console.log('changing wllet mode to ', value);
+  const handleWalletToggle = useCallback(
+    (value) => {
+      setWalletMode(value);
+      setState((state) => ({ ...state, walletMode: value }));
+      console.log('changing wllet mode to ', value);
 
-    if (value === walletModes.RPC && !isDaemonVisible) {
-      setIsDaemonVisible(true);
-    }
-  };
+      if (value === walletModes.RPC && !isDaemonVisible) {
+        setIsDaemonVisible(true);
+      }
+    },
+    [setIsDaemonVisible, isDaemonVisible, setState]
+  );
 
-  const handleDaemonToggle = (value) => {
-    setDaemonMode(value);
-    setState((state) => ({ ...state, daemonMode: value }));
-    setIsDaemonVisible(false);
-  };
+  const handleDaemonToggle = useCallback(
+    (value) => {
+      setDaemonMode(value);
+      setState((state) => ({ ...state, daemonMode: value }));
+      setIsDaemonVisible(false);
+    },
+    [setIsDaemonVisible, setState]
+  );
 
   return (
     <div className="relative inline-block">

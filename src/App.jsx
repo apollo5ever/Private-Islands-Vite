@@ -163,11 +163,13 @@ function App() {
     //set state array of myislands and set active island to 0
     setState((state) => ({ ...state, myIslands: myIslands, active: 0 }));
 
-    logger(LOG.API, COMPNAME, 'full island list', fullIslandList);
+    logger(LOG.DEBUG, COMPNAME, 'full island list', fullIslandList);
   };
 
   useEffect(() => {
-    populateMyIslands();
+    if (state.deroBridgeApiRef) {
+      populateMyIslands();
+    }
   }, [state.deroBridgeApiRef, state.ipfs, state.walletMode, state.scid]);
 
   return (
