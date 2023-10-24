@@ -38,6 +38,16 @@ import { TileContext } from '@/components/providers/TileContext.jsx';
 // TODO - have the Shuffle only happen when tiles page loads first time
 // TODO - DetailCard is called in the new mainView/fundraiser.jsx -- I should move this to mainView folder and verify it works
 
+// TODO YOOOOOOOOOOOOOOOOOOO
+/*
+ - Oct 24 -- get z-index & default island count to 1 for headerbuttons
+ - figure out ghost subscription issue
+ Start a new branch cuz  mts-tile-debug no bueno, but good fixes in there adding some callbacks, getting rid of the isMounted bullcrap,
+  cleaning up app.jsx -- commenting out worker.js in index.html file -- maybe I should create a PR for it and cherry pick fixes
+
+  I also have a stash named tiledebug I might want if I go back down that road
+ */
+
 export const TileGrid = () => {
   const logger = useContext(LoggerContext);
   const {
