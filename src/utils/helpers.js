@@ -48,10 +48,10 @@ export class Helpers {
       case piAssetType.ISLAND:
       case piAssetType.BOUNTY:
       case piAssetType.FUNDRAISER:
+        case piAssetType.SUBSCRIPTION:
         return tile.Name;
 
-      case piAssetType.SUBSCRIPTION:
-        return tile.Names[tile.Names.length - 1];
+    
     }
   };
 
@@ -60,10 +60,11 @@ export class Helpers {
       case piAssetType.ISLAND:
       case piAssetType.BOUNTY:
       case piAssetType.FUNDRAISER:
+     case piAssetType.SUBSCRIPTION:   
         return tile.Tagline;
 
-      case piAssetType.SUBSCRIPTION:
-        return tile.Taglines[tile.Taglines.length - 1];
+      
+       
     }
   };
 
@@ -72,10 +73,10 @@ export class Helpers {
       case piAssetType.ISLAND:
       case piAssetType.BOUNTY:
       case piAssetType.FUNDRAISER:
+       case piAssetType.SUBSCRIPTION:  
         return tile.Image;
 
-      case piAssetType.SUBSCRIPTION:
-        return tile.Images[tile.Images.length - 1];
+     
     }
   };
 
@@ -84,10 +85,10 @@ export class Helpers {
       case piAssetType.ISLAND:
       case piAssetType.BOUNTY:
       case piAssetType.FUNDRAISER:
+        case piAssetType.SUBSCRIPTION: 
         return tile.Description;
 
-      case piAssetType.SUBSCRIPTION:
-        return tile.Description[tile.Description.length - 1];
+     
     }
   };
 
@@ -105,8 +106,9 @@ export class Helpers {
   static getInitiatorName = (tile) => {
     switch (tile.type) {
       case piAssetType.ISLAND:
+       return tile.Name; 
       case piAssetType.SUBSCRIPTION:
-        return tile.Name;
+        
       case piAssetType.BOUNTY:
       case piAssetType.FUNDRAISER:
         return tile?.Initiator.Name;
