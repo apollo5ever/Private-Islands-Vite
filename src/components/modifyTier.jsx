@@ -28,7 +28,7 @@ export default function ModifyTier() {
 
   const getTier = React.useCallback(async () => {
     if (!state.myIslands) return;
-    let island = state.myIslands.filter((x) => x.Name == params.island);
+    let island = state.myIslands.filter((x) => x.SCID == params.island);
     setIsland(island[0]);
     if (island[0].Tiers[params.tier]) {
       setTierObj(island[0].Tiers[params.tier]);
@@ -120,11 +120,24 @@ export default function ModifyTier() {
           datatype: 'S',
           value: event.target.tierName.value,
         },
+        {
+          name: 'image',
+          datatype: 'S',
+          value: event.target.image.value,
+        },
+        {
+          name: 'tagline',
+          datatype: 'S',
+          value: event.target.tagline.value,
+        },
+        {
+          name: 'desc',
+          datatype: 'S',
+          value: event.target.description.value,
+        },
       ],
     });
     sendTransaction(txData);
-
-    setSearchParams({ status: 'metadata', name: event.target.tierName.value });
   });
 
   const SetMetadata = React.useCallback(async (event) => {
@@ -163,22 +176,22 @@ export default function ModifyTier() {
           value: parseInt(params.tier),
         },
         {
-          name: 'Name',
+          name: 'name',
           datatype: 'S',
           value: event.target.tierName.value,
         },
         {
-          name: 'Image',
+          name: 'image',
           datatype: 'S',
           value: event.target.image.value,
         },
         {
-          name: 'Tagline',
+          name: 'tagline',
           datatype: 'S',
           value: event.target.tagline.value,
         },
         {
-          name: 'Description',
+          name: 'desc',
           datatype: 'S',
           value: event.target.description.value,
         },
@@ -193,40 +206,6 @@ export default function ModifyTier() {
     <div className="function">
       {searchParams.get('status') == 'metadata' ? (
         <form onSubmit={SetMetadata}>
-          <input
-            placeholder="Tier Name"
-            id="tierName"
-            defaultValue={
-              tierObj.Names && tierObj.Names[tierObj.Names.length - 1]
-            }
-            type="text"
-          />
-          <input
-            placeholder="image url"
-            id="image"
-            defaultValue={
-              tierObj.Images && tierObj.Images[tierObj.Images.length - 1]
-            }
-            type="text"
-          />
-          <input
-            placeholder="Tagline"
-            id="tagline"
-            type="text"
-            defaultValue={
-              tierObj.Taglines && tierObj.Taglines[tierObj.Taglines.length - 1]
-            }
-          />
-          <textarea
-            placeholder="Description"
-            rows="44"
-            cols="80"
-            id="description"
-            defaultValue={
-              tierObj.Descriptions &&
-              tierObj.Descriptions[tierObj.Descriptions.length - 1]
-            }
-          />
           {custom ? (
             <input
               placeholder="Subscription Interval in Seconds"
@@ -248,10 +227,28 @@ export default function ModifyTier() {
             <input
               placeholder="Tier Name"
               id="tierName"
-              defaultValue={
-                tierObj.Names && tierObj.Names[tierObj.Names.length - 1]
-              }
+              defaultValue={tierObj.Name}
               type="text"
+            />
+
+            <input
+              placeholder="image url"
+              id="image"
+              defaultValue={tierObj.Image}
+              type="text"
+            />
+            <input
+              placeholder="Tagline"
+              id="tagline"
+              type="text"
+              defaultValue={tierObj.Tagline}
+            />
+            <textarea
+              placeholder="Description"
+              rows="44"
+              cols="80"
+              id="description"
+              defaultValue={tierObj.Description}
             />
             <input
               placeholder="address"
