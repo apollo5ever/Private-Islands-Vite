@@ -18,9 +18,11 @@ import { useGetTransfers } from './components/hooks/useGetTransfers';
 import { useGetAddress } from './components/hooks/useGetAddress';
 import { useGetContracts } from './components/hooks/useGetContracts';
 import { useGetRandomAddress } from './components/hooks/useGetRandomAddress';
+import ThemeContext from './components/providers/ThemeContext';
 
 function App() {
   const [menuActive, setMenuActive] = useState(false);
+  const theme = useContext(ThemeContext);
   const [state, setState] = useContext(LoginContext);
   const logger = useContext(LoggerContext);
   const [getSC] = useGetSC();
@@ -173,21 +175,29 @@ function App() {
   return (
     <div className="App">
       <Outlet />
-      <h3>Coco Balance: {state.cocoBalance}</h3>
-      <button
-        onClick={() => {
-          logger(LOG.DEBUG, COMPNAME, 'state', state);
+      <div
+        style={{
+          color: '#B6DCE4',
+          display: theme.theme == 'dark' ? 'none' : 'block',
         }}
       >
-        State
-      </button>
-      <button
-        onClick={() => {
-          getContracts();
-        }}
-      >
-        Get Contracts
-      </button>
+        {' '}
+        <h3>Coco Balance: {state.cocoBalance}</h3>
+        <button
+          onClick={() => {
+            logger(LOG.DEBUG, COMPNAME, 'state', state);
+          }}
+        >
+          State
+        </button>
+        <button
+          onClick={() => {
+            getContracts();
+          }}
+        >
+          Get Contracts
+        </button>
+      </div>
     </div>
   );
 }

@@ -22,7 +22,7 @@ export default function COCOLotto() {
 
   useEffect(() => {
     async function fetchData() {
-      let lotto = await getSC(state.scid_lotto);
+      let lotto = await getSC(state.scid_lotto, false, true);
       // let's make a list of all asset treasuries
       //first use regex to find all treasuries
       var assetSearch = new RegExp('TREASURY_.*');
@@ -212,18 +212,19 @@ export default function COCOLotto() {
       <div className="hero relative mt-3 items-start rounded-lg bg-secondary px-2 font-fell text-2xl">
         <FlexBoxColumn className="hero-content">
           {lottos.map((x) => (
-            <>
+            <div className="mt-3 rounded-xl border border-accent p-4 text-2xl">
               <h1>{x.Name}</h1>
               <h3>Amount in atomic units: {x.Treasury}</h3>
               <h3>
                 Next Lotto Draw: {x.Time ? dateString(x.Time) : 'unspecified'}
               </h3>
-            </>
+            </div>
           ))}
           <div>
             You have {userTickets.length} ticket
             {userTickets.length === 1 ? '' : 's'} (
-            {(100 * userTickets.length) / totalTickets}% chance of winning)
+            {((100 * userTickets.length) / totalTickets).toFixed(2) +
+              '% chance of winning)'}
           </div>
           <div className="w-full">
             <form onSubmit={BuyTickets} className="flex w-full">
