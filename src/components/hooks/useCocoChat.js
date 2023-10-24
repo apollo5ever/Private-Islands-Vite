@@ -34,6 +34,18 @@ export const useCocoChat = (type) => {
           'Need to raise funds? Set a goal & a deadline. Users donate Dero & it is stored in the contract.  When the goal is met' +
           'the Dero is sent to the fundee. If not met & the deadline is past, users are refunding their contributions',
       },
+      general: [
+        {
+          title: 'Need Community Support For Your Project?',
+          msg:
+            'Fundraisers are a great way to raise capital. If the goal is not met before the deadliine, funds return to supporters',
+        },
+        {
+          title: 'Fundraisers Now Have ICO Capability',
+          msg:
+            'When you launch a fundraiser you can deposit tokens with which to reward your supporters.',
+        },
+      ]
     },
     subscription: {
       primary: {
@@ -43,6 +55,18 @@ export const useCocoChat = (type) => {
           'for access to a newsletter. Your content in encrypted in decentralize storage & your subscribers are sent a transaction ' +
           'with the decryption key each period.',
       },
+      general: [
+        {
+          title: 'Start Your Newsletter on Private Islands',
+          msg:
+            'Subscription Tiers can be set up on monthly, annually or even hourly intervals.',
+        },
+        {
+          title: 'Subscriptions Are Better With XSWD',
+          msg:
+            'The SXWD protocol by Slixe will allow you to read subscriber content right here on Private Islands',
+        },
+      ]
     },
     island: {
       primary: {
@@ -51,6 +75,14 @@ export const useCocoChat = (type) => {
           'Private Islands is a decentralized, trustless financial support system using Dero currency on the Dero Smart Contract ' +
           'network.  Raise funds, sell subscriptions, earn bounties.',
       },
+      general: [
+        {
+          title: 'Your Island is Your User Profile',
+          msg:
+            'Did you know your island is a token that lives in your wallet?',
+        },
+     
+      ]
     },
   };
 

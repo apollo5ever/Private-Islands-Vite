@@ -144,11 +144,7 @@ export const TileGrid = () => {
             >
               {/* Title on hover */}
               <h2 className="absolute inset-x-2 top-2 z-10 rounded-md bg-black bg-opacity-50 p-1 text-center text-lg font-medium text-white opacity-0 group-hover:opacity-100">
-                {tile.type === 'island' ||
-                tile.type === 'bounty' ||
-                tile.type === 'fundraiser'
-                  ? tile.Name
-                  : tile.Names[tile.Names.length - 1]}
+                {tile.Name}
               </h2>
 
               {/* Buttons on hover
