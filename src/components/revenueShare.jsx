@@ -31,7 +31,7 @@ export default function RevenueShare() {
       } else {
         setRegistryShares(0);
       }
-      let bounty = await getSC(state.scid_bounties);
+      let bounty = await getSC(state.scid_bounties, false, true);
       console.log('bounty ', bounty.stringkeys.T_DERO);
       setBountyTreasury(bounty.stringkeys.T_DERO);
       if (bounty.stringkeys[`${state.userAddress}_SHARES`]) {
@@ -40,7 +40,7 @@ export default function RevenueShare() {
         setBountyShares(0);
       }
 
-      let fund = await getSC(state.scid_fundraisers);
+      let fund = await getSC(state.scid_fundraisers, false, true);
       console.log('fund ', fund.stringkeys.T_DERO);
       setFundTreasury(fund.stringkeys.T_DERO);
       if (fund.stringkeys[`${state.userAddress}_SHARES`]) {
@@ -49,7 +49,7 @@ export default function RevenueShare() {
         setFundShares(0);
       }
 
-      let sub = await getSC(state.scid_subscriptions);
+      let sub = await getSC(state.scid_subscriptions, false, true);
       console.log('sub ', sub.stringkeys.T_DERO);
       setSubTreasury(sub.stringkeys.T_DERO);
       if (sub.stringkeys[`${state.userAddress}_SHARES`]) {
