@@ -7,6 +7,7 @@ import { piAssetType, Helpers, statusFilter } from '/src/utils/helpers';
 import { TypeFilterBar } from '@/components/tileView/typeFilterBar.jsx';
 import { GridToggleIcon } from '@/components/tileView/gridToggleIcon.jsx';
 import { TileContext } from '@/components/providers/TileContext.jsx';
+import { useSearchParams } from 'react-router-dom';
 
 // TODO - DONE -- Get status search feature working on button filter
 // TODO - DONE -- Get the fundraiser & subscription primary cards set up
@@ -37,6 +38,7 @@ import { TileContext } from '@/components/providers/TileContext.jsx';
 
 export const TileGrid = () => {
   const logger = useContext(LoggerContext);
+  const [searchParams, setSearchParams] = useSearchParams();
   const {
     selectedTile,
     setSelectedTile,
@@ -56,11 +58,27 @@ export const TileGrid = () => {
       : 'h-[calc(100vw/6)] w-[calc(100vw/6)]';
 
   useEffect(() => {
+    console.log(
+      'umm?',
+      allElements.find(
+        (x) =>
+          x.SCID == searchParams.get('scid') &&
+          x.type == searchParams.get('type') &&
+          x.Index == searchParams.get('index')
+      )
+    );
     return () => {
       // When component is unmounted, lets reset this so when we come back we see all the tiles
-      setSelectedTile(null);
+      setSelectedTile(
+        allElements.find(
+          (x) =>
+            x.SCID == searchParams.get('scid') &&
+            x.type == searchParams.get('type') &&
+            x.Index == searchParams.get('index')
+        )
+      );
     };
-  }, []);
+  }, [allElements]);
 
   useEffect(() => {
     const filtered = allElements.filter((element) => {
@@ -138,6 +156,11 @@ export const TileGrid = () => {
               key={tile.Name}
               onClick={() => {
                 setSelectedTile(tile);
+                let params = { scid: tile.SCID, type: tile.type };
+                if (tile.Index !== undefined) {
+                  params.index = tile.Index;
+                }
+                setSearchParams(params);
                 setSelectedIndex(filteredElements.indexOf(tile));
               }}
               className={`group relative m-0 ${tileSize} cursor-pointer overflow-hidden rounded-md p-0 transition-all duration-300 hover:bg-black hover:bg-opacity-40`}

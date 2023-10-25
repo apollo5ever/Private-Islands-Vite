@@ -5,9 +5,11 @@ import { TileContext } from '@/components/providers/TileContext.jsx';
 import React, { useContext, useEffect, useState } from 'react';
 import { FlexBoxColumn } from '@/components/common/FlexBoxColumn.jsx';
 import { useNavigate } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
 export const HeaderButtons = ({ type }) => {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { selectedTile, setSelectedTile, initiatorTile, myIslands, isMyTile } =
     useContext(TileContext);
   const [counts, setCounts] = useState({
@@ -33,6 +35,11 @@ export const HeaderButtons = ({ type }) => {
   const gotoTile = (type) => {
     const tile = Helpers.getTileFromIsland(initiatorTile, type);
     if (tile) {
+      let params = { scid: tile.SCID, type: tile.type };
+      if (tile.Index !== undefined) {
+        params.index = tile.Index;
+      }
+      setSearchParams(params);
       setSelectedTile(tile);
     }
   };

@@ -96,7 +96,11 @@ export const PageHeader = () => {
           )}
         </div>
 
-        <NavLink to="/tiles" className="mx-auto">
+        <NavLink
+          to="/tiles"
+          className="mx-auto"
+          onClick={() => setSelectedTile(null)}
+        >
           <h1 className="text-center font-fell text-7xl text-black">
             Dero Private Islands
           </h1>

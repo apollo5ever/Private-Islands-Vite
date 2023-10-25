@@ -4,9 +4,11 @@ import { useTheme } from '@/components/hooks/useTheme.js';
 import { useContext, useMemo } from 'react';
 import { TileContext } from '@/components/providers/TileContext.jsx';
 import { useGetAssociatedItems } from '@/components/hooks/useGetAssociatedItems.js';
+import { useSearchParams } from 'react-router-dom';
 
 export const SidebarTile = () => {
   const { proseClass } = useTheme();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { selectedTile, initiatorTile, setSelectedTile, myIslands, isMyTile } =
     useContext(TileContext);
   const { OtherBounties, OtherFundraisers, OtherSubscriptions, OtherIslands } =
@@ -47,7 +49,14 @@ export const SidebarTile = () => {
               >
                 <div
                   className={`card-body z-10 cursor-pointer text-black`}
-                  onClick={() => setSelectedTile(item)}
+                  onClick={() => {
+                    let params = { scid: item.SCID, type: item.type };
+                    if (item.Index !== undefined) {
+                      params.index = item.Index;
+                    }
+                    setSearchParams(params);
+                    setSelectedTile(item);
+                  }}
                 >
                   <h2 className="card-title">{Helpers.getTileName(item)}</h2>
                   {Helpers.getTileTagline(item)}
