@@ -80,12 +80,14 @@ export function useInitializeWallet() {
         userAddress: address,
         randomAddress: randomAddress,
       }));
+      console.log(deroBridgeApiRef);
+      return deroBridgeApiRef;
     }
   };
 
   async function initializeWallet() {
     if (state.walletMode == 'rpc') {
-      await initRPC();
+      return await initRPC();
     } else if (state.walletMode == 'xswd') {
       await initXSWD();
     }

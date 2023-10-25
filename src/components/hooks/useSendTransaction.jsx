@@ -1,14 +1,16 @@
 import React, { useState, useContext } from 'react';
 import { LoginContext } from '../../LoginContext';
 import to from 'await-to-js';
+import { useInitializeWallet } from './useInitializeWallet';
 
 export function useSendTransaction() {
   const [state, setState] = useContext(LoginContext);
+  const [initializeWallet] = useInitializeWallet();
 
-  const rpcSend = React.useCallback(async (d) => {
-    const deroBridgeApi = state.deroBridgeApiRef.current;
+  const rpcSend = React.useCallback(async (data, deroBridgeApiRef) => {
+    const deroBridgeApi = deroBridgeApiRef.current;
 
-    const [err, res] = await to(deroBridgeApi.wallet('start-transfer', d));
+    const [err, res] = await to(deroBridgeApi.wallet('start-transfer', data));
     console.log('useSendTransaction RPC res', res);
     return res.data.result.txid;
   });
@@ -23,8 +25,13 @@ export function useSendTransaction() {
         sc: data.sc,
         fees: data.fees,
       };
+      if (!state.deroBridgeApiRef) {
+        const deroBridgeApiRef = await initializeWallet();
+        console.log(deroBridgeApiRef);
+        return await rpcSend(rpcData, deroBridgeApiRef);
+      }
 
-      return await rpcSend(rpcData);
+      return await rpcSend(rpcData, state.deroBridgeApiRef);
     } else if (state.walletMode == 'xswd') {
       return new Promise((resolve, reject) => {
         const payload = {
