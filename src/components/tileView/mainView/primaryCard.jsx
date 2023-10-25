@@ -8,8 +8,10 @@ import { Bounty } from '@/components/tileView/mainView/bounty.jsx';
 import { TileContext } from '@/components/providers/TileContext.jsx';
 import { Subscription } from '@/components/tileView/mainView/subscription.jsx';
 import { Fundraiser } from '@/components/tileView/mainView/fundraiser.jsx';
+import { useSearchParams } from 'react-router-dom';
 
 export const PrimaryCard = ({ data, tiles }) => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const { setSelectedTile, selectedIndex, setSelectedIndex } =
     useContext(TileContext);
 
@@ -20,7 +22,10 @@ export const PrimaryCard = ({ data, tiles }) => {
         variant="circle"
         btnColor="black"
         size="xs"
-        handleClick={() => setSelectedTile(null)}
+        handleClick={() => {
+          setSelectedTile(null);
+          setSearchParams({});
+        }}
       >
         X
       </Button>
@@ -30,6 +35,15 @@ export const PrimaryCard = ({ data, tiles }) => {
           className="z-10 ml-2 cursor-pointer"
           onClick={() => {
             setSelectedTile(tiles[selectedIndex - 1]);
+            let params = {
+              scid: tiles[selectedIndex - 1].SCID,
+              type: tiles[selectedIndex - 1].type,
+            };
+            if (tiles[selectedIndex - 1].Index !== undefined) {
+              params.index = tiles[selectedIndex - 1].Index;
+            }
+            console.log('tiles', tiles);
+            setSearchParams(params);
             setSelectedIndex(selectedIndex - 1);
           }}
         >
@@ -48,6 +62,14 @@ export const PrimaryCard = ({ data, tiles }) => {
           className="z-10 ml-2 cursor-pointer"
           onClick={() => {
             setSelectedTile(tiles[selectedIndex + 1]);
+            let params = {
+              scid: tiles[selectedIndex + 1].SCID,
+              type: tiles[selectedIndex + 1].type,
+            };
+            if (tiles[selectedIndex + 1].Index !== undefined) {
+              params.index = tiles[selectedIndex + 1].Index;
+            }
+            setSearchParams(params);
             setSelectedIndex(selectedIndex + 1);
           }}
         >

@@ -81,6 +81,11 @@ export const useCocoChat = (type) => {
           msg:
             'Did you know your island is a token that lives in your wallet?',
         },
+        {
+          title: 'Your Island is Your User Profile',
+          msg:
+            'Did you know your island is a token that lives in your wallet?',
+        }
      
       ]
     },
