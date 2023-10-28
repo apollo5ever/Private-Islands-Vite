@@ -10,7 +10,7 @@ const LoginProvider = (props) => {
     daemonMode: 'pools',
     ws: null,
     scid_registry:
-      'a5daa9a02a81a762c83f3d4ce4592310140586badb4e988431819f47657559f7',
+      'f8a81d0e5c5f9df1f9e41b186f77d1ddbd4daab4e25a380ddde44d66c040da8f',
     scid_bounties:
       'fc2a6923124a07f33c859f201a57159663f087e2f4b163eaa55b0f09bf6de89f',
     scid_fundraisers:
