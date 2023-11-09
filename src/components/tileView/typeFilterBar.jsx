@@ -1,6 +1,7 @@
 import { useState, useContext, useEffect } from 'react';
 import { piAssetType, statusFilter } from '@/utils/helpers.js';
 import { LoginContext } from '../../LoginContext';
+import { TileContext } from '@/components/providers/TileContext.jsx';
 
 export const TypeFilterBar = ({
   selectedFilter,
@@ -11,13 +12,14 @@ export const TypeFilterBar = ({
   const [hoveredButton, setHoveredButton] = useState(null);
   const [state, setState] = useContext(LoginContext);
   const [scidArray, setSCIDArray] = useState('');
+  const { myIslands } = useContext(TileContext);
 
   useEffect(() => {
-    if (!state.myIslands || state.myIslands.length === 0) {
+    if (!myIslands || myIslands.length === 0) {
       return;
     }
-    setSCIDArray(state.myIslands.map((x) => x.SCID));
-  }, [state.myIslands]);
+    setSCIDArray(myIslands.map((x) => x.SCID));
+  }, [myIslands]);
 
   // Primary filter based on type
   const typeFilterButtons = [

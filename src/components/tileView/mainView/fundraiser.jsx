@@ -12,7 +12,7 @@ import dateString from '@/utils/dateString';
 
 export const Fundraiser = ({ fundData }) => {
   const { proseClass } = useTheme();
-  const { gotoIslandTile } = useContext(TileContext);
+  const { gotoIslandTile, myIslands } = useContext(TileContext);
   console.log('FUNDDATA', fundData);
 
   const [state, setState] = useContext(LoginContext);
@@ -217,9 +217,9 @@ export const Fundraiser = ({ fundData }) => {
     <FlexBoxRow className="align-center card card-side my-3 whitespace-normal bg-secondary shadow-xl">
       <div>
         {!editing &&
-        state.myIslands &&
-        state.myIslands.length > 0 &&
-        state.myIslands.map((x) => x.SCID).includes(fundData.SCID) ? (
+        myIslands &&
+        myIslands.length > 0 &&
+        myIslands.map((x) => x.SCID).includes(fundData.SCID) ? (
           <small
             onClick={() => {
               setEditing(true);
@@ -275,9 +275,9 @@ export const Fundraiser = ({ fundData }) => {
         )}
         {fundData ? (
           <>
-            <div className="card-body break-words font-fell">
+            <div className="card-body break-words">
               <FlexBoxColumn align="start" className="">
-                <figure className="mr-4 min-w-[200px] max-w-[300px] content-center rounded-lg">
+                <figure className="mr-4 min-w-[200px] max-w-[500px] content-center rounded-lg">
                   <img
                     src={Helpers.getTileImage(fundData)}
                     alt={Helpers.getTileName(fundData)}
@@ -322,6 +322,99 @@ export const Fundraiser = ({ fundData }) => {
                     ''
                   )}
                   <h3>Deadline: {dateString(fundData.Expiry)}</h3>
+                  {fundData.Status === 0 ? (
+                    <FlexBoxColumn align="end" className="mb-2">
+                      <form onSubmit={supportGoal}>
+                        <FlexBoxColumn align="end" className="mb-2">
+                          <input
+                            id="amount"
+                            className="input-bordered input w-full max-w-xs"
+                            placeholder="Dero amount to donate"
+                            type="text"
+                          />
+                          <div>
+                            <label htmlFor="refundable">Refundable?</label>{' '}
+                            &nbsp;
+                            <input
+                              id="refundable"
+                              type="checkbox"
+                              className="mr-2"
+                            />
+                          </div>
+                          <Button size="sm" type={'submit'}>
+                            Support
+                          </Button>
+                        </FlexBoxColumn>
+                      </form>
+                      {fundData.WithdrawlType == 'address' &&
+                      fundData.Raised >= fundData.Goal ? (
+                        <form onSubmit={withdraw}>
+                          <Button size="sm" type={'submit'}>
+                            Withdraw
+                          </Button>
+                        </form>
+                      ) : (
+                        ''
+                      )}
+                      {fundData.WithdrawlType == 'token' &&
+                      fundData.Raised >= fundData.Goal ? (
+                        <form onSubmit={oaoWithdraw}>
+                          <input
+                            type="number"
+                            placeholder="amount"
+                            id="amount"
+                          />
+                          <Button size="sm" type={'submit'}>
+                            Withdraw
+                          </Button>
+                        </form>
+                      ) : (
+                        ''
+                      )}
+                    </FlexBoxColumn>
+                  ) : fundData.Status === 1 ? (
+                    <>
+                      <p>
+                        This Smoke Signal has met its fundraiser goal! If you
+                        are the owner, you can withdraw the funds to the fundee
+                        now.
+                      </p>
+                      <form onSubmit={withdraw}>
+                        <Button size="sm" type={'submit'}>
+                          Withdraw
+                        </Button>
+                      </form>
+                      {fundData.ICO ? (
+                        <>
+                          <Button
+                            size="sm"
+                            handleClick={() => {
+                              getTokens();
+                            }}
+                          >
+                            Get Tokens
+                          </Button>
+                        </>
+                      ) : (
+                        ''
+                      )}
+                    </>
+                  ) : fundData.Status === 2 ? (
+                    <>
+                      <p>
+                        This Smoke Signal failed to meet its goal. If you made a
+                        refundable donation, you can withdraw those funds now.
+                      </p>
+                      <form onSubmit={withdraw}>
+                        <Button size="sm" type={'submit'}>
+                          Withdraw
+                        </Button>
+                      </form>
+                    </>
+                  ) : (
+                    ''
+                  )}
+
                   <div className={`${proseClass} text-zinc-900`}>
                     <p
                       dangerouslySetInnerHTML={{
