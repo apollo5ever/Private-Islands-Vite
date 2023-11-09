@@ -19,7 +19,7 @@ export function useInitializeWallet() {
   const [getRandomAddress] = useGetRandomAddress();
 
   async function initXSWD() {
-    const ws = new WebSocketService('ws://localhost:44326/xswd');
+    const ws = new WebSocketService('ws://127.0.0.1:44326/xswd');
 
     async function initializeWithRetry() {
       console.log('websocket status check: ', ws.getState());
@@ -36,13 +36,11 @@ export function useInitializeWallet() {
       const handleResponse = async (response) => {
         if (response === 'User has authorized the application') {
           console.log('authenticated!');
-          const address = await getAddress();
-          const randomAddress = await getRandomAddress();
+          // const address = await getAddress();
+          //const randomAddress = await getRandomAddress();
           setState((state) => ({
             ...state,
             ws: ws,
-            userAddress: address,
-            randomAddress: randomAddress,
           }));
         }
       };
