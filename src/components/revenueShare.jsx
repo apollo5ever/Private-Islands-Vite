@@ -65,6 +65,23 @@ export default function RevenueShare() {
     fetchData();
   }, [state.walletMode, state.userAddress]);
 
+  const checkOldFunds = async () => {
+    console.log('check old funds');
+    const migrateData = {
+      ringsize: 2,
+      scid: 'ce99faba61d984bd4163b31dd4da02c5bff32445aaaa6fc70f14fe0d257a15c3',
+      sc_rpc: [
+        {
+          name: 'entrypoint',
+          value: 'Migrate',
+          datatype: 'S',
+        },
+      ],
+    };
+    await sendTransaction(migrateData);
+    //  const oldSCdata = await getSC("ce99faba61d984bd4163b31dd4da02c5bff32445aaaa6fc70f14fe0d257a15c3",false,true)
+  };
+
   const BountyBuyShares = React.useCallback(async (e) => {
     e.preventDefault();
     console.log('bounty selected');
@@ -396,6 +413,16 @@ export default function RevenueShare() {
       </div>
       <div className="mt-3 text-xl">
         It appears you Do Not have any COCO to Migrate
+      </div>
+      <div className="mt-3 text-xl">
+        <div className="mb-6 text-4xl font-bold">
+          If You Believe You Have Unclaimed Funds From Old Contracts
+        </div>
+
+        <p>Click here than DM apollo</p>
+        <Button size="small" handleClick={checkOldFunds}>
+          Check
+        </Button>
       </div>
     </FullPageContainer>
   );
