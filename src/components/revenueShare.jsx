@@ -23,7 +23,11 @@ export default function RevenueShare() {
 
   React.useEffect(() => {
     async function fetchData() {
-      let registry = await getSC(state.scid_registry, false, true);
+      let registry = await getSC(
+        'a5daa9a02a81a762c83f3d4ce4592310140586badb4e988431819f47657559f7',
+        false,
+        true
+      );
       // console.log("registry ", registry.stringkeys.T_DERO);
       setRegistryTreasury(registry.stringkeys.T_DERO);
       if (registry.stringkeys[`${state.userAddress}_SHARES`]) {
@@ -282,7 +286,7 @@ export default function RevenueShare() {
     console.log('bounty selected');
 
     const data = new Object({
-      scid: state.scid_registry,
+      scid: 'a5daa9a02a81a762c83f3d4ce4592310140586badb4e988431819f47657559f7',
       ringsize: 2,
       sc_rpc: [
         {
