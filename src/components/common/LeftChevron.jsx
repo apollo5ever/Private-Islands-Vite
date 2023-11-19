@@ -1,11 +1,7 @@
 import leftChevron from '/src/assets/images/ChevronLeft.svg';
 
 export const LeftChevron = () => {
-  return (
-    <div className="absolute left-4 top-1/2 -translate-y-1/2 transform">
-      <ChevronIcon className="h-10 w-10" src={leftChevron} />
-    </div>
-  );
+  return <ChevronIcon className="h-10 w-10" src={leftChevron} />;
 };
 
 const ChevronIcon = (props) => (
