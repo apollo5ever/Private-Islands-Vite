@@ -34,6 +34,13 @@ export const daemonModes = {
   POOLS: 'pools',
 };
 
+export const breakPoint = {
+  SMALL: 640,
+  MEDIUM: 768,
+  LARGE: 1024,
+  DESKTOP: 1280,
+};
+
 // General utility functions
 /*
  To get classnames formatted properly
@@ -48,10 +55,8 @@ export class Helpers {
       case piAssetType.ISLAND:
       case piAssetType.BOUNTY:
       case piAssetType.FUNDRAISER:
-        case piAssetType.SUBSCRIPTION:
+      case piAssetType.SUBSCRIPTION:
         return tile.Name;
-
-    
     }
   };
 
@@ -60,11 +65,8 @@ export class Helpers {
       case piAssetType.ISLAND:
       case piAssetType.BOUNTY:
       case piAssetType.FUNDRAISER:
-     case piAssetType.SUBSCRIPTION:   
+      case piAssetType.SUBSCRIPTION:
         return tile.Tagline;
-
-      
-       
     }
   };
 
@@ -73,10 +75,8 @@ export class Helpers {
       case piAssetType.ISLAND:
       case piAssetType.BOUNTY:
       case piAssetType.FUNDRAISER:
-       case piAssetType.SUBSCRIPTION:  
+      case piAssetType.SUBSCRIPTION:
         return tile.Image;
-
-     
     }
   };
 
@@ -85,10 +85,8 @@ export class Helpers {
       case piAssetType.ISLAND:
       case piAssetType.BOUNTY:
       case piAssetType.FUNDRAISER:
-        case piAssetType.SUBSCRIPTION: 
+      case piAssetType.SUBSCRIPTION:
         return tile.Description;
-
-     
     }
   };
 
@@ -106,9 +104,9 @@ export class Helpers {
   static getInitiatorName = (tile) => {
     switch (tile.type) {
       case piAssetType.ISLAND:
-       return tile.Name; 
+        return tile.Name;
       case piAssetType.SUBSCRIPTION:
-        
+
       case piAssetType.BOUNTY:
       case piAssetType.FUNDRAISER:
         return tile?.Initiator.Name;

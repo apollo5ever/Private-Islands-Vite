@@ -44,6 +44,7 @@ export const TileGrid = () => {
     setSelectedTile,
     selectedIndex,
     setSelectedIndex,
+    isMobile,
     allElements,
   } = useContext(TileContext);
   const [tilesPerRow, setTilesPerRow] = useState(8);
@@ -107,7 +108,7 @@ export const TileGrid = () => {
 
     return (
       <div className="flex h-full w-full">
-        <div className="mr-2 h-full w-3/4 overflow-x-hidden">
+        <div className="mr-2 h-full w-full overflow-x-hidden md:w-3/4">
           <PrimaryCard
             data={selectedTile}
             selectedIndex={selectedIndex}
@@ -116,9 +117,11 @@ export const TileGrid = () => {
             tiles={allElements}
           />
         </div>
-        <div className="flex-grow overflow-auto">
-          <SidebarCard data={selectedTile} />
-        </div>
+        {!isMobile && (
+          <div className="flex-grow overflow-auto">
+            <SidebarCard data={selectedTile} />
+          </div>
+        )}
       </div>
     );
   }
