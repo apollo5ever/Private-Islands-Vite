@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useGetAllElements } from '@/components/hooks/useGetAllElements.js';
 import { LoginContext } from '@/LoginContext.jsx';
-import { Helpers, piAssetType } from '@/utils/helpers.js';
+import { Helpers, piAssetType, breakPoint } from '@/utils/helpers.js';
 
 export const TileContext = createContext();
 
@@ -11,6 +11,9 @@ export const TileProvider = ({ children }) => {
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [initiatorTile, setInitiatorTile] = useState();
   const [isMyTile, setIsMyTile] = useState(false);
+  const [isMobile, setIsMobile] = useState(
+    window.innerWidth < breakPoint.MEDIUM
+  );
   const { allElements, getIslands, myIslands } = useGetAllElements(state);
 
   useEffect(() => {
@@ -38,6 +41,15 @@ export const TileProvider = ({ children }) => {
     }
   }, [allElements, selectedTile, myIslands]);
 
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < breakPoint.MEDIUM);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const gotoIslandTile = (scid) => {
     const island = allElements.find(
       (item) => item?.SCID === scid && item.type === piAssetType.ISLAND
@@ -60,6 +72,7 @@ export const TileProvider = ({ children }) => {
         gotoIslandTile,
         myIslands,
         isMyTile,
+        isMobile,
       }}
     >
       {children}

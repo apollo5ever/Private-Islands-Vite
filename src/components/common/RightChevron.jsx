@@ -1,11 +1,7 @@
 import rightChevron from '/src/assets/images/ChevronRight.svg';
 
 export const RightChevron = () => {
-  return (
-    <div className="absolute right-4 top-1/2 -translate-y-1/2 transform">
-      <ChevronIcon className="h-10 w-10" src={rightChevron} />
-    </div>
-  );
+  return <ChevronIcon className="h-10 w-10" src={rightChevron} />;
 };
 
 const ChevronIcon = (props) => (

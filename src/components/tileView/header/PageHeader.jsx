@@ -101,9 +101,9 @@ export const PageHeader = () => {
           className="mx-auto"
           onClick={() => setSelectedTile(null)}
         >
-          <h1 className="text-center font-fell text-7xl text-black">
+          <div className="text-center font-fell text-3xl text-black md:text-7xl">
             Dero Private Islands
-          </h1>
+          </div>
         </NavLink>
 
         <div className="flex items-center space-x-4">
