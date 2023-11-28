@@ -411,15 +411,13 @@ export default function RevenueShare() {
           ''
         )}
       </div>
-      <div className="mt-3 text-xl">
-        It appears you Do Not have any COCO to Migrate
-      </div>
+
       <div className="mt-3 text-xl">
         <div className="mb-6 text-4xl font-bold">
           If You Believe You Have Unclaimed Funds From Old Contracts
         </div>
 
-        <p>Click here than DM apollo</p>
+        <p>Click here then DM apollo</p>
         <Button size="small" handleClick={checkOldFunds}>
           Check
         </Button>
