@@ -23,7 +23,11 @@ export default function RevenueShare() {
 
   React.useEffect(() => {
     async function fetchData() {
-      let registry = await getSC(state.scid_registry, false, true);
+      let registry = await getSC(
+        'a5daa9a02a81a762c83f3d4ce4592310140586badb4e988431819f47657559f7',
+        false,
+        true
+      );
       // console.log("registry ", registry.stringkeys.T_DERO);
       setRegistryTreasury(registry.stringkeys.T_DERO);
       if (registry.stringkeys[`${state.userAddress}_SHARES`]) {
@@ -60,6 +64,23 @@ export default function RevenueShare() {
     }
     fetchData();
   }, [state.walletMode, state.userAddress]);
+
+  const checkOldFunds = async () => {
+    console.log('check old funds');
+    const migrateData = {
+      ringsize: 2,
+      scid: 'ce99faba61d984bd4163b31dd4da02c5bff32445aaaa6fc70f14fe0d257a15c3',
+      sc_rpc: [
+        {
+          name: 'entrypoint',
+          value: 'Migrate',
+          datatype: 'S',
+        },
+      ],
+    };
+    await sendTransaction(migrateData);
+    //  const oldSCdata = await getSC("ce99faba61d984bd4163b31dd4da02c5bff32445aaaa6fc70f14fe0d257a15c3",false,true)
+  };
 
   const BountyBuyShares = React.useCallback(async (e) => {
     e.preventDefault();
@@ -282,7 +303,7 @@ export default function RevenueShare() {
     console.log('bounty selected');
 
     const data = new Object({
-      scid: state.scid_registry,
+      scid: 'a5daa9a02a81a762c83f3d4ce4592310140586badb4e988431819f47657559f7',
       ringsize: 2,
       sc_rpc: [
         {
@@ -390,8 +411,16 @@ export default function RevenueShare() {
           ''
         )}
       </div>
+
       <div className="mt-3 text-xl">
-        It appears you Do Not have any COCO to Migrate
+        <div className="mb-6 text-4xl font-bold">
+          If You Believe You Have Unclaimed Funds From Old Contracts
+        </div>
+
+        <p>Click here then DM apollo</p>
+        <Button size="small" handleClick={checkOldFunds}>
+          Check
+        </Button>
       </div>
     </FullPageContainer>
   );

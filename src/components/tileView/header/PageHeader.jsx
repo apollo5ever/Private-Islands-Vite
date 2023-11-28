@@ -40,8 +40,8 @@ export const PageHeader = () => {
         height: '160px',
         backgroundImage:
           theme === 'dark'
-            ? `url('/src/assets/parallax/HeaderBackgroundNight.png')`
-            : `url('/src/assets/parallax/HeaderBackground.png')`,
+            ? `url('/assets/parallax/HeaderBackgroundNight.png')`
+            : `url('/assets/parallax/HeaderBackground.png')`,
         backgroundSize: 'cover',
       }}
     >
