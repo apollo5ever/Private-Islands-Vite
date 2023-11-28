@@ -18,6 +18,25 @@ export const Fundraiser = ({ fundData }) => {
   const [state, setState] = useContext(LoginContext);
   const [editing, setEditing] = useState(false);
   const [sendTransaction] = useSendTransaction();
+  const [tooltipVisible, setTooltipVisible] = useState(false);
+  const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
+
+  const handleMouseOver = (e) => {
+    const target = e.target;
+    const rect = target.getBoundingClientRect();
+
+    // Show tooltip
+    setTooltipPosition({
+      top: rect.top + window.scrollY,
+      left: rect.left + rect.width,
+    });
+    setTooltipVisible(true);
+  };
+
+  const handleMouseOut = () => {
+    // Hide tooltip
+    setTooltipVisible(false);
+  };
 
   const withdraw = useCallback(async (event) => {
     event.preventDefault();
@@ -321,10 +340,34 @@ export const Fundraiser = ({ fundData }) => {
                   ) : (
                     ''
                   )}
-                  <h3>Deadline: {dateString(fundData.Expiry)}</h3>
+                  <h3 onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>
+                    Deadline: {dateString(fundData.Expiry).local}
+                    {tooltipVisible && (
+                      <div
+                        id="tooltip"
+                        style={{
+                          display: 'block',
+                          position: 'absolute',
+
+                          backgroundColor: '#f9f9f9',
+                          border: '1px solid #ccc',
+                          padding: '10px',
+                        }}
+                      >
+                        {dateString(fundData.Expiry).utc}
+                      </div>
+                    )}
+                  </h3>
                   {fundData.Status === 0 ? (
                     <FlexBoxColumn align="end" className="mb-2">
-                      <form onSubmit={supportGoal}>
+                      <form
+                        onSubmit={supportGoal}
+                        style={{
+                          position: 'fixed',
+                          top: 300,
+                          right: 600,
+                        }}
+                      >
                         <FlexBoxColumn align="end" className="mb-2">
                           <input
                             id="amount"
@@ -425,7 +468,7 @@ export const Fundraiser = ({ fundData }) => {
 
                   {fundData.Status === 0 ? (
                     <FlexBoxColumn align="end" className="mb-2">
-                      <form onSubmit={supportGoal}>
+                      {/* <form onSubmit={supportGoal}>
                         <FlexBoxColumn align="end" className="mb-2">
                           <input
                             id="amount"
@@ -446,7 +489,7 @@ export const Fundraiser = ({ fundData }) => {
                             Support
                           </Button>
                         </FlexBoxColumn>
-                      </form>
+                      </form> */}
                       {fundData.WithdrawlType == 'address' &&
                       fundData.Raised >= fundData.Goal ? (
                         <form onSubmit={withdraw}>
