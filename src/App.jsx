@@ -18,6 +18,7 @@ import { useGetTransfers } from './components/hooks/useGetTransfers';
 import { useGetAddress } from './components/hooks/useGetAddress';
 import { useGetContracts } from './components/hooks/useGetContracts';
 import { useGetRandomAddress } from './components/hooks/useGetRandomAddress';
+import { PageHeader } from '@/components/tileView/header/PageHeader.jsx';
 import ThemeContext from './components/providers/ThemeContext';
 
 function App() {
@@ -173,32 +174,34 @@ function App() {
   }, [state.deroBridgeApiRef, state.ipfs, state.walletMode, state.scid]);
 
   return (
-    <div className="App">
-      <Outlet />
-      <div
-        style={{
-          color: '#B6DCE4',
-          display: theme.theme == 'dark' ? 'none' : 'block',
-        }}
-      >
-        {' '}
-        <h3>Coco Balance: {state.cocoBalance}</h3>
-        <button
-          onClick={() => {
-            logger(LOG.DEBUG, COMPNAME, 'state', state);
+    <>
+      <PageHeader />
+      <div className="App">
+        <Outlet />
+        <div
+          style={{
+            color: '#B6DCE4',
+            display: theme.theme == 'dark' ? 'none' : 'block',
           }}
         >
-          State
-        </button>
-        <button
-          onClick={() => {
-            getContracts();
-          }}
-        >
-          Get Contracts
-        </button>
+          <h3>Coco Balance: {state.cocoBalance}</h3>
+          <button
+            onClick={() => {
+              logger(LOG.DEBUG, COMPNAME, 'state', state);
+            }}
+          >
+            State
+          </button>
+          <button
+            onClick={() => {
+              getContracts();
+            }}
+          >
+            Get Contracts
+          </button>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

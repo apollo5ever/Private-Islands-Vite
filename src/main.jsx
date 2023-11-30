@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { HashRouter, BrowserRouter, Route, Routes } from 'react-router-dom';
 import App from './App';
 import './index.css';
+import { Home } from '@/components/tileView/home.jsx';
 import { LoginProvider } from './LoginContext';
 import { LOG, LoggerProvider } from '@/components/providers/LoggerContext.jsx';
 import OAO from './components/oao';
@@ -22,7 +23,6 @@ import CreateFund from './components/addFundraiser';
 import BuryTreasure from './components/buryTreasure';
 import Test from './components/simulatorTest';
 import { PageHeader } from '@/components/tileView/header/PageHeader.jsx';
-// import { PageHeader } from '@/components/header/PageHeader.jsx';
 import { ThemeProvider } from '@/components/providers/ThemeContext.jsx';
 
 import './polyfills';
@@ -72,44 +72,44 @@ createRoot(document.getElementById('root')).render(
           <LoggerProvider loggingThreshold={LOG[loggingThreshold] ?? LOG.OFF}>
             <HashRouter>
               <TileProvider>
-                <PageHeader />
                 <Routes>
-                  <Route path="/" element={<App />}>
-                    <Route path="/tiles" element={<TileGrid />} />
-                    <Route path="/about" element={<About />} />
-                    <Route path="/lotto" element={<COCOLotto />} />
-                    <Route path="/migration" element={<RevenueShare />} />
-                    <Route path="/island/:island" element={<Island />} />
+                  <Route path="/" element={<Home />} />
+                  <Route path="/pi" element={<App />}>
+                    <Route path="/pi/tiles" element={<TileGrid />} />
+                    <Route path="/pi/about" element={<About />} />
+                    <Route path="/pi/lotto" element={<COCOLotto />} />
+                    <Route path="/pi/migration" element={<RevenueShare />} />
+                    <Route path="/pi/island/:island" element={<Island />} />
                     <Route
-                      path="/island/:island/smokesignal/:index"
+                      path="/pi/island/:island/smokesignal/:index"
                       element={<Fundraiser />}
                     />
                     <Route
-                      path="/island/:island/treasure/:index"
+                      path="/pi/island/:island/treasure/:index"
                       element={<Treasure />}
                     />
-                    <Route path="/test" element={<Test />} />
+                    <Route path="/pi/test" element={<Test />} />
                     <Route path="smokesignals" element={<FundList />} />
                     <Route path="treasure" element={<BountyList />} />
                     <Route
-                      path="/newsignal/:island/:index"
+                      path="/pi/newsignal/:island/:index"
                       element={<CreateFund />}
                     />
                     <Route
-                      path="/burytreasure/:island/:index"
+                      path="/pi/burytreasure/:island/:index"
                       element={<BuryTreasure />}
                     />
-                    <Route path="/oao" element={<OAO />} />
-                    <Route path="/ceo" element={<CEO />} />
+                    <Route path="/pi/oao" element={<OAO />} />
+                    <Route path="/pi/ceo" element={<CEO />} />
                     <Route path="myisland" element={<MyIsland />} />
                     <Route path="claimisland" element={<ClaimIsland />} />
                     <Route path="archipelago" element={<TileGrid />} />
                     <Route
-                      path="/island/:island/compose"
+                      path="/pi/island/:island/compose"
                       element={<PublishPost />}
                     />
                     <Route
-                      path="/island/:island/modifytier/:tier"
+                      path="/pi/island/:island/modifytier/:tier"
                       element={<ModifyTier />}
                     />
                   </Route>

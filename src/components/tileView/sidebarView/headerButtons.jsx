@@ -49,14 +49,14 @@ export const HeaderButtons = ({ type }) => {
     switch (type) {
       case piAssetType.BOUNTY:
         navigate(
-          `/burytreasure/${selectedTile.SCID}/${
+          `/pi/burytreasure/${selectedTile.SCID}/${
             selectedTile.Bounties && selectedTile.Bounties.length
           }`
         );
         break;
       case piAssetType.FUNDRAISER:
         navigate(
-          `/newsignal/${selectedTile.SCID}/${
+          `/pi/newsignal/${selectedTile.SCID}/${
             selectedTile.Fundraisers && selectedTile.Fundraisers.length
           }`
         );
@@ -64,7 +64,7 @@ export const HeaderButtons = ({ type }) => {
 
       case piAssetType.SUBSCRIPTION:
         navigate(
-          `/island/${selectedTile.SCID}/modifyTier/${
+          `/pi/island/${selectedTile.SCID}/modifyTier/${
             (selectedTile.Tiers && selectedTile.Tiers.length) || 0
           }`
         );

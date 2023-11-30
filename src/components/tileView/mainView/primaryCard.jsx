@@ -16,7 +16,7 @@ export const PrimaryCard = ({ data, tiles }) => {
     useContext(TileContext);
 
   return (
-    <div className="relative flex w-full">
+    <div className="relative flex w-full flex-wrap">
       <Button
         className="absolute right-8 top-5 z-10"
         variant="circle"
