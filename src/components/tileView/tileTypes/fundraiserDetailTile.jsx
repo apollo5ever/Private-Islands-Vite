@@ -75,7 +75,7 @@ export const FundraiserDetailTile = (props) => {
           </div>
           <div className="float-right inline-block w-full rounded-full">
             <progress
-              className="progress progress-accent w-full"
+              className="progress-accent progress w-full"
               value={raised}
               max={goal}
             />

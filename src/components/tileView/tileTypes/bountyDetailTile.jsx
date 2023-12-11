@@ -10,7 +10,7 @@ export const BountyDetailTile = (props) => {
   const bountyAmount = tile.Amount / 100000;
 
   return (
-    <div className="mx-auto grid w-full flex-1 grid-cols-1 content-between">
+    <div className="mx-auto grid w-full flex-1 grid-cols-1 content-between rounded-lg bg-[#FBF8EC]">
       <div className="img_container relative">
         <div
           className="bounty_img relative inline-block h-36 w-full rounded-lg bg-cover bg-center bg-no-repeat"
@@ -44,9 +44,7 @@ export const BountyDetailTile = (props) => {
             />
             {/*TODO Update this content - For now leaving as a space as I'm not sure what this is*/}
             <div className="text-center">
-              <h4 className="font-['Average Sans'] text-5xl text-[#444444]">
-                ' '
-              </h4>
+              <h4 className="font-['Average Sans'] text-5xl text-[#444444]"></h4>
             </div>
           </div>
           <div className="w-3/4 flex-1 space-y-6 pl-7 leading-6">
@@ -57,17 +55,17 @@ export const BountyDetailTile = (props) => {
               <div className="font-fell text-3xl leading-6 text-[#B1AF94]">
                 {Helpers.getTileName(tile)}
               </div>
-              <p className="font-['Average Sans'] text-2xl text-[#FFA450]">
-                dangerouslySetInnerHTML=
-                {{ __html: Helpers.getTileDescription(tile) }}
-              </p>
+              <div className="font-fell text-3xl leading-6 text-[#B1AF94]">
+                {Helpers.getTileTagline(tile)}
+              </div>
             </div>
-            <div className="card_description">
+            <div>
               <p
-                className={`${proseClass} line-clamp-5 font-fell text-lg text-[#484541]`}
-              >
-                {Helpers.getTileDescription(tile)}
-              </p>
+                className={`${proseClass} line-clamp-5 text-lg text-[#484541]`}
+                dangerouslySetInnerHTML={{
+                  __html: Helpers.getTileDescription(tile),
+                }}
+              />
             </div>
           </div>
         </div>
