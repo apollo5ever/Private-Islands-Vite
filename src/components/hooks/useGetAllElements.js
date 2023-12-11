@@ -40,7 +40,7 @@ export const useGetAllElements = (state, isFirstVisit = true) => {
     // TODO MST - had trouble with the state mgmt as this is called from TileContext so think I had a timing issue?  It never shuffled
     // For now, isFirstVisit doesnt exist or isn't being used -- but want to do something with this at some ponit to limit shuffle
     return isFirstVisit ? Helpers.shuffleArray(elements) : elements;
-  }, [islands, bounties, fundraisers, subscriptions, isFirstVisit]);
+  }, [islands]);
 
   return {
     allElements: allElements,

@@ -17,6 +17,7 @@ export default function IslandList() {
   let [searchParams, setSearchParams] = useSearchParams();
 
   function shuffleArray(array) {
+    console.log('shuffle!');
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [array[i], array[j]] = [array[j], array[i]];
@@ -25,17 +26,11 @@ export default function IslandList() {
   }
 
   const getIslands = React.useCallback(async () => {
-    setIslands(await GI(state));
+    setIslands(shuffleArray(await GI()));
+    console.log('shuffle');
   });
 
-  React.useEffect(() => {
-    getIslands();
-  }, []);
-
-  React.useEffect(() => {
-    // shuffle the array and update the state
-    setShuffledIslands(shuffleArray(islands));
-  }, [islands]); // specify an empty array as the dependencies to run the effect only when the component mounts or updates
+  // specify an empty array as the dependencies to run the effect only when the component mounts or updates
 
   return (
     <>

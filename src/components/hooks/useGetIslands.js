@@ -10,11 +10,12 @@ export const useGetIslands = (state) => {
   const [islands, setIslands] = useState([]);
   const [myIslands, setMyIslands] = useState(state.myIslands);
   const [shuffledIslands, setShuffledIslands] = useState([]);
+  
   const COMPNAME = 'useGetIslands.js';
 
   const getIslands = useCallback(async () => {
     try {
-      const islandsData = await GI(state);
+      const islandsData = await GI();
       setIslands(islandsData);
       let myisles = await Promise.all(
         islandsData.map(async (island) => {
@@ -28,13 +29,20 @@ export const useGetIslands = (state) => {
         })
       ).then((results) => results.filter((result) => result !== null));
       setMyIslands(myisles);
-
-      setShuffledIslands(Helpers.shuffleArray([...islandsData]));
+      if(shuffledIslands.length==0){
+        console.log("shuffle zero")
+        setShuffledIslands(Helpers.shuffleArray([...islandsData]));
+      }
+      
       logger(LOG.API, COMPNAME, 'All Islands', islandsData);
     } catch (error) {
       logger(LOG.ERROR, COMPNAME, 'Error fetching islands', error);
     }
-  }, [state, logger]);
+  }, [ state.myIslands]);
+
+ 
+
+ 
 
   useEffect(() => {
     let isMounted = true;
@@ -46,7 +54,7 @@ export const useGetIslands = (state) => {
     return () => {
       isMounted = false;
     };
-  }, [state, getIslands]);
+  }, []);
 
   return {
     islands,

@@ -114,7 +114,7 @@ export default function Treasure() {
   });
 
   const getFunds = React.useCallback(async () => {
-    let profile = await GI(state, island);
+    let profile = await GI(island);
     console.log(profile.Bounties);
     setTreasure(profile.Bounties[index]);
     setIslandSCID(profile.SCID);
@@ -295,18 +295,18 @@ export default function Treasure() {
                 cancel
               </small>
               <input
-                className="input input-bordered w-full max-w-xs"
+                className="input-bordered input w-full max-w-xs"
                 placeholder="name"
                 id="Name"
               />
               <input
-                className="input input-bordered w-full max-w-xs"
+                className="input-bordered input w-full max-w-xs"
                 placeholder="image url"
                 defaultValue={treasure.image}
                 id="Image"
               />
               <input
-                className="input input-bordered w-full max-w-xs"
+                className="input-bordered input w-full max-w-xs"
                 placeholder="tagline"
                 defaultValue={treasure.tagline}
                 id="Tagline"
@@ -564,7 +564,7 @@ export default function Treasure() {
                         id="amount"
                         type="text"
                         placeholder="Amount (Dero)"
-                        className="input input-bordered w-full max-w-xs"
+                        className="input-bordered input w-full max-w-xs"
                       />
                       <Button size="small" type={'submit'}>
                         Add Treasure
@@ -578,7 +578,7 @@ export default function Treasure() {
                         id="proof"
                         type="text"
                         placeholder="proof"
-                        className="input input-bordered w-full max-w-xs"
+                        className="input-bordered input w-full max-w-xs"
                       />
                       <Button size="small" type={'submit'}>
                         Claim Treasure
