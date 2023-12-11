@@ -233,7 +233,7 @@ export const Fundraiser = ({ fundData }) => {
   });
 
   return (
-    <FlexBoxRow className="align-center card card-side my-3 whitespace-normal bg-secondary shadow-xl">
+    <FlexBoxRow className="align-center card card-side my-3 flex-wrap whitespace-normal bg-secondary shadow-xl">
       <div>
         {!editing &&
         myIslands &&
@@ -296,7 +296,7 @@ export const Fundraiser = ({ fundData }) => {
           <>
             <div className="card-body break-words">
               <FlexBoxColumn align="start" className="">
-                <figure className="mr-4 min-w-[200px] max-w-[500px] content-center rounded-lg">
+                <figure className="mr-4 min-w-[200px] max-w-[350px] content-center rounded-lg md:max-w-[500px]">
                   <img
                     src={Helpers.getTileImage(fundData)}
                     alt={Helpers.getTileName(fundData)}
@@ -362,6 +362,7 @@ export const Fundraiser = ({ fundData }) => {
                     <FlexBoxColumn align="end" className="mb-2">
                       <form
                         onSubmit={supportGoal}
+                        className="w-full"
                         style={{
                           position: 'fixed',
                           top: 300,
@@ -371,11 +372,11 @@ export const Fundraiser = ({ fundData }) => {
                         <FlexBoxColumn align="end" className="mb-2">
                           <input
                             id="amount"
-                            className="input-bordered input w-full max-w-xs"
+                            className="input input-bordered w-full sm:max-w-xs"
                             placeholder="Dero amount to donate"
                             type="text"
                           />
-                          <div>
+                          <div className="mt-2 flex items-center justify-end">
                             <label htmlFor="refundable">Refundable?</label>{' '}
                             &nbsp;
                             <input
@@ -468,15 +469,15 @@ export const Fundraiser = ({ fundData }) => {
 
                   {fundData.Status === 0 ? (
                     <FlexBoxColumn align="end" className="mb-2">
-                      {/* <form onSubmit={supportGoal}>
+                      <form onSubmit={supportGoal} className="w-full">
                         <FlexBoxColumn align="end" className="mb-2">
                           <input
                             id="amount"
-                            className="input-bordered input w-full max-w-xs"
+                            className="input input-bordered w-full sm:max-w-xs"
                             placeholder="Dero amount to donate"
                             type="text"
                           />
-                          <div>
+                          <div className="mt-2 flex items-center justify-end">
                             <label htmlFor="refundable">Refundable?</label>{' '}
                             &nbsp;
                             <input
@@ -489,7 +490,7 @@ export const Fundraiser = ({ fundData }) => {
                             Support
                           </Button>
                         </FlexBoxColumn>
-                      </form> */}
+                      </form>
                       {fundData.WithdrawlType == 'address' &&
                       fundData.Raised >= fundData.Goal ? (
                         <form onSubmit={withdraw}>

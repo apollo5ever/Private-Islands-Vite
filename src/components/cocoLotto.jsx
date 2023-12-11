@@ -9,6 +9,7 @@ import bgImage from '@/assets/parallax/FancyIsland.png';
 import { FullPageContainer } from '@/components/common/FullPageContainer.jsx';
 import { FlexBoxColumn } from '@/components/common/FlexBoxColumn.jsx';
 import { Button } from '@/components/common/Button.jsx';
+import { Helpers } from '@/utils/helpers.js';
 
 export default function COCOLotto() {
   const [state, setState] = useContext(LoginContext);
@@ -212,11 +213,15 @@ export default function COCOLotto() {
       <div className="hero relative mt-3 items-start rounded-lg bg-secondary px-2 font-fell text-2xl">
         <FlexBoxColumn className="hero-content">
           {lottos.map((x) => (
-            <div className="mt-3 rounded-xl border border-accent p-4 text-2xl">
+            <div
+              className="mt-3 rounded-xl border border-accent p-4 text-2xl"
+              key={x.Name}
+            >
               <h1>{x.Name}</h1>
               <h3>Amount in atomic units: {x.Treasury}</h3>
               <h3>
-                Next Lotto Draw: {x.Time ? dateString(x.Time) : 'unspecified'}
+                Next Lotto Draw:&nbsp;
+                {x.Time ? Helpers.formatDate(x.Time) : 'unspecified'}
               </h3>
             </div>
           ))}
@@ -232,7 +237,7 @@ export default function COCOLotto() {
                 <input
                   type="number"
                   placeholder="tickets"
-                  className="input-bordered input w-full max-w-xs border border-accent"
+                  className="input input-bordered w-full max-w-xs border border-accent"
                   id="tickets"
                 />
               </div>
@@ -252,7 +257,7 @@ export default function COCOLotto() {
                 <input
                   type="number"
                   placeholder="tickets"
-                  className="input-bordered input w-full max-w-xs border border-accent"
+                  className="input input-bordered w-full max-w-xs border border-accent"
                   id="tickets"
                 />
               </div>

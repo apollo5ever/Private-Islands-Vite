@@ -10,7 +10,7 @@ export const PageHeader = () => {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
   const dropdownRef = useRef();
   const { theme } = useTheme();
-  const { setSelectedTile } = useContext(TileContext);
+  const { setSelectedTile, isMobile } = useContext(TileContext);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -70,41 +70,49 @@ export const PageHeader = () => {
           />
           {isDropDownOpen && (
             <div className="absolute left-12 top-10 z-50 rounded border bg-info text-xl shadow-lg">
+              <NavLink to="/" className="menu-item block border-b px-1">
+                Home
+              </NavLink>
               <NavLink
-                to="archipelago"
+                to="/pi/archipelago"
                 className="menu-item block border-b px-1"
                 onClick={() => setSelectedTile(null)}
               >
                 Explore Archipelago
               </NavLink>
               <NavLink
-                to="claimisland"
+                to="/pi/claimisland"
                 className="menu-item block border-b px-1"
               >
                 Claim Your Private Island
               </NavLink>
-              <NavLink to="lotto" className="menu-item block border-b px-1">
+              <NavLink to="/pi/lotto" className="menu-item block border-b px-1">
                 CoCo Lotto
               </NavLink>
-              <NavLink to="migration" className="menu-item block border-b px-1">
+              <NavLink
+                to="/pi/migration"
+                className="menu-item block border-b px-1"
+              >
                 Migration
               </NavLink>
-              <NavLink to="/about" className="menu-item block border-b px-1">
+              <NavLink to="/pi/about" className="menu-item block border-b px-1">
                 About
               </NavLink>
             </div>
           )}
         </div>
 
-        <NavLink
-          to="/tiles"
-          className="mx-auto"
-          onClick={() => setSelectedTile(null)}
-        >
-          <div className="text-center font-fell text-3xl text-black md:text-7xl">
-            Dero Private Islands
-          </div>
-        </NavLink>
+        {!isMobile && (
+          <NavLink
+            to="/pi/tiles"
+            className="mx-auto"
+            onClick={() => setSelectedTile(null)}
+          >
+            <div className="text-center font-fell text-3xl text-black md:text-7xl">
+              Dero Private Islands
+            </div>
+          </NavLink>
+        )}
 
         <div className="flex items-center space-x-4">
           <WalletToggle />

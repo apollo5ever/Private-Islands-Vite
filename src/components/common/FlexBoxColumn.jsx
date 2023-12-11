@@ -4,18 +4,26 @@ export const FlexBoxColumn = ({
   className,
   justify = '',
   align = '',
+  gap,
   children,
   maxHeight = '',
   overflow = '',
 }) => {
   const Justify = Helpers.twFlexJustify(justify);
   const Align = Helpers.twFlexAlignItems(align);
+  const Gap =
+    justify === 'stretch' && !gap
+      ? 'space-y-2'
+      : gap
+      ? `space-y-${gap.toString()}`
+      : '';
 
   const classNames = Helpers.formatClasses(
     className,
     'flex flex-col',
     Justify,
-    Align
+    Align,
+    Gap
   );
 
   const styles = {

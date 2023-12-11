@@ -1,3 +1,5 @@
+import { default as GI } from '@/components/getIslands.js';
+
 // App Constants
 
 export const WALLET_INPUT_RENDERS = {
@@ -41,6 +43,18 @@ export const breakPoint = {
   DESKTOP: 1280,
 };
 
+// TODO - Install i18next component & set up json file to for text replacement/translation
+export const seniorCocoMessages = {
+  home: {
+    [piAssetType.FUNDRAISER]:
+      'A Fundraiser (or Smoke Signal in my island life) offers you a way to raise Dero for a cause.  Basically it is a private, unstoppable, uncensorable GoFundMFe tool',
+    [piAssetType.SUBSCRIPTION]:
+      'A Subscription (or Message in a Bottle in my island life) enables you to offered tiered subscriptions to information you want to periodically provide for a fee, or simply a tiered subscription service',
+    [piAssetType.BOUNTY]:
+      'A Bounty (or Buried Treasure in my island life) offers you a way to get tasks done by offering a reward for the task at hand',
+  },
+};
+
 // General utility functions
 /*
  To get classnames formatted properly
@@ -76,8 +90,14 @@ export class Helpers {
       case piAssetType.BOUNTY:
       case piAssetType.FUNDRAISER:
       case piAssetType.SUBSCRIPTION:
-        return tile.Image;
+        return tile.Image ? tile.Image : this.getPlaceholderImage();
     }
+  };
+
+  static getPlaceholderImage = () => {
+    let numbers = [1, 2, 3, 4];
+    let randomIndex = Math.floor(Math.random() * numbers.length);
+    return `src/assets/images/islandPlaceholder_${numbers[randomIndex]}.png`;
   };
 
   static getTileDescription = (tile) => {
@@ -99,6 +119,11 @@ export class Helpers {
       case piAssetType.BOUNTY:
         return tile?.Initiator.SCID;
     }
+  };
+
+  static getInitiatorImage = async (state, tile) => {
+    const island = await GI(state, this.getInitiatorScid(tile));
+    return island.Image;
   };
 
   static getInitiatorName = (tile) => {
@@ -183,11 +208,42 @@ export class Helpers {
   };
 
   static getItemCounts = (island) => {
+    if (
+      island.SCID ===
+      'cf530bd98d200171a94bcd6ef1e3ad6348bfa3e6691196e64e93e7953b64a2e4'
+    ) {
+      console.log('GETIN ITME COUNTS FOR ', island);
+    }
     return {
       bountiesCount: island.Bounties ? island.Bounties.length : 0,
       tiersCount: island.Tiers ? island.Tiers.length : 0,
       fundraisersCount: island.Fundraisers ? island.Fundraisers.length : 0,
     };
+  };
+
+  static getSeniorCocoMessage = (page, type) => {
+    const DEFAULT_MESSAGE = '';
+
+    console.log('PAGE?TYPE', page, type);
+
+    if (seniorCocoMessages[page] && seniorCocoMessages[page][type]) {
+      return seniorCocoMessages[page][type];
+    }
+
+    return DEFAULT_MESSAGE;
+  };
+
+  static isDateBeforeToday = (dateStr) => {
+    const givenDate = new Date(dateStr);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Reset time to 00:00:00.000
+
+    return givenDate < today;
+  };
+
+  static formatDate = (dateStr) => {
+    const date = new Date(dateStr * 1000);
+    return date.toLocaleString();
   };
 
   static shuffleArray = (array) => {

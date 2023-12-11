@@ -4,7 +4,9 @@ module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}", 'node_modules/daisyui/dist/**/*.js'],
   theme: {
     extend: {
-      
+      clipPath: {
+        'deroHex': 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)', // This doesn't seem to work
+      },
       fontFamily: {
         'fell': ['IM FELL Double Pica SC', 'serif'],
       },
@@ -26,8 +28,8 @@ module.exports = {
             }
           }
         }
-      }
-    }
+      },
+    },
   },
   important: true,
   plugins: [require("@tailwindcss/typography"), require("daisyui")],

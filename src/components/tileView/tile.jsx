@@ -1,23 +1,22 @@
-import { useEffect, useState } from 'react';
+import { piAssetType } from '@/utils/helpers.js';
+import { IslandTile } from '@/components/tileView/tileTypes/islandTile.jsx';
+import { BountyTile } from '@/components/tileView/tileTypes/bountyTile.jsx';
+import { SubscriptionTile } from '@/components/tileView/tileTypes/subscriptionTile.jsx';
+import { FundraiserTile } from '@/components/tileView/tileTypes/fundraiserTile.jsx';
 
 export const Tile = (props) => {
-  const [src, setSrc] = useState(props.image);
-
-  useEffect(() => {
-    setSrc(props.image);
-  }, [props.image]);
+  const { tileClass, tile } = props;
 
   return (
-    <div className="relative m-0 overflow-hidden rounded-md p-1">
-      <img
-        className="h-full w-full rounded-xl object-cover object-center"
-        src={src}
-        onError={() =>
-          setSrc(
-            'https://privateislands.fund/static/media/logotransparent.ee389a36cdf74af7b010.png'
-          )
-        }
-      />
+    <div
+      className={`relative mx-auto flex w-full rounded-lg bg-[#FBF8EC] px-4 pb-6 pt-4 shadow-xl ring-1 ring-gray-900/5 hover:bg-gray-100 ${tileClass}`}
+    >
+      {tile.type === piAssetType.ISLAND && <IslandTile tile={tile} />}
+      {tile.type === piAssetType.BOUNTY && <BountyTile tile={tile} />}
+      {tile.type === piAssetType.SUBSCRIPTION && (
+        <SubscriptionTile tile={tile} />
+      )}
+      {tile.type === piAssetType.FUNDRAISER && <FundraiserTile tile={tile} />}
     </div>
   );
 };
