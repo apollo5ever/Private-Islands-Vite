@@ -35,7 +35,7 @@ export default function Island() {
 
   const getIslands = React.useCallback(async () => {
     console.log('client get island ', params.island);
-    setIsland(await GI(state, params.island));
+    setIsland(await GI(params.island));
   });
 
   const getIslandObjects = React.useCallback(async () => {
