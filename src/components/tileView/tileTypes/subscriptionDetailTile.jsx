@@ -40,7 +40,7 @@ export const SubscriptionDetailTile = (props) => {
         <div className="upper_content flex w-full space-y-6">
           <div className="w-1/4 space-y-10 pt-8 text-center">
             <img
-              src="https://redwebdesigns.ca/private/img/icons/icon_bottle_light.svg"
+              src={bottle}
               className="mx-auto ml-2 w-full max-w-[70px]"
               alt="Dero Subscription on Private Islands"
             />
@@ -71,9 +71,7 @@ export const SubscriptionDetailTile = (props) => {
       </div>
       <div className="subscription_amount mt-7 w-full flex-1 place-items-end">
         <p className="font-['Average Sans'] text-right text-4xl text-[#61C0A8]">
-          <p>
-            {`${subscriptionAmount} Dero per ${subscriptionPeriodInDays} days`}
-          </p>
+          {`${subscriptionAmount} Dero per ${subscriptionPeriodInDays} days`}
         </p>
       </div>
     </div>
