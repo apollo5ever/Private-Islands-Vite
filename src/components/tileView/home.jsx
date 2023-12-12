@@ -111,24 +111,20 @@ export const Home = () => {
                     <div className="rpc_info mb-3 w-full rounded-lg bg-slate-100 px-2 py-2 shadow-lg ring-1 ring-slate-300 sm:max-w-xs">
                       <p className="text-slate-500">Get the RPC extension:</p>
                       <div className="buttons grid grid-cols-2 justify-items-center gap-4">
-                        <div className="w-full cursor-pointer py-1 text-left font-fell text-lg italic leading-tight text-[#61C0A8] underline">
+                        <a
+                          href="https://chromewebstore.google.com/detail/dero-rpc-bridge/nmofcfcaegdplgbjnadipebgfbodplpd"
+                          target="_blank"
+                          className="w-full cursor-pointer py-1 text-left font-fell text-lg italic leading-tight text-[#61C0A8] underline"
+                        >
                           (Chrome store)
-                        </div>
-                        <div className="w-full cursor-pointer py-1 text-left font-fell italic leading-tight text-[#61C0A8] underline">
+                        </a>
+                        <a
+                          href="https://addons.mozilla.org/en-US/firefox/addon/dero-rpc-bridge/?utm_source=addons.mozilla.org&utm_medium=referral&utm_content=search"
+                          target="_blank"
+                          className="w-full cursor-pointer py-1 text-left font-fell italic leading-tight text-[#61C0A8] underline"
+                        >
                           (Firefox)
-                        </div>
-                      </div>
-                    </div>
-                    <div className="how_to_start_3-4 relative">
-                      <div className="my-4 grid grid-cols-10 content-center items-center justify-start justify-items-start gap-2">
-                        <div className="col-span-1 text-2xl font-bold">3.</div>
-                        <div className="col-span-9">
-                          A DERO wallet running with the rpc-server turned on.
-                        </div>
-                        <div className="col-span-1 text-2xl font-bold">4.</div>
-                        <div className="col-span-9">
-                          The Dero RPC Bridge Extension
-                        </div>
+                        </a>
                       </div>
                     </div>
                   </div>
