@@ -31,8 +31,10 @@ export const IslandDetailTile = (props) => {
     }
   }, [tile.SCID]);
 
+  // TODO MTS - perhaps make into a hook if I want to use this elswhere at some point
+
+  /* Go to detail view for island or first element of given type for that island */
   const handleClick = (type) => {
-    console.log(`Clicked on ${type}`, filteredIndex, tile);
     let params = { scid: tile.SCID, type: type };
     params.index = 0;
     if (filteredIndex !== undefined) {
@@ -40,7 +42,6 @@ export const IslandDetailTile = (props) => {
     }
     setSearchParams(params);
     const elementName = Helpers.getOnChainAssetName(type);
-    console.log('ELEMENT NAME', elementName);
     if (
       (elementName in tile &&
         Array.isArray(tile[elementName]) &&
@@ -55,7 +56,7 @@ export const IslandDetailTile = (props) => {
   };
 
   return (
-    <div className="main_card relative mx-auto flex w-full rounded-lg bg-[#FBF8EC] px-4 pb-6 pt-4 shadow-xl ring-1 ring-gray-900/5 hover:bg-gray-100">
+    <div className="main_card relative mx-auto flex w-full cursor-default rounded-lg bg-[#FBF8EC] px-4 pb-6 pt-4 shadow-xl ring-1 ring-gray-900/5 hover:bg-gray-100">
       <div className="mx-auto grid w-full flex-1 grid-cols-1 content-between">
         <div className="img_container relative w-full justify-center pt-[140px]">
           <div
@@ -70,7 +71,7 @@ export const IslandDetailTile = (props) => {
               }}
             >
               <img
-                className="clip-deroHex h-[150px] w-full"
+                className="clip-deroHex h-[150px] w-full cursor-pointer"
                 style={{
                   clipPath:
                     'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
@@ -112,7 +113,9 @@ export const IslandDetailTile = (props) => {
           >
             <div
               className={`fire_icon ${
-                counts.fundraiser === 0 ? 'cursor-not-allowed' : ''
+                counts.fundraiser === 0
+                  ? 'cursor-not-allowed'
+                  : 'cursor-pointer'
               } space-y-3 text-center`}
             >
               <div className="font-black text-[#F89070]">
@@ -123,7 +126,9 @@ export const IslandDetailTile = (props) => {
                 <img
                   src={counts.fundraiser ? flame : unlitFlame}
                   className={`mx-auto w-[40px] ${
-                    counts.fundraiser === 0 ? 'cursor-not-allowed' : ''
+                    counts.fundraiser === 0
+                      ? 'cursor-not-allowed'
+                      : 'cursor-pointer'
                   }`}
                 />
               </div>
@@ -131,7 +136,9 @@ export const IslandDetailTile = (props) => {
             {/*fire_icon*/}
             <div
               className={`bottle_icon space-y-3 text-center ${
-                counts.subscription === 0 ? 'cursor-not-allowed' : ''
+                counts.subscription === 0
+                  ? 'cursor-not-allowed'
+                  : 'cursor-pointer'
               }`}
               onClick={() => handleClick(piAssetType.SUBSCRIPTION)}
             >
@@ -143,7 +150,9 @@ export const IslandDetailTile = (props) => {
                 <img
                   src={bottle}
                   className={`mx-auto w-[40px] ${
-                    counts.subscription === 0 ? 'cursor-not-allowed' : ''
+                    counts.subscription === 0
+                      ? 'cursor-not-allowed'
+                      : 'cursor-pointer'
                   }`}
                 />
               </div>
@@ -155,7 +164,7 @@ export const IslandDetailTile = (props) => {
             >
               <div
                 className={`font-black text-[#90663E] ${
-                  counts.bounty === 0 ? 'cursor-not-allowed' : ''
+                  counts.bounty === 0 ? 'cursor-not-allowed' : 'cursor-pointer'
                 }`}
               >
                 {counts.bounty}
@@ -165,7 +174,9 @@ export const IslandDetailTile = (props) => {
                 <img
                   src={treasureChest}
                   className={`mx-auto w-[40px] ${
-                    counts.bounty === 0 ? 'cursor-not-allowed' : ''
+                    counts.bounty === 0
+                      ? 'cursor-not-allowed'
+                      : 'cursor-pointer'
                   }`}
                 />
               </div>

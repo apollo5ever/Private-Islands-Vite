@@ -125,7 +125,9 @@ export const TileGrid = () => {
   logger(LOG.API, COMPNAME, 'TILE GRID', allElements);
 
   return (
-    <div className="relative flex min-h-screen flex-col justify-start overflow-hidden bg-gradient-to-b from-[#FDFBEA] via-[#F0EBDD] to-[#E5D7B9]">
+    <div className="relative flex min-h-screen flex-col justify-start overflow-hidden">
+      {/*TODO add gradient once we have colors refined*/}
+      {/*<div className="relative flex min-h-screen flex-col justify-start overflow-hidden bg-gradient-to-b from-[#FDFBEA] via-[#F0EBDD] to-[#E5D7B9]">*/}
       {!isMobile && (
         <TypeFilterBar
           selectedFilter={selectedFilter}
