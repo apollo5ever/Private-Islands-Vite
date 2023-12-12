@@ -34,7 +34,6 @@ export const TileProvider = ({ children }) => {
       const isTileMine = myIslands?.some(
         (island) => island.SCID === foundTile.SCID
       );
-      console.log('IS TIME MINE? ', isTileMine);
       setIsMyTile(!!isTileMine);
     } else {
       setIsMyTile(false);

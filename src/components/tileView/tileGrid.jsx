@@ -10,11 +10,12 @@ import { GridToggleIcon } from '@/components/tileView/gridToggleIcon.jsx';
 import { TileContext } from '@/components/providers/TileContext.jsx';
 import { useSearchParams } from 'react-router-dom';
 
-// TODO - review bounties to see the 'edit' link & do similar for other stuff - start with island
 // TODO - figure out how to poll status of dero txn to know when its complete (for claim island process)
-// TODO - add the new wallet toggle to the header once the code is merged to main
-// TODO - have the Shuffle only happen when tiles page loads first time
 // TODO - DetailCard is called in the new mainView/fundraiser.jsx -- I should move this to mainView folder and verify it works
+
+// TODO - Check bountyTile, bountyDetailTile & subscriptions and make sure css is right - missing card/outer styling??
+// TODO - Now that state removed as dependency from getIslands - when new island added, need a way to trigger re-render so getAllElements will update
+// TODO - maybe create a wrapper component for the repeated css in the tiel and tiledetail types
 
 /*
   TODO Notes for myself as I transition to new styling
@@ -124,16 +125,9 @@ export const TileGrid = () => {
   logger(LOG.API, COMPNAME, 'TILE GRID', allElements);
 
   return (
-    <div
-      className="relative"
-      // TODO - get this to be the entire page, need to do it at the App component level, and perhaps use TileContext to manage state for when I want it on conditionally
-      // style={{
-      //   backgroundImage: `url('/src/assets/parallax/IslandBackground.png')`,
-      //   backgroundSize: 'cover', // This will cover the entire viewport
-      //   backgroundPosition: 'center', // This will center the image
-      //   backgroundRepeat: 'no-repeat', // This will prevent the image from repeating
-      // }}
-    >
+    <div className="relative flex min-h-screen flex-col justify-start overflow-hidden">
+      {/*TODO add gradient once we have colors refined*/}
+      {/*<div className="relative flex min-h-screen flex-col justify-start overflow-hidden bg-gradient-to-b from-[#FDFBEA] via-[#F0EBDD] to-[#E5D7B9]">*/}
       {!isMobile && (
         <TypeFilterBar
           selectedFilter={selectedFilter}
@@ -152,21 +146,11 @@ export const TileGrid = () => {
       {/* Force tailwind to recognize these classes for tree shaking */}
       {/*<div className="hidden grid-cols-6 grid-cols-8"></div>*/}
       {/*<div className={`grid gap-2 grid-cols-${tilesPerRow}`}>*/}
-      <div className="mx-5 mb-20 mt-0 grid grid-cols-4 gap-4">
+      <div className="main_container relative mx-5 mb-20 mt-20 grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {filteredElements &&
           filteredElements.map((tile, index) => (
             <div
               key={tile.Name}
-              onClick={() => {
-                setSelectedTile(tile);
-                let params = { scid: tile.SCID, type: tile.type };
-                if (tile.Index !== undefined) {
-                  params.index = tile.Index;
-                }
-                setSearchParams(params);
-                setSelectedIndex(filteredElements.indexOf(tile));
-              }}
-              // className={`tile-wrapper m-0 p-0 ${tileSize} cursor-pointer transition-all duration-300`}
               className={`tile-wrapper m-0 cursor-pointer p-0 transition-all duration-300`}
             >
               <TileDetail
@@ -174,6 +158,7 @@ export const TileGrid = () => {
                 tileSize={tileSize}
                 key={tile.SCID + '_detail_' + index}
                 tile={tile}
+                filteredIndex={filteredElements.indexOf(tile)}
               />
               <Tile
                 tileClass="tile"

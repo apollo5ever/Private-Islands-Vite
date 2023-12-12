@@ -19,6 +19,13 @@ export const piAssetType = {
   ALL: 'all',
 };
 
+export const assetOnChainName = {
+  ISLAND: 'island',
+  BOUNTY: 'Bounties',
+  FUNDRAISER: 'Fundraisers',
+  SUBSCRIPTION: 'Tiers',
+};
+
 export const statusFilter = {
   ALL: null,
   ACTIVE: 0,
@@ -121,7 +128,7 @@ export class Helpers {
     }
   };
 
-  static getInitiatorImage = async (state, tile) => {
+  static getInitiatorImage = async (tile) => {
     const island = await GI(this.getInitiatorScid(tile));
     return island.Image;
   };
@@ -221,6 +228,13 @@ export class Helpers {
     };
   };
 
+  static getOnChainAssetName = (type) => {
+    const value = Object.keys(piAssetType).find(
+      (key) => piAssetType[key] === type
+    );
+    return assetOnChainName[value];
+  };
+
   static getSeniorCocoMessage = (page, type) => {
     const DEFAULT_MESSAGE = '';
 
@@ -247,7 +261,7 @@ export class Helpers {
   };
 
   static shuffleArray = (array) => {
-    console.log("shuffle!")
+    console.log('shuffle!');
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [array[i], array[j]] = [array[j], array[i]];

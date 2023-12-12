@@ -1,14 +1,18 @@
-import { Helpers } from '@/utils/helpers.js';
+import { Helpers, piAssetType } from '@/utils/helpers.js';
 import treasureChest from '@/assets/icons/icon_locked-chest_tan.svg';
 import flame from '@/assets/icons/icon_fire_orange.svg';
 import unlitFlame from '/src/assets/icons/icon_fire_light.svg';
 import bottle from '@/assets/icons/icon_bottle_blue.svg';
 import { useTheme } from '@/components/hooks/useTheme.js';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { TileContext } from '@/components/providers/TileContext.jsx';
 
 export const IslandDetailTile = (props) => {
-  const { tile } = props;
+  const { tile, filteredIndex } = props;
   const { proseClass } = useTheme();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { setSelectedTile, setSelectedIndex } = useContext(TileContext);
   const [counts, setCounts] = useState({
     bounty: 0,
     subscription: 0,
@@ -27,8 +31,32 @@ export const IslandDetailTile = (props) => {
     }
   }, [tile.SCID]);
 
+  // TODO MTS - perhaps make into a hook if I want to use this elswhere at some point
+
+  /* Go to detail view for island or first element of given type for that island */
+  const handleClick = (type) => {
+    let params = { scid: tile.SCID, type: type };
+    params.index = 0;
+    if (filteredIndex !== undefined) {
+      setSelectedIndex(filteredIndex);
+    }
+    setSearchParams(params);
+    const elementName = Helpers.getOnChainAssetName(type);
+    if (
+      (elementName in tile &&
+        Array.isArray(tile[elementName]) &&
+        tile[elementName].length > 0) ||
+      type === piAssetType.ISLAND
+    ) {
+      const firstElement =
+        type === piAssetType.ISLAND ? tile : tile[elementName][0];
+      const item = { ...firstElement, type: type };
+      setSelectedTile(item);
+    }
+  };
+
   return (
-    <div className="main_card relative mx-auto flex w-full rounded-lg bg-[#FBF8EC] px-4 pb-6 pt-4 shadow-xl ring-1 ring-gray-900/5 hover:bg-gray-100">
+    <div className="main_card relative mx-auto flex w-full cursor-default rounded-lg bg-[#FBF8EC] px-4 pb-6 pt-4 shadow-xl ring-1 ring-gray-900/5 hover:bg-gray-100">
       <div className="mx-auto grid w-full flex-1 grid-cols-1 content-between">
         <div className="img_container relative w-full justify-center pt-[140px]">
           <div
@@ -43,12 +71,13 @@ export const IslandDetailTile = (props) => {
               }}
             >
               <img
-                className="clip-deroHex h-[150px] w-full"
+                className="clip-deroHex h-[150px] w-full cursor-pointer"
                 style={{
                   clipPath:
                     'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
                 }}
                 src={Helpers.getTileImage(tile)}
+                onClick={() => handleClick(piAssetType.ISLAND)}
               />
             </div>
           </div>
@@ -78,8 +107,17 @@ export const IslandDetailTile = (props) => {
         </div>
         {/*upper_content*/}
         <div className="content_lower mt-7 text-center">
-          <div className="funding_type grid grid-cols-3 content-center gap-2 text-center text-xl italic">
-            <div className="fire_icon space-y-3 text-center">
+          <div
+            className="funding_type grid grid-cols-3 content-center gap-2 text-center text-xl italic"
+            onClick={() => handleClick(piAssetType.FUNDRAISER)}
+          >
+            <div
+              className={`fire_icon ${
+                counts.fundraiser === 0
+                  ? 'cursor-not-allowed'
+                  : 'cursor-pointer'
+              } space-y-3 text-center`}
+            >
               <div className="font-black text-[#F89070]">
                 {counts.fundraiser}
               </div>
@@ -87,28 +125,59 @@ export const IslandDetailTile = (props) => {
               <div>
                 <img
                   src={counts.fundraiser ? flame : unlitFlame}
-                  className="mx-auto w-[40px] cursor-pointer"
+                  className={`mx-auto w-[40px] ${
+                    counts.fundraiser === 0
+                      ? 'cursor-not-allowed'
+                      : 'cursor-pointer'
+                  }`}
                 />
               </div>
             </div>
             {/*fire_icon*/}
-            <div className="bottle_icon space-y-3 text-center">
+            <div
+              className={`bottle_icon space-y-3 text-center ${
+                counts.subscription === 0
+                  ? 'cursor-not-allowed'
+                  : 'cursor-pointer'
+              }`}
+              onClick={() => handleClick(piAssetType.SUBSCRIPTION)}
+            >
               <div className="font-black text-[#46BDDC]">
                 {counts.subscription}
               </div>
               <div className="clear-both"></div>
               <div>
-                <img src={bottle} className="mx-auto w-[40px] cursor-pointer" />
+                <img
+                  src={bottle}
+                  className={`mx-auto w-[40px] ${
+                    counts.subscription === 0
+                      ? 'cursor-not-allowed'
+                      : 'cursor-pointer'
+                  }`}
+                />
               </div>
             </div>
             {/*bottle_icon*/}
-            <div className="tresure_icon space-y-3 text-center">
-              <div className="font-black text-[#90663E]">{counts.bounty}</div>
+            <div
+              className="tresure_icon space-y-3 text-center"
+              onClick={() => handleClick(piAssetType.BOUNTY)}
+            >
+              <div
+                className={`font-black text-[#90663E] ${
+                  counts.bounty === 0 ? 'cursor-not-allowed' : 'cursor-pointer'
+                }`}
+              >
+                {counts.bounty}
+              </div>
               <div className="clear-both"></div>
               <div>
                 <img
                   src={treasureChest}
-                  className="mx-auto w-[40px] cursor-pointer"
+                  className={`mx-auto w-[40px] ${
+                    counts.bounty === 0
+                      ? 'cursor-not-allowed'
+                      : 'cursor-pointer'
+                  }`}
                 />
               </div>
             </div>

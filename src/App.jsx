@@ -6,7 +6,7 @@ import React, {
   useCallback,
 } from 'react';
 import { Outlet, NavLink, Link } from 'react-router-dom';
-import './App.css';
+// import './App.css';
 import { LoginContext } from './LoginContext';
 import { useGetSC } from './components/hooks/useGetSC';
 import { default as GI } from './components/getIslands';
