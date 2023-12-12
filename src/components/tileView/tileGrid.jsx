@@ -125,16 +125,7 @@ export const TileGrid = () => {
   logger(LOG.API, COMPNAME, 'TILE GRID', allElements);
 
   return (
-    <div
-      className="relative"
-      // TODO - get this to be the entire page, need to do it at the App component level, and perhaps use TileContext to manage state for when I want it on conditionally
-      // style={{
-      //   backgroundImage: `url('/src/assets/parallax/IslandBackground.png')`,
-      //   backgroundSize: 'cover', // This will cover the entire viewport
-      //   backgroundPosition: 'center', // This will center the image
-      //   backgroundRepeat: 'no-repeat', // This will prevent the image from repeating
-      // }}
-    >
+    <div className="relative flex min-h-screen flex-col justify-start overflow-hidden bg-gradient-to-b from-[#FDFBEA] via-[#F0EBDD] to-[#E5D7B9]">
       {!isMobile && (
         <TypeFilterBar
           selectedFilter={selectedFilter}
@@ -153,7 +144,7 @@ export const TileGrid = () => {
       {/* Force tailwind to recognize these classes for tree shaking */}
       {/*<div className="hidden grid-cols-6 grid-cols-8"></div>*/}
       {/*<div className={`grid gap-2 grid-cols-${tilesPerRow}`}>*/}
-      <div className="mx-5 mb-20 mt-0 grid grid-cols-4 gap-4">
+      <div className="main_container relative mx-5 mb-20 mt-20 grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {filteredElements &&
           filteredElements.map((tile, index) => (
             <div

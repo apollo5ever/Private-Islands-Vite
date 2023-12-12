@@ -121,7 +121,7 @@ export class Helpers {
     }
   };
 
-  static getInitiatorImage = async (state, tile) => {
+  static getInitiatorImage = async (tile) => {
     const island = await GI(this.getInitiatorScid(tile));
     return island.Image;
   };
@@ -247,7 +247,7 @@ export class Helpers {
   };
 
   static shuffleArray = (array) => {
-    console.log("shuffle!")
+    console.log('shuffle!');
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [array[i], array[j]] = [array[j], array[i]];
