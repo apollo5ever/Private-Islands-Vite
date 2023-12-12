@@ -122,7 +122,7 @@ export class Helpers {
   };
 
   static getInitiatorImage = async (state, tile) => {
-    const island = await GI(state, this.getInitiatorScid(tile));
+    const island = await GI(this.getInitiatorScid(tile));
     return island.Image;
   };
 
