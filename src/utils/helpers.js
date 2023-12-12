@@ -97,7 +97,7 @@ export class Helpers {
   static getPlaceholderImage = () => {
     let numbers = [1, 2, 3, 4];
     let randomIndex = Math.floor(Math.random() * numbers.length);
-    return `src/assets/images/islandPlaceholder_${numbers[randomIndex]}.png`;
+    return `public/assets/images/islandPlaceholder_${numbers[randomIndex]}.png`;
   };
 
   static getTileDescription = (tile) => {
