@@ -19,6 +19,13 @@ export const piAssetType = {
   ALL: 'all',
 };
 
+export const assetOnChainName = {
+  ISLAND: 'island',
+  BOUNTY: 'Bounties',
+  FUNDRAISER: 'Fundraisers',
+  SUBSCRIPTION: 'Tiers',
+};
+
 export const statusFilter = {
   ALL: null,
   ACTIVE: 0,
@@ -219,6 +226,13 @@ export class Helpers {
       tiersCount: island.Tiers ? island.Tiers.length : 0,
       fundraisersCount: island.Fundraisers ? island.Fundraisers.length : 0,
     };
+  };
+
+  static getOnChainAssetName = (type) => {
+    const value = Object.keys(piAssetType).find(
+      (key) => piAssetType[key] === type
+    );
+    return assetOnChainName[value];
   };
 
   static getSeniorCocoMessage = (page, type) => {

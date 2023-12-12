@@ -149,15 +149,15 @@ export const TileGrid = () => {
           filteredElements.map((tile, index) => (
             <div
               key={tile.Name}
-              onClick={() => {
-                setSelectedTile(tile);
-                let params = { scid: tile.SCID, type: tile.type };
-                if (tile.Index !== undefined) {
-                  params.index = tile.Index;
-                }
-                setSearchParams(params);
-                setSelectedIndex(filteredElements.indexOf(tile));
-              }}
+              // onClick={() => {
+              //   setSelectedTile(tile);
+              //   let params = { scid: tile.SCID, type: tile.type };
+              //   if (tile.Index !== undefined) {
+              //     params.index = tile.Index;
+              //   }
+              //   setSearchParams(params);
+              //   setSelectedIndex(filteredElements.indexOf(tile));
+              // }}
               // className={`tile-wrapper m-0 p-0 ${tileSize} cursor-pointer transition-all duration-300`}
               className={`tile-wrapper m-0 cursor-pointer p-0 transition-all duration-300`}
             >
@@ -166,6 +166,7 @@ export const TileGrid = () => {
                 tileSize={tileSize}
                 key={tile.SCID + '_detail_' + index}
                 tile={tile}
+                filteredIndex={filteredElements.indexOf(tile)}
               />
               <Tile
                 tileClass="tile"

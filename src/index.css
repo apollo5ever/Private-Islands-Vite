@@ -181,6 +181,7 @@ input, textarea {
   /*transform: translateY(0);*/
   opacity: 1;
   visibility: visible;
+  pointer-events: all; /* Allows click events when visible */
 }
 
 .tile-wrapper:hover .tile {
