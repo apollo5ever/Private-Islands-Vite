@@ -10,11 +10,12 @@ import { GridToggleIcon } from '@/components/tileView/gridToggleIcon.jsx';
 import { TileContext } from '@/components/providers/TileContext.jsx';
 import { useSearchParams } from 'react-router-dom';
 
-// TODO - review bounties to see the 'edit' link & do similar for other stuff - start with island
 // TODO - figure out how to poll status of dero txn to know when its complete (for claim island process)
-// TODO - add the new wallet toggle to the header once the code is merged to main
-// TODO - have the Shuffle only happen when tiles page loads first time
 // TODO - DetailCard is called in the new mainView/fundraiser.jsx -- I should move this to mainView folder and verify it works
+
+// TODO - Check bountyTile, bountyDetailTile & subscriptions and make sure css is right - missing card/outer styling??
+// TODO - Now that state removed as dependency from getIslands - when new island added, need a way to trigger re-render so getAllElements will update
+// TODO - maybe create a wrapper component for the repeated css in the tiel and tiledetail types
 
 /*
   TODO Notes for myself as I transition to new styling
