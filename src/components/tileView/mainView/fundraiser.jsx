@@ -372,7 +372,7 @@ export const Fundraiser = ({ fundData }) => {
                         <FlexBoxColumn align="end" className="mb-2">
                           <input
                             id="amount"
-                            className="input input-bordered w-full sm:max-w-xs"
+                            className="input-bordered input w-full sm:max-w-xs"
                             placeholder="Dero amount to donate"
                             type="text"
                           />
@@ -468,55 +468,7 @@ export const Fundraiser = ({ fundData }) => {
                   </div>
 
                   {fundData.Status === 0 ? (
-                    <FlexBoxColumn align="end" className="mb-2">
-                      <form onSubmit={supportGoal} className="w-full">
-                        <FlexBoxColumn align="end" className="mb-2">
-                          <input
-                            id="amount"
-                            className="input input-bordered w-full sm:max-w-xs"
-                            placeholder="Dero amount to donate"
-                            type="text"
-                          />
-                          <div className="mt-2 flex items-center justify-end">
-                            <label htmlFor="refundable">Refundable?</label>{' '}
-                            &nbsp;
-                            <input
-                              id="refundable"
-                              type="checkbox"
-                              className="mr-2"
-                            />
-                          </div>
-                          <Button size="sm" type={'submit'}>
-                            Support
-                          </Button>
-                        </FlexBoxColumn>
-                      </form>
-                      {fundData.WithdrawlType == 'address' &&
-                      fundData.Raised >= fundData.Goal ? (
-                        <form onSubmit={withdraw}>
-                          <Button size="sm" type={'submit'}>
-                            Withdraw
-                          </Button>
-                        </form>
-                      ) : (
-                        ''
-                      )}
-                      {fundData.WithdrawlType == 'token' &&
-                      fundData.Raised >= fundData.Goal ? (
-                        <form onSubmit={oaoWithdraw}>
-                          <input
-                            type="number"
-                            placeholder="amount"
-                            id="amount"
-                          />
-                          <Button size="sm" type={'submit'}>
-                            Withdraw
-                          </Button>
-                        </form>
-                      ) : (
-                        ''
-                      )}
-                    </FlexBoxColumn>
+                    ''
                   ) : fundData.Status === 1 ? (
                     <>
                       <p>
