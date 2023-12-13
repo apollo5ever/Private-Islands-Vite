@@ -32,7 +32,6 @@ export const IslandDetailTile = (props) => {
   }, [tile.SCID]);
 
   // TODO MTS - perhaps make into a hook if I want to use this elsewhere at some point
-  // TODO MTS - this is broken - i.e. when I click on a 0 bounty it takes me to the fundraiser....
 
   /* Go to detail view for island or first element of given type for that island */
   const handleClick = (type) => {
