@@ -13,7 +13,7 @@ export const useInitiatorImage = (tile) => {
   useEffect(() => {
     const fetchInitiatorImage = async () => {
       try {
-        const image = await Helpers.getInitiatorImage(state, tile);
+        const image = await Helpers.getInitiatorImage( tile);
         if (image) {
           setInitiatorImage(image);
         } else {
