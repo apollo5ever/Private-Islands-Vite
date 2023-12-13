@@ -37,7 +37,6 @@ export const IslandDetailTile = (props) => {
   const handleClick = (type) => {
     let params = { scid: tile.SCID, type: type };
     params.index = 0;
-    console.log('CLICK', type, params);
     if (filteredIndex !== undefined) {
       setSelectedIndex(filteredIndex);
     }
