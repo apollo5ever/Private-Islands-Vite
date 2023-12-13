@@ -31,7 +31,7 @@ export const IslandDetailTile = (props) => {
     }
   }, [tile.SCID]);
 
-  // TODO MTS - perhaps make into a hook if I want to use this elswhere at some point
+  // TODO MTS - perhaps make into a hook if I want to use this elsewhere at some point
 
   /* Go to detail view for island or first element of given type for that island */
   const handleClick = (type) => {
@@ -107,16 +107,14 @@ export const IslandDetailTile = (props) => {
         </div>
         {/*upper_content*/}
         <div className="content_lower mt-7 text-center">
-          <div
-            className="funding_type grid grid-cols-3 content-center gap-2 text-center text-xl italic"
-            onClick={() => handleClick(piAssetType.FUNDRAISER)}
-          >
+          <div className="funding_type grid grid-cols-3 content-center gap-2 text-center text-xl italic">
             <div
               className={`fire_icon ${
                 counts.fundraiser === 0
                   ? 'cursor-not-allowed'
                   : 'cursor-pointer'
               } space-y-3 text-center`}
+              onClick={() => handleClick(piAssetType.FUNDRAISER)}
             >
               <div className="font-black text-[#F89070]">
                 {counts.fundraiser}

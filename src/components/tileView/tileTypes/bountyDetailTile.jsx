@@ -2,15 +2,32 @@ import { Helpers } from '@/utils/helpers.js';
 import { useInitiatorImage } from '@/components/hooks/useGetInitiatorImage.js';
 import chest from '@/assets/icons/icon_locked-chest_tan.svg';
 import { useTheme } from '@/components/hooks/useTheme.js';
+import { useSearchParams } from 'react-router-dom';
+import { useContext } from 'react';
+import { TileContext } from '@/components/providers/TileContext.jsx';
 
 export const BountyDetailTile = (props) => {
   const { tile } = props;
   const initiatorImage = useInitiatorImage(tile);
   const { proseClass } = useTheme();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { setSelectedTile } = useContext(TileContext);
   const bountyAmount = tile.Amount / 100000;
 
+  const handleClick = () => {
+    let params = { scid: tile.SCID, type: tile.type };
+    if (tile.Index !== undefined) {
+      params.index = tile.Index;
+    }
+    setSearchParams(params);
+    setSelectedTile(tile);
+  };
+
   return (
-    <div className="mx-auto grid w-full flex-1 grid-cols-1 content-between rounded-lg bg-[#FBF8EC]">
+    <div
+      className="mx-auto grid w-full flex-1 grid-cols-1 content-between rounded-lg bg-[#FBF8EC]"
+      onClick={handleClick}
+    >
       <div className="img_container relative">
         <div
           className="bounty_img relative inline-block h-36 w-full rounded-lg bg-cover bg-center bg-no-repeat"

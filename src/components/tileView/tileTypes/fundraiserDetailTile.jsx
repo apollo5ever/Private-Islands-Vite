@@ -3,19 +3,36 @@ import dateString from '@/utils/dateString.js';
 import { useTheme } from '@/components/hooks/useTheme.js';
 import { useInitiatorImage } from '@/components/hooks/useGetInitiatorImage.js';
 import flame from '@/assets/icons/icon_fire_orange.svg';
+import { useSearchParams } from 'react-router-dom';
+import { useContext } from 'react';
+import { TileContext } from '@/components/providers/TileContext.jsx';
 
 export const FundraiserDetailTile = (props) => {
   const { tile } = props;
   const { proseClass } = useTheme();
   const initiatorImage = useInitiatorImage(tile);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { setSelectedTile } = useContext(TileContext);
   const raised = tile.Raised / 100000;
   const goal = tile.Goal / 100000;
   const deadline = tile.Expiry ? dateString(tile.Expiry).local : '--';
   const isExpired =
     deadline === '--' ? false : Helpers.isDateBeforeToday(deadline);
 
+  const handleClick = () => {
+    let params = { scid: tile.SCID, type: tile.type };
+    if (tile.Index !== undefined) {
+      params.index = tile.Index;
+    }
+    setSearchParams(params);
+    setSelectedTile(tile);
+  };
+
   return (
-    <div className="fundraiser_card relative mx-auto flex w-full rounded-lg bg-[#FBF8EC] px-4 pb-6 pt-4 shadow-xl ring-1 ring-gray-900/5 hover:bg-gray-100">
+    <div
+      className="fundraiser_card relative mx-auto flex w-full rounded-lg bg-[#FBF8EC] px-4 pb-6 pt-4 shadow-xl ring-1 ring-gray-900/5 hover:bg-gray-100"
+      onClick={handleClick}
+    >
       <div className="mx-auto grid w-full flex-1 grid-cols-1 content-between">
         <div className="img_container relative">
           <div
@@ -75,7 +92,7 @@ export const FundraiserDetailTile = (props) => {
           </div>
           <div className="float-right inline-block w-full rounded-full">
             <progress
-              className="progress-accent progress w-full"
+              className="progress progress-accent w-full"
               value={raised}
               max={goal}
             />

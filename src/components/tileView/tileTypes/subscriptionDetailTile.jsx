@@ -2,17 +2,33 @@ import { Helpers } from '@/utils/helpers.js';
 import { useInitiatorImage } from '@/components/hooks/useGetInitiatorImage.js';
 import bottle from '@/assets/icons/icon_bottle_blue.svg';
 import { useTheme } from '@/components/hooks/useTheme.js';
-import React from 'react';
+import React, { useContext } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { TileContext } from '@/components/providers/TileContext.jsx';
 
 export const SubscriptionDetailTile = (props) => {
   const { tile } = props;
   const initiatorImage = useInitiatorImage(tile);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { setSelectedTile } = useContext(TileContext);
   const { proseClass } = useTheme();
   const subscriptionAmount = tile.Amount / 100000;
   const subscriptionPeriodInDays = Math.round(tile.Interval / (60 * 60 * 24));
 
+  const handleClick = () => {
+    let params = { scid: tile.SCID, type: tile.type };
+    if (tile.Index !== undefined) {
+      params.index = tile.Index;
+    }
+    setSearchParams(params);
+    setSelectedTile(tile);
+  };
+
   return (
-    <div className="mx-auto grid w-full flex-1 grid-cols-1 content-between rounded-lg bg-[#FBF8EC]">
+    <div
+      className="mx-auto grid w-full flex-1 grid-cols-1 content-between rounded-lg bg-[#FBF8EC]"
+      onClick={handleClick}
+    >
       <div className="img_container relative">
         <div
           className="subscription_img relative inline-block h-36 w-full rounded-lg bg-cover bg-center bg-no-repeat"
