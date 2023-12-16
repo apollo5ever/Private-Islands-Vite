@@ -29,6 +29,7 @@ export const ClaimIsland = () => {
   const [islandSCID, setIslandSCID] = useState(searchParams.get('scid'));
   const [name, setName] = useState('');
   const [islandInWallet, setIslandInWallet] = useState(0);
+  const [minting,setMinting] = useState(false)
   const [formData,setFormData] = useState({
     image:"",
     tagline:"",
@@ -47,24 +48,28 @@ export const ClaimIsland = () => {
   const Claim = async (e) => {
     e.preventDefault();
     let scid = await mint(name);
+    setMinting(true)
     let balance = await balanceCheck(scid);
-    await register(name, scid);
-    setMetadata(scid)
+    await register(name, scid,balance);
+    setMetadata(scid,balance)
     
-    //setMetadata(data)
+    
   };
 
   const balanceCheck = async (scid) => {
     let balance = 0;
     while (balance == 0) {
+      console.log("check balance of ",scid)
       balance = await getBalance(scid);
+     // await new Promise(resolve => setTimeout(resolve, 18000));
     }
+    setMinting(false)
     return balance;
   };
 
-  const setMetadata = async (scid) =>{
+  const setMetadata = async (scid,balance) =>{
     
-   
+   console.log("balance: ",balance)
 
     let metaDataData = {
       scid: scid,
@@ -155,7 +160,8 @@ export const ClaimIsland = () => {
     setIslandSCID(newIslandSCID);
     return newIslandSCID;
   };
-  const register = async (name, scid) => {
+  const register = async (name, scid,balance) => {
+    console.log("balance: ",balance)
     const res = await getSC(state.scid_registry, false, true);
     var search = `aPRIVATE-ISLANDS${name}`;
     var island_scid = res.stringkeys[search];
@@ -462,6 +468,7 @@ export const ClaimIsland = () => {
                   Create
                 </Button>
               </form>
+              {minting&&"Waiting for confirmation... DO NOT LEAVE PAGE"}
             
               {error && (
                 <FlexBoxRow className="my-3 rounded border border-error bg-info text-2xl text-error">
