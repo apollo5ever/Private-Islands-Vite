@@ -3,6 +3,7 @@ import bgImage from '@/assets/parallax/CoolIsland.png';
 import { FullPageContainer } from '@/components/common/FullPageContainer.jsx';
 import { useSearchParams } from 'react-router-dom';
 import { useSendTransaction } from '/src/components/hooks/useSendTransaction';
+import { useGetGasEstimate } from '../hooks/useGetGasEstimate';
 import { useGetSC } from '/src/components/hooks/useGetSC';
 import { LoginContext } from '@/LoginContext';
 import { Button } from '@/components/common/Button.jsx';
@@ -10,6 +11,7 @@ import { useGetBalance } from '/src/components/hooks/useGetBalance';
 import { FlexBoxRow } from '@/components/common/FlexBoxRow.jsx';
 import { FlexBoxColumn } from '@/components/common/FlexBoxColumn.jsx';
 import { useNavigate } from 'react-router-dom';
+import RichTextEditor from '../common/richTextEditor';
 
 export const ClaimIsland = () => {
   let [searchParams, setSearchParams] = useSearchParams();
@@ -21,18 +23,110 @@ export const ClaimIsland = () => {
   const [execs, setExecs] = useState([]);
   const [error, setError] = useState('');
   const [sendTransaction] = useSendTransaction();
+  const [getGasEstimate] = useGetGasEstimate()
   const [getSC] = useGetSC();
   const [getBalance] = useGetBalance();
   const [islandSCID, setIslandSCID] = useState(searchParams.get('scid'));
-  const [islandName, setIslandName] = useState(searchParams.get('name'));
+  const [name, setName] = useState('');
   const [islandInWallet, setIslandInWallet] = useState(0);
+  const [formData,setFormData] = useState({
+    image:"",
+    tagline:"",
+    bio:""
+  })
+  const [editorHtml,setEditorHtml] = useState("")
 
-  const Mint = useCallback(async (event) => {
-    event.preventDefault();
-    //check registry to see if name is taken
-    const res0 = await getSC(state.scid_registry, false, true);
-    var search = `aPRIVATE-ISLANDS${event.target.island.value}`;
-    var island_scid = res0.stringkeys[search];
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const Claim = async (e) => {
+    e.preventDefault();
+    let scid = await mint(name);
+    let balance = await balanceCheck(scid);
+    await register(name, scid);
+    setMetadata(scid)
+    
+    //setMetadata(data)
+  };
+
+  const balanceCheck = async (scid) => {
+    let balance = 0;
+    while (balance == 0) {
+      balance = await getBalance(scid);
+    }
+    return balance;
+  };
+
+  const setMetadata = async (scid) =>{
+    
+   
+
+    let metaDataData = {
+      scid: scid,
+      ringsize: 2,
+      signer:state.userAddress,
+      transfers: [
+        {
+          destination: state.randomAddress,
+          burn: 1,
+          scid: scid,
+        },
+      ],
+      sc_rpc: [
+        {
+          name: 'entrypoint',
+          datatype: 'S',
+          value: 'SetMetadata',
+        },
+        {
+          name: 'Image',
+          datatype: 'S',
+          value: formData.image,
+        },
+        {
+          name: 'Tagline',
+          datatype: 'S',
+          value: formData.tagline,
+        },
+        {
+          name: 'Bio',
+          datatype: 'S',
+          value: formData.bio,
+        },
+      ],
+    };
+    const gas_rpc = [
+      {
+        name: 'SC_ACTION',
+        datatype: 'U',
+        value: 0,
+      },
+      {
+        name: 'SC_ID',
+        datatype: 'H',
+        value: scid,
+      },
+    ].concat(metaDataData.sc_rpc);
+
+    metaDataData.gas_rpc= gas_rpc
+
+    let fees = await getGasEstimate(metaDataData)
+
+     metaDataData.fees = fees
+
+
+    sendTransaction(metaDataData);
+  }
+
+  const mint = async (name) => {
+    const res = await getSC(state.scid_registry, false, true);
+    var search = `aPRIVATE-ISLANDS${name}`;
+    var island_scid = res.stringkeys[search];
     //----------Errors--------------------------
     if (island_scid) {
       setError('this island is taken');
@@ -51,7 +145,7 @@ export const ClaimIsland = () => {
         {
           name: 'name',
           datatype: 'S',
-          value: event.target.island.value,
+          value: name,
         },
       ],
       sc: 'RnVuY3Rpb24gSW5pdGlhbGl6ZVByaXZhdGUobmFtZSBTdHJpbmcpIFVpbnQ2NAoxMCBJRiBFWElTVFMoIm5hbWUiKSBUSEVOIEdPVE8gMTAwCjIwIFNUT1JFKCJuYW1lIixuYW1lKQozMCBTRU5EX0FTU0VUX1RPX0FERFJFU1MoU0lHTkVSKCksMSxTQ0lEKCkpCjQwIFNUT1JFKCJvd25lciIsIiIpCjk5IFJFVFVSTiAwCjEwMCBSRVRVUk4gMQpFbmQgRnVuY3Rpb24KCkZ1bmN0aW9uIFNldEltYWdlKEltYWdlIFN0cmluZykgVWludDY0CjEwIElGIEFERFJFU1NfU1RSSU5HKFNJR05FUigpKSAhPSBMT0FEKCJvd25lciIpICYmIEFTU0VUVkFMVUUoU0NJRCgpKSAhPSAxIFRIRU4gR09UTyAxMDAKMjAgU1RPUkUoImltYWdlIixJbWFnZSkKMzAgU0VORF9BU1NFVF9UT19BRERSRVNTKFNJR05FUigpLEFTU0VUVkFMVUUoU0NJRCgpKSxTQ0lEKCkpCjk5IFJFVFVSTiAwCjEwMCBSRVRVUk4gMQpFbmQgRnVuY3Rpb24KCkZ1bmN0aW9uIFNldFRhZ2xpbmUoVGFnbGluZSBTdHJpbmcpIFVpbnQ2NAoxMCBJRiBBRERSRVNTX1NUUklORyhTSUdORVIoKSkgIT0gTE9BRCgib3duZXIiKSAmJiBBU1NFVFZBTFVFKFNDSUQoKSkgIT0gMSBUSEVOIEdPVE8gMTAwCjIwIFNUT1JFKCJ0YWdsaW5lIixUYWdsaW5lKQo0MCBTRU5EX0FTU0VUX1RPX0FERFJFU1MoU0lHTkVSKCksQVNTRVRWQUxVRShTQ0lEKCkpLFNDSUQoKSkKOTkgUkVUVVJOIDAKMTAwIFJFVFVSTiAxCkVuZCBGdW5jdGlvbgoKRnVuY3Rpb24gU2V0QmlvKEJpbyBTdHJpbmcpIFVpbnQ2NAoxMCBJRiBBRERSRVNTX1NUUklORyhTSUdORVIoKSkgIT0gTE9BRCgib3duZXIiKSAmJiBBU1NFVFZBTFVFKFNDSUQoKSkgIT0gMSBUSEVOIEdPVE8gMTAwCjIwIFNUT1JFKCJiaW8iLEJpbykKNDAgU0VORF9BU1NFVF9UT19BRERSRVNTKFNJR05FUigpLEFTU0VUVkFMVUUoU0NJRCgpKSxTQ0lEKCkpCjk5IFJFVFVSTiAwCjEwMCBSRVRVUk4gMQpFbmQgRnVuY3Rpb24KCkZ1bmN0aW9uIFNldE1ldGFkYXRhKEltYWdlIFN0cmluZywgVGFnbGluZSBTdHJpbmcsIEJpbyBTdHJpbmcpIFVpbnQ2NAoxMCBJRiBBRERSRVNTX1NUUklORyhTSUdORVIoKSkgIT0gTE9BRCgib3duZXIiKSAmJiBBU1NFVFZBTFVFKFNDSUQoKSkgIT0gMSBUSEVOIEdPVE8gMTAwCjIwIFNUT1JFKCJpbWFnZSIsSW1hZ2UpCjMwIFNUT1JFKCJ0YWdsaW5lIixUYWdsaW5lKQo0MCBTVE9SRSgiYmlvIixCaW8pCjUwIFNFTkRfQVNTRVRfVE9fQUREUkVTUyhTSUdORVIoKSxBU1NFVFZBTFVFKFNDSUQoKSksU0NJRCgpKQo5OSBSRVRVUk4gMAoxMDAgUkVUVVJOIDEKRW5kIEZ1bmN0aW9uCgpGdW5jdGlvbiBTZXRJUEZTKGNpZCBTdHJpbmcpIFVpbnQ2NAoxMCBJRiBBRERSRVNTX1NUUklORyhTSUdORVIoKSkgIT0gTE9BRCgib3duZXIiKSAmJiBBU1NFVFZBTFVFKFNDSUQoKSkgIT0gMSBUSEVOIEdPVE8gMTAwCjIwIFNUT1JFKCJpcGZzIixjaWQpCjUwIFNFTkRfQVNTRVRfVE9fQUREUkVTUyhTSUdORVIoKSxBU1NFVFZBTFVFKFNDSUQoKSksU0NJRCgpKQo5OSBSRVRVUk4gMAoxMDAgUkVUVVJOIDEKRW5kIEZ1bmN0aW9uCgpGdW5jdGlvbiBEaXNwbGF5KCkgVWludDY0CjEwIElGIEFTU0VUVkFMVUUoU0NJRCgpKSAhPSAxIFRIRU4gR09UTyAxMDAKMjAgU1RPUkUoIm93bmVyIixBRERSRVNTX1NUUklORyhTSUdORVIoKSkpCjk5IFJFVFVSTiAwCjEwMCBSRVRVUk4gMQpFbmQgRnVuY3Rpb24KCkZ1bmN0aW9uIFJldHJpZXZlKCkgVWludDY0CjEwIElGIFNJR05FUigpICE9IEFERFJFU1NfUkFXKExPQUQoIm93bmVyIikpIFRIRU4gR09UTyAxMDAKMjAgU0VORF9BU1NFVF9UT19BRERSRVNTKFNJR05FUigpLDEsU0NJRCgpKQozMCBTVE9SRSgib3duZXIiLCIiKQo5OSBSRVRVUk4gMAoxMDAgUkVUVVJOIDEKRW5kIEZ1bmN0aW9uCg==',
@@ -59,14 +153,63 @@ export const ClaimIsland = () => {
 
     let newIslandSCID = await sendTransaction(mintData);
     setIslandSCID(newIslandSCID);
-    setSearchParams({
-      status: 'minted',
-      scid: newIslandSCID,
-      name: event.target.island.value,
-    });
+    return newIslandSCID;
+  };
+  const register = async (name, scid) => {
+    const res = await getSC(state.scid_registry, false, true);
+    var search = `aPRIVATE-ISLANDS${name}`;
+    var island_scid = res.stringkeys[search];
+    //----------Errors--------------------------
+    if (island_scid) {
+      setError('this island is taken');
+      return;
+    }
 
-    setIslandName(event.target.island.value);
-  });
+    const registrationData = {
+      scid: state.scid_registry,
+      ringsize: 2,
+      transfers: [
+        {
+          destination: state.randomAddress,
+          burn: 10000,
+        },
+        {
+          destination: state.randomAddress,
+          burn: 1,
+          scid: scid,
+        },
+      ],
+      sc_rpc: [
+        {
+          name: 'entrypoint',
+          datatype: 'S',
+          value: 'RegisterAsset',
+        },
+        {
+          name: 'name',
+          datatype: 'S',
+          value: name,
+        },
+        {
+          name: 'collection',
+          datatype: 'S',
+          value: 'PRIVATE-ISLANDS',
+        },
+        {
+          name: 'scid',
+          datatype: 'S',
+          value: scid,
+        },
+        {
+          name: 'index',
+          datatype: 'U',
+          value: 0,
+        },
+      ],
+    };
+
+    sendTransaction(registrationData);
+  };
 
   const checkWalletForIsland = async () => {
     if (!islandSCID) return;
@@ -76,11 +219,6 @@ export const ClaimIsland = () => {
 
     setIslandInWallet(islandBalance);
     if (islandBalance === 1) {
-      setSearchParams({
-        status: 'inWallet',
-        name: islandName,
-        scid: islandSCID,
-      });
     }
   };
 
@@ -247,13 +385,13 @@ export const ClaimIsland = () => {
             <form onSubmit={updateMetaData}>
               <FlexBoxColumn align="start">
                 <input
-                  className="input input-bordered mx-2 w-full max-w-xs"
+                  className="input-bordered input mx-2 w-full max-w-xs"
                   placeholder="Image URL"
                   id="image"
                   type="text"
                 />
                 <input
-                  className="input input-bordered mx-2 w-full max-w-xs"
+                  className="input-bordered input mx-2 w-full max-w-xs"
                   placeholder="Tagline"
                   id="tagline"
                   type="text"
@@ -285,19 +423,46 @@ export const ClaimIsland = () => {
             </div>
 
             <div className="rounded-2xl border border-accent p-4 text-xl">
-              Step 1 of 3: <br />
-              Name Your Island
-              <form onSubmit={Mint}>
+              <form onSubmit={Claim}>
                 <input
-                  className="input input-bordered mx-2 w-full max-w-xs"
+                  className="input-bordered input mx-2 w-full max-w-xs"
                   placeholder="Island Name"
                   id="island"
                   type="text"
+                  onChange={(e) => setName(e.target.value)}
                 />
+                <input
+                  className="input-bordered input mx-2 w-full max-w-xs"
+                  placeholder="Image URL"
+                  id="image"
+                  name="image"
+                  value={formData.image}
+                  onChange={handleChange}
+                  type="text"
+                />
+                <input
+                  className="input-bordered input mx-2 w-full max-w-xs"
+                  placeholder="Tagline"
+                  id="tagline"
+                  name="tagline"
+                  value={formData.tagline}
+                  onChange={handleChange}
+                  type="text"
+                />
+                <RichTextEditor name="bio"
+                  editorHtml={editorHtml}
+                  setEditorHtml={setEditorHtml}
+                  bio={formData.bio}
+                  handleChange={handleChange}
+                  formData={formData}
+                  setFormData={setFormData}
+                  />
+               
                 <Button size="small" type={'submit'}>
                   Create
                 </Button>
               </form>
+            
               {error && (
                 <FlexBoxRow className="my-3 rounded border border-error bg-info text-2xl text-error">
                   {error}
