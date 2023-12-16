@@ -12,7 +12,10 @@ export function useGetBalance() {
         scid: scid,
       })
     );
-    console.log('rpc balance check', scid, res);
+    console.log('rpc balance check', scid, res,err);
+    if(err){
+      return 0
+    }
     return res.data.result.balance;
   });
 
