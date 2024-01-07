@@ -56,7 +56,7 @@ export const IslandDetailTile = (props) => {
   };
 
   return (
-    <div className="main_card relative mx-auto flex w-full cursor-default rounded-lg bg-[#FBF8EC] px-4 pb-6 pt-4 shadow-xl ring-1 ring-gray-900/5 hover:bg-gray-100">
+    <div className="main_card relative mx-auto flex h-full w-full cursor-default rounded-lg bg-[#FBF8EC] px-4 pb-6 pt-4 shadow-xl ring-1 ring-gray-900/5 hover:bg-gray-100">
       <div className="mx-auto grid w-full flex-1 grid-cols-1 content-between">
         <div className="img_container relative w-full justify-center pt-[140px]">
           <div

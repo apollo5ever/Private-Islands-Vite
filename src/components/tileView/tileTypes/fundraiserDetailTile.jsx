@@ -30,7 +30,7 @@ export const FundraiserDetailTile = (props) => {
 
   return (
     <div
-      className="fundraiser_card relative mx-auto flex w-full rounded-lg bg-[#FBF8EC] px-4 pb-6 pt-4 shadow-xl ring-1 ring-gray-900/5 hover:bg-gray-100"
+      className="fundraiser_card relative mx-auto flex h-full w-full rounded-lg bg-[#FBF8EC] px-4 pb-6 pt-4 shadow-xl ring-1 ring-gray-900/5 hover:bg-gray-100"
       onClick={handleClick}
     >
       <div className="mx-auto grid w-full flex-1 grid-cols-1 content-between">

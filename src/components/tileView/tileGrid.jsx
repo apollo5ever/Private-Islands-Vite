@@ -146,7 +146,7 @@ export const TileGrid = () => {
       {/* Force tailwind to recognize these classes for tree shaking */}
       {/*<div className="hidden grid-cols-6 grid-cols-8"></div>*/}
       {/*<div className={`grid gap-2 grid-cols-${tilesPerRow}`}>*/}
-      <div className="main_container relative mx-5 mb-20 mt-20 grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="main_container relative mx-5 mb-20 mt-20 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {filteredElements &&
           filteredElements.map((tile, index) => (
             <div

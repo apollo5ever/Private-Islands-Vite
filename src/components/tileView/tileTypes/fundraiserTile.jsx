@@ -16,7 +16,7 @@ export const FundraiserTile = (props) => {
     <div className="mx-auto grid w-full flex-1 grid-cols-1 content-between">
       <div className="img_container relative">
         <img
-          className="fundraiser_img relative inline-block h-96 w-full rounded-lg bg-cover bg-center bg-no-repeat"
+          className="fundraiser_img relative inline-block h-96 max-h-[300px] w-full rounded-lg bg-cover bg-center bg-no-repeat"
           src={Helpers.getTileImage(tile)}
         />
         <div
