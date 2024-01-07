@@ -132,6 +132,7 @@ export const ClaimIsland = () => {
 
   const mint = async (name) => {
     const res = await getSC(state.scid_registry, false, true);
+    console.log('MINT FUNC - getSc res', res);
     var search = `aPRIVATE-ISLANDS${name}`;
     var island_scid = res.stringkeys[search];
     //----------Errors--------------------------

@@ -53,34 +53,18 @@ export default function RT(props) {
     }
 
     sendTransaction(data);
-
-    /*     const deroBridgeApi = props.dba.current
-
-     const [err0, res0] = await to(deroBridgeApi.wallet('start-transfer', {
-      
-         "scid": props.scid,
-         "ringsize": 2,
-          "sc_rpc": [{
-             "name": "entrypoint",
-             "datatype": "S",
-             "value": "RT"
-         },
-         {
-             "name": "H",
-             "datatype": "S",
-             "value": props.island+props.index
-         }
-     ]
-     })) */
   });
 
   return (
     <>
       <div>
         <form onSubmit={accept}>
-          <Button size="small" type={'submit'}>
+          <button
+            type={'submit'}
+            className="btn w-full cursor-pointer rounded-bl-[35px] rounded-tr-[35px] bg-gradient-to-b from-accent to-[#6CCAB1] py-1 text-center text-xl leading-tight text-[#FFF] hover:shadow-lg"
+          >
             Release Treasure
-          </Button>
+          </button>
         </form>
       </div>
     </>

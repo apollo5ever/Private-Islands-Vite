@@ -10,7 +10,7 @@ export default function XSWDConnect() {
     const appInfo = {
       id: await generateAppId(name),
       name,
-      description: `The World's Most Resilient Crowdfunding Platform`,
+      description: 'The Most Resilient Crowdfunding Platform on Earth',
     };
     const xswd = new Api(appInfo);
 

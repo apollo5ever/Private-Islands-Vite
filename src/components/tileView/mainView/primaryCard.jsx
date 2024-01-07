@@ -1,7 +1,8 @@
 import { PrimaryTileNav } from '@/components/tileView/mainView/PrimaryTileNav.jsx';
 import { Island } from '@/components/tileView/mainView/island.jsx';
 import { piAssetType, Helpers } from '@/utils/helpers.js';
-import { Bounty } from '@/components/tileView/mainView/bounty.jsx';
+import { Bounty } from '@/components/tileView/mainView/bounty/bounty.jsx';
+// import { Bounty } from '@/components/tileView/mainView/bounty.jsx';
 import { Subscription } from '@/components/tileView/mainView/subscription.jsx';
 import { Fundraiser } from '@/components/tileView/mainView/fundraiser/fundraiser.jsx';
 

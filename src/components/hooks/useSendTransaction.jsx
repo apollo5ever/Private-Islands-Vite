@@ -14,7 +14,7 @@ export function useSendTransaction() {
   });
 
   async function sendTransaction(data) {
-    console.log(data);
+    console.log('SEND TXN DATA', data);
     if (data.sc) {
       data.sc_rpc.push({ name: 'SC_ACTION', datatype: 'U', value: 1 });
     } else if (data.sc_rpc && data.sc_rpc.length > 0) {

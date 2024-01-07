@@ -3,7 +3,7 @@ import { Helpers } from '@/utils/helpers.js';
 import { FlexBoxRow } from '@/components/common/FlexBoxRow.jsx';
 import { useState } from 'react';
 
-export const EditFundraiser = ({ tile }) => {
+export const EditFundraiser = ({ tile, setEditing }) => {
   const { handleSetMetaData } = useFundraiserActions(tile);
   const [image, setImage] = useState(Helpers.getTileImage(tile));
   const [name, setName] = useState(Helpers.getTileName(tile));
@@ -12,13 +12,11 @@ export const EditFundraiser = ({ tile }) => {
     Helpers.getTileDescription(tile)
   );
 
-  {
-    /*
+  /*
     TODO DO - TEST - Successfully tested by Apollo on Feb 29
             - Handle a user response post submit based on searchParams.get('status') == 'success'
             - Create a snackbar type message?
   */
-  }
 
   return (
     <>

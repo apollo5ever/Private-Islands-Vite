@@ -164,8 +164,6 @@ export const AddFundraiser = () => {
 
   return (
     <form onSubmit={addNewFundraiser}>
-      {' '}
-      {/*TODO add function name in form tag onSubmit={addNewFundraiser} - leaving out so I don't accidently submit to prod back end */}
       <div className="main_container relative mx-5 mb-12 mt-0 grid h-full grid-cols-1 items-start gap-x-5 gap-y-2 lg:grid-cols-1">
         <div className="edit_title content-center px-2 pt-2 lg:col-span-2">
           <h1 className="mb-4 text-3xl">Add New Fundraiser&nbsp;&#8853;</h1>

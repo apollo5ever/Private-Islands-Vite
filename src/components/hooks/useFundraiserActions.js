@@ -36,6 +36,7 @@ export const useFundraiserActions = (tile) => {
 
   const handleSetMetaData = (event) => {
     event.preventDefault();
+    console.log('SET META FOR TILE', tile);
     setMetaData(tile, state, sendTransaction, getRandomAddress, event);
   };
 

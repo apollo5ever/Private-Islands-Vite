@@ -341,7 +341,7 @@ export default function RevenueShare() {
   return (
     <FullPageContainer bgImage={bgImage} rightPct={-75}>
       <div className="mb-6 text-4xl font-bold">COCO Lotto - Update</div>
-      <div class="text-2xl">Redeem Your COCO from deprecated system</div>
+      <div className="text-2xl">Redeem Your COCO from deprecated system</div>
       <div className="text-xl">
         We are migrating to a better and simpler COCO LOTTO system. Please
         redeem your COCO from the old system.

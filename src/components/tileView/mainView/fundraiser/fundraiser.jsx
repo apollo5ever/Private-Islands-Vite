@@ -1,7 +1,7 @@
 import { Helpers } from '@/utils/helpers.js';
 import { useTheme } from '@/components/hooks/useTheme.js';
 import { useState } from 'react';
-import { ImageHeader } from '@/components/tileView/mainView/fundraiser/imageHeader.jsx';
+import { ImageHeader } from '@/components/tileView/common/imageHeader.jsx';
 import { InitiatedBy } from '@/components/tileView/common/InitiatedBy.jsx';
 import { DisplayDateBox } from '@/components/tileView/common/DisplayDateBox.jsx';
 import { FundProgress } from '@/components/tileView/common/fundraiser/FundProgress.jsx';
@@ -21,13 +21,13 @@ export const Fundraiser = ({ fundData }) => {
     <div className="mx-auto grid w-full grid-cols-1 content-start">
       {/* TODO MTS -- Need to TEST editing form - feb 4, 2024 */}
       {fundData && editing ? (
-        <EditFundraiser tile={fundData} />
+        <EditFundraiser tile={fundData} setEditing={setEditing} />
       ) : (
         <>
           <div className="break-words">
             {/*TODO MTS - prob need call back from ImageHeader to update editing state when form submitted*/}
             <ImageHeader
-              fundData={fundData}
+              assetData={fundData}
               editing={editing}
               setEditing={setEditing}
             />

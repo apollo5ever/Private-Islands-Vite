@@ -90,7 +90,7 @@ export const HeaderButtons = ({ tile }) => {
                         ? 'cursor-not-allowed'
                         : 'cursor-pointer'
                     }`}
-                    key={index}
+                    key={Helpers.getIconDescription(value)}
                     onClick={() => gotoTile(value)}
                     disabled={counts[value] === 0}
                   >

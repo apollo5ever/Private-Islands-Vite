@@ -42,7 +42,7 @@ export const Bounty = ({ bountyData }) => {
   };
 
   const getJudging = () => {
-    console.log('myslands', state);
+    console.log('GET JUDGING', state);
     if (!state.myIslands || !treasure.Judges || state.myIslands.length === 0)
       return;
     const matching = treasure.Judges.filter((execObj) =>
@@ -127,7 +127,7 @@ export const Bounty = ({ bountyData }) => {
 
   const getFunds = useCallback(async () => {
     let profile = await GI(island);
-    console.log(profile.Bounties);
+    console.log('GET FUNDS PROFILE', profile.Bounties);
     setTreasure(profile.Bounties[index]);
     setIslandSCID(profile.SCID);
     if (
@@ -244,8 +244,6 @@ export const Bounty = ({ bountyData }) => {
   });
 
   useEffect(() => {
-    console.log('executed only once!');
-
     getFunds();
   }, [state.ipfs]);
 
@@ -267,19 +265,19 @@ export const Bounty = ({ bountyData }) => {
             <FlexBoxColumn className="mt-20">
               <FlexBoxRow gap={2}>
                 <input
-                  className="input input-bordered w-full max-w-xs"
+                  className="input-bordered input w-full max-w-xs"
                   placeholder="name"
                   defaultValue={treasure.Name}
                   id="Name"
                 />
                 <input
-                  className="input input-bordered w-full max-w-xs"
+                  className="input-bordered input w-full max-w-xs"
                   placeholder="image url"
                   defaultValue={Helpers.getTileImage(bountyData)}
                   id="Image"
                 />
                 <input
-                  className="input input-bordered w-full max-w-xs"
+                  className="input-bordered input w-full max-w-xs"
                   placeholder="tagline"
                   defaultValue={Helpers.getTileTagline(bountyData)}
                   id="Tagline"
@@ -550,7 +548,7 @@ export const Bounty = ({ bountyData }) => {
                             id="amount"
                             type="text"
                             placeholder="Amount (Dero)"
-                            className="input input-bordered w-full max-w-xs"
+                            className="input-bordered input w-full max-w-xs"
                           />
                         </div>
                         <div className="p-2">
@@ -569,7 +567,7 @@ export const Bounty = ({ bountyData }) => {
                             id="proof"
                             type="text"
                             placeholder="proof"
-                            className="input input-bordered w-full max-w-xs"
+                            className="input-bordered input w-full max-w-xs"
                           />
                         </div>
                         <div className="p-2">
