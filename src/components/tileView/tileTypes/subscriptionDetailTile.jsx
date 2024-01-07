@@ -26,7 +26,7 @@ export const SubscriptionDetailTile = (props) => {
 
   return (
     <div
-      className="mx-auto grid w-full flex-1 grid-cols-1 content-between rounded-lg bg-[#FBF8EC]"
+      className="mx-auto grid h-full w-full flex-1 grid-cols-1 content-between rounded-lg bg-[#FBF8EC]"
       onClick={handleClick}
     >
       <div className="img_container relative">
@@ -86,7 +86,7 @@ export const SubscriptionDetailTile = (props) => {
         </div>
       </div>
       <div className="subscription_amount mt-7 w-full flex-1 place-items-end">
-        <p className="font-['Average Sans'] text-right text-4xl text-[#61C0A8]">
+        <p className="font-['Average Sans'] text-right text-4xl text-accent">
           <p>
             {`${subscriptionAmount} Dero per ${subscriptionPeriodInDays} days`}
           </p>

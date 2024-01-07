@@ -1,60 +1,95 @@
-import { useNavigate } from 'react-router-dom';
-import { SeniorCoco } from '@/components/tileView/sidebarView/SeniorCoco.jsx';
-import { FlexBoxRow } from '@/components/common/FlexBoxRow.jsx';
-import { FlexBoxColumn } from '@/components/common/FlexBoxColumn.jsx';
-import { BubbleText } from '@/components/tileView/sidebarView/bubbleText.jsx';
-import { useState } from 'react';
-import { Helpers, piAssetType } from '@/utils/helpers.js';
+import mapPathDown from '/src/assets/images/homePage/dashedPathDown.svg';
+import mapPathRight from '/src/assets/images/homePage/dashedPathRight.svg';
+import parallax_bg from '/src/assets/images/homePage/islands-parallax-bg.png';
+import parallax1 from '/src/assets/images/homePage/islands-parallax-1.png';
+import parallax2 from '/src/assets/images/homePage/islands-parallax-2.png';
+import parallax3 from '/src/assets/images/homePage/islands-parallax-3.png';
+import parallax4 from '/src/assets/images/homePage/islands-parallax-4.png';
+import parallax5 from '/src/assets/images/homePage/islands-parallax-5.png';
+import parallax6 from '/src/assets/images/homePage/islands-parallax-6.png';
+import parallax7 from '/src/assets/images/homePage/islands-parallax-7.png';
+import parallax8 from '/src/assets/images/homePage/islands-parallax-8.png';
+import parallax9 from '/src/assets/images/homePage/islands-parallax-9.png';
+import treasureChest from '/src/assets/icons/icon_locked-chest_tan.svg';
+import litFlame from '/src/assets/icons/icon_fire_orange.svg';
+import bottle from '/src/assets/icons/icon_bottle_blue.svg';
+import { PageHeader } from '@/components/tileView/header/PageHeader.jsx';
+import { NavLink } from 'react-router-dom';
 
 export const Home = () => {
-  const DEFAULT_MESSAGE =
-    "I'm Senior Coco - Please hover on each of these buttons to learn more.";
-  const navigate = useNavigate();
-  const [message, setMessage] = useState(DEFAULT_MESSAGE);
-
-  const handleMouseEnter = (type) => () => {
-    setMessage(Helpers.getSeniorCocoMessage('home', type));
-  };
-
-  const handleMouseLeave = () => {
-    setMessage(DEFAULT_MESSAGE);
-  };
-
   return (
     <>
-      <div className="inner_body justify-top relative flex min-h-screen flex-col overflow-hidden bg-gradient-to-b from-[#FDFBEA] via-[#F0EBDD] to-[#E5D7B9]">
-        <header className="relative grid w-full content-center items-center">
-          {/*HEADER BANNER*/}
-          <div className="title_container relative z-10 mb-7 grid h-screen w-full place-content-center items-center bg-[url('https://redwebdesigns.ca/private/img/islands-parallax1.png')] bg-cover bg-fixed bg-center bg-no-repeat">
-            <div className="bg_layer1 z-10 h-screen w-screen place-content-center bg-[url('https://redwebdesigns.ca/private/img/islands-parallax2.png')] bg-cover bg-center bg-no-repeat">
-              <div className="bg_layer2 z-10 inline-block h-full w-full place-content-center bg-[url('https://redwebdesigns.ca/private/img/islands-parallax3.png')] bg-contain bg-center bg-no-repeat">
-                <div className="bg_layer3 z-40 inline-block h-full w-screen bg-[url('https://redwebdesigns.ca/private/img/islands-parallax4.png')] bg-auto bg-fixed bg-bottom bg-no-repeat">
-                  <div className="banner_text grid h-full w-full place-content-center items-center justify-items-stretch space-y-8 px-4">
-                    <div className="site_title lg:text-10xl text-center font-fell text-6xl text-[#484541] drop-shadow-lg sm:text-8xl">
-                      <a
-                        className="inline-block drop-shadow-lg"
-                        href="#"
-                        aria-current="page"
-                      >
-                        Private Islands
-                      </a>
-                    </div>
-                    <div className="tagline text-center text-3xl text-[#484541] drop-shadow-lg">
-                      The world's most resilient support network
-                    </div>
-                    <div className="buttons mb-6 grid justify-items-center gap-5 sm:grid-cols-2">
+      <div className="inner_body justify-top relative flex min-h-screen flex-col bg-gradient-to-b from-[#FDFBEA] via-[#F0EBDD] to-[#E5D7B9]">
+        <div className="home_hero relative grid w-full content-center items-center">
+          <div
+            className="title_container grid h-screen w-full place-content-center items-center bg-cover bg-fixed bg-center bg-no-repeat"
+            style={{ backgroundImage: `url(${parallax_bg})` }}
+          >
+            <div
+              className="bg_layer1 inline-block h-screen w-screen bg-cover bg-center bg-no-repeat"
+              style={{ backgroundImage: `url(${parallax1})` }}
+            >
+              <div
+                className="bg_layer2 inline-block h-screen w-full bg-cover bg-center bg-no-repeat"
+                style={{ backgroundImage: `url(${parallax2})` }}
+              >
+                <div
+                  className="bg_layer3 inline-block h-screen w-screen bg-cover bg-center bg-no-repeat"
+                  style={{ backgroundImage: `url(${parallax3})` }}
+                >
+                  <div
+                    className="bg_layer4 inline-block h-screen w-screen bg-cover bg-center bg-no-repeat"
+                    style={{ backgroundImage: `url(${parallax4})` }}
+                  >
+                    <div
+                      className="bg_layer5 inline-block h-screen w-screen bg-cover bg-center bg-no-repeat"
+                      style={{ backgroundImage: `url(${parallax5})` }}
+                    >
                       <div
-                        className="w-full max-w-sm cursor-pointer rounded-xl bg-gradient-to-b from-[#61C0A8] to-[#6CCAB1] py-1 text-center font-fell text-3xl italic leading-tight text-[#FFF] hover:shadow-lg"
-                        onClick={() => navigate('/pi/tiles')}
+                        className="bg_layer6 bg-homepage-fade inline-block h-screen w-screen bg-cover bg-fixed bg-center bg-no-repeat"
+                        style={{ backgroundImage: `url(${parallax6})` }}
                       >
-                        Explore
-                      </div>
+                        <div
+                          className="bg_layer7 relative z-20 inline-block h-screen w-screen bg-cover bg-fixed bg-center bg-no-repeat"
+                          style={{ backgroundImage: `url(${parallax7})` }}
+                        >
+                          <div
+                            className="bg_layer8 relative z-20 inline-block h-screen w-screen bg-cover bg-fixed bg-center bg-no-repeat"
+                            style={{ backgroundImage: `url(${parallax8})` }}
+                          >
+                            <div
+                              className="bg_layer9 relative z-20 inline-block h-screen w-screen bg-cover bg-fixed bg-bottom bg-no-repeat"
+                              style={{ backgroundImage: `url(${parallax9})` }}
+                            >
+                              <div className="banner_text sticky left-0 right-0 top-1/3 z-50 grid w-full place-content-center place-items-center items-center justify-items-stretch space-y-8 place-self-center px-4 pb-5">
+                                <h1 className="site_title lg:text-10xl text-center text-6xl text-black sm:text-8xl">
+                                  Private Islands
+                                </h1>
 
-                      <div
-                        className="w-full max-w-sm cursor-pointer rounded-xl bg-gradient-to-b from-[#61C0A8] to-[#6CCAB1] py-1 text-center font-fell text-3xl italic leading-tight text-[#FFF] hover:shadow-lg"
-                        onClick={() => navigate('/pi/claimisland')}
-                      >
-                        Create Your Island
+                                <div className="tagline text-center text-3xl font-semibold drop-shadow-[0_3px_5px_rgba(255,255,255,0.8)]">
+                                  The World's Most Resilient Support Network
+                                </div>
+
+                                <div className="buttons mb-6 grid justify-items-center gap-5 sm:grid-cols-2">
+                                  <NavLink
+                                    className="btn w-full max-w-sm cursor-pointer rounded-xl bg-gradient-to-b from-accent to-[#6CCAB1] py-1 text-center text-3xl italic leading-tight text-white hover:shadow-lg"
+                                    to="/pi/archipelago"
+                                    onClick={() => setSelectedTile(null)}
+                                  >
+                                    Explore
+                                  </NavLink>
+
+                                  <NavLink
+                                    to="/pi/claimisland"
+                                    className="btn w-full max-w-sm cursor-pointer rounded-xl bg-gradient-to-b from-accent to-[#6CCAB1] py-1 text-center text-3xl italic leading-tight text-white hover:shadow-lg"
+                                  >
+                                    Claim Your Island
+                                  </NavLink>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -62,126 +97,142 @@ export const Home = () => {
               </div>
             </div>
           </div>
-        </header>
-        <div className="main_container relative mx-5 mb-12 mt-0 grid grid-cols-1 items-start">
-          <div className="main_info relative mx-auto mt-8 w-full">
-            <div className="intro_section mx-auto w-full pb-12">
+        </div>
+
+        <PageHeader />
+
+        <div className="main_container relative mx-5 grid grid-cols-1 items-start py-6">
+          <div className="main_info relative mx-auto w-full">
+            <div className="intro_section mx-auto w-full px-1 py-6 sm:px-6 lg:w-3/4">
               <div className="relative w-full">
                 <div className="intro_text mx-auto w-full max-w-7xl space-y-5 text-center">
-                  <h2 className="font-fell text-3xl leading-10 text-[#484541]">
-                    We are building the world's most resilient support network
-                  </h2>
-                  <p className="font-['Average Sans'] text-lg leading-10 text-slate-800">
+                  <h2 className="text-3xl leading-10">
                     Private Islands is place where people can come together to
                     support projects without fear that their funds will be
-                    seized or their networks wiped. Here on Private Islands,
-                    creator-supporter relationships are stored on the Dero
-                    blockchain. Funds are either sent directly to their
-                    recipient, or in some cases they are held in a smart
-                    contract for a period of time.
+                    seized or their networks wiped.
+                  </h2>
+                  <p className="text-xl leading-10">
+                    <span className="italic">
+                      Creator &#10094;&#9903;&#10095; Supporter
+                    </span>{' '}
+                    relationships are stored on the Dero blockchain. Funds are
+                    either sent directly to their recipient, or in some cases
+                    they are held in a smart contract for a period of time.
                   </p>
                 </div>
               </div>
             </div>
-            <FlexBoxRow>
-              <div className="second_section mx-auto grid w-full pb-12 sm:grid-cols-2">
-                {/*HOW TO START CARD - RIGHT COLUMN*/}
-                <div className="how_to_start mx-auto inline-block w-full rounded-lg bg-[white] px-4 pb-6 pt-4 shadow-xl ring-1 ring-gray-900/5">
-                  <div className="mx-auto grid w-full grid-cols-1 content-start">
-                    <div className="how_to_start_1-2 relative">
-                      <h3 className="w-full py-1 text-left text-slate-500">
-                        <span className="text-3xl text-[#61C0A8]">
-                          How Do I Start?
-                        </span>
-                      </h3>
-                      <p className="mt-2 text-lg text-slate-500">
-                        In order to use this website you need two things:
-                      </p>
-                      <div className="my-4 grid grid-cols-10 content-center items-center justify-start justify-items-start gap-2">
-                        <div className="col-span-1 text-2xl font-bold">1.</div>
-                        <div className="col-span-9">
-                          A DERO wallet running with the rpc-server turned on.
-                        </div>
-                        <div className="col-span-1 text-2xl font-bold">2.</div>
-                        <div className="col-span-9">
-                          The Dero RPC Bridge Extension
-                        </div>
-                      </div>
-                    </div>
-                    <div className="rpc_info mb-3 w-full rounded-lg bg-slate-100 px-2 py-2 shadow-lg ring-1 ring-slate-300 sm:max-w-xs">
-                      <p className="text-slate-500">Get the RPC extension:</p>
-                      <div className="buttons grid grid-cols-2 justify-items-center gap-4">
-                        <a
-                          href="https://chromewebstore.google.com/detail/dero-rpc-bridge/nmofcfcaegdplgbjnadipebgfbodplpd"
-                          target="_blank"
-                          className="w-full cursor-pointer py-1 text-left font-fell text-lg italic leading-tight text-[#61C0A8] underline"
-                        >
-                          (Chrome store)
-                        </a>
-                        <a
-                          href="https://addons.mozilla.org/en-US/firefox/addon/dero-rpc-bridge/?utm_source=addons.mozilla.org&utm_medium=referral&utm_content=search"
-                          target="_blank"
-                          className="w-full cursor-pointer py-1 text-left font-fell italic leading-tight text-[#61C0A8] underline"
-                        >
-                          (Firefox)
-                        </a>
-                      </div>
-                    </div>
+
+            <div className="clear-both h-4 sm:h-8"></div>
+
+            <div className="pi_sections_content flex w-full justify-center space-y-6 px-2">
+              <div className="funding_type grid w-full items-stretch gap-6 text-lg italic leading-6 sm:text-xl md:grid-cols-3 lg:gap-10">
+                {/*TODO link to new fundraiser page??*/}
+                <div className="grid cursor-pointer items-center space-y-3 rounded-lg bg-[rgba(255,255,255,0.6)] p-6 text-center shadow-lg ring-1 ring-[#E5D7B9] hover:scale-105 hover:bg-[rgba(255,255,255,0.9)]">
+                  <h4 className="text-3xl text-[#F89070]">Smoke Signals</h4>
+                  <div className="clear-both"></div>
+                  <div>
+                    <img src={litFlame} className="mx-auto w-full max-w-fit" />
+                  </div>
+                  <div className="clear-both"></div>
+                  <div className="text-3xl font-black text-[#F89070]">
+                    Fundraisers
                   </div>
                 </div>
-                <div className="navigation_container relative mx-6 mt-0 w-full gap-6 sm:grid-cols-2">
-                  <div className="main_navigation relative mb-[50px] grid grid-cols-4 place-content-between gap-6 sm:col-span-2 lg:col-span-3">
-                    <div className="navbar col-span-3 ml-12 lg:col-span-2">
-                      <FlexBoxRow>
-                        <FlexBoxColumn
-                          align="start"
-                          gap={2}
-                          className="flex-grow"
-                        >
-                          <div
-                            className="cursor-pointer rounded-xl border-2 bg-[#61C0A8] px-4 py-1 text-center text-white hover:bg-[#5DA399]"
-                            onMouseEnter={handleMouseEnter(
-                              piAssetType.FUNDRAISER
-                            )}
-                            onMouseLeave={handleMouseLeave}
-                          >
-                            Fundraisers
-                          </div>
-                          <div
-                            className="cursor-pointer rounded-xl border-2 bg-[#61C0A8] px-4 py-1 text-center text-white"
-                            onMouseEnter={handleMouseEnter(piAssetType.BOUNTY)}
-                            onMouseLeave={handleMouseLeave}
-                          >
-                            Bounties
-                          </div>
-                          <div
-                            className="cursor-pointer rounded-xl border-2 bg-[#61C0A8] px-4 py-1 text-center text-white"
-                            onMouseEnter={handleMouseEnter(
-                              piAssetType.SUBSCRIPTION
-                            )}
-                            onMouseLeave={handleMouseLeave}
-                          >
-                            Subscriptions
-                          </div>
-                        </FlexBoxColumn>
-                        <FlexBoxRow>
-                          <div className="flex flex-col items-end justify-start">
-                            <div className="h-24 w-full">
-                              {' '}
-                              {/* Reserve space for BubbleText */}
-                              <BubbleText text={message} />
-                            </div>
-                            <div className="mt-4 flex-shrink-0">
-                              <SeniorCoco />
-                            </div>
-                          </div>
-                        </FlexBoxRow>
-                      </FlexBoxRow>
-                    </div>
+                {/*TODO link to new subscription page??*/}
+                <div className="grid cursor-pointer items-center space-y-3 rounded-lg bg-[rgba(255,255,255,0.6)] p-6 text-center shadow-lg ring-1 ring-[#E5D7B9] hover:scale-105 hover:bg-[rgba(255,255,255,0.9)]">
+                  <h4 className="text-3xl text-[#46BDDC]">
+                    Message in a Bottle
+                  </h4>
+                  <div className="clear-both"></div>
+                  <div>
+                    <img src={bottle} className="mx-auto w-full max-w-fit" />
+                  </div>
+                  <div className="clear-both"></div>
+                  <div className="text-3xl font-black text-[#46BDDC]">
+                    Subscriptions
+                  </div>
+                </div>
+                {/*TODO link to new bounties page??*/}
+                <div className="grid cursor-pointer items-center space-y-3 rounded-lg bg-[rgba(255,255,255,0.6)] p-6 text-center shadow-lg ring-1 ring-[#E5D7B9] hover:scale-105 hover:bg-[rgba(255,255,255,0.9)]">
+                  <h4 className="text-3xl text-[#90663E]">Treasure Chest</h4>
+                  <div className="clear-both"></div>
+                  <div>
+                    <img
+                      src={treasureChest}
+                      className="mx-auto w-full max-w-fit"
+                    />
+                  </div>
+                  <div className="clear-both"></div>
+                  <div className="text-3xl font-black text-[#90663E]">
+                    Bounties
                   </div>
                 </div>
               </div>
-            </FlexBoxRow>
+            </div>
+
+            <div className="clear-both h-8 md:h-12"></div>
+
+            <div className="island_section mx-auto my-8 grid w-full rounded-lg border-[2px] border-dashed border-[#90663E] bg-[url('https://redwebdesigns.ca/private/img/islands-parallax-bg.png')] bg-cover bg-fixed bg-center bg-no-repeat px-6 py-10 sm:grid-cols-2 sm:gap-8 lg:gap-1">
+              <div className="island_tile relative z-20 mx-auto grid w-full max-w-md rounded-lg bg-[white] px-4 pb-4 pt-4 shadow-xl ring-1 ring-gray-100 md:max-w-lg">
+                <div className="mx-auto grid w-full content-start">
+                  <div className="island_card relative z-20 mx-auto flex w-full rounded-lg bg-[#FBF8EC] px-4 pb-6 pt-4 shadow-xl ring-1 ring-[#E5D7B9] hover:bg-gray-100 sm:px-3">
+                    <div className="mx-auto grid w-full grid-cols-1 content-stretch">
+                      <div className="flex min-w-full pb-10">
+                        <div className="w-full items-end space-y-3 text-center">
+                          <h2 className="text-3xl leading-10 text-accent md:text-4xl">
+                            Mint Your Private Island!
+                          </h2>
+                        </div>
+                      </div>
+                      <div className="img_container relative mx-auto w-full text-center">
+                        <div
+                          className="main_card_img_bg h-0 w-full rounded-lg pt-[100%] before:absolute before:-inset-1 before:block before:bg-[rgba(144,102,62,0.4)]"
+                          style={{
+                            clipPath:
+                              'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
+                          }}
+                        ></div>
+                        <div
+                          className="main_card_img absolute -top-[10px] left-0 inline-block h-0 w-full rounded-lg bg-[url('https://privateislands.fund/assets/images/islandPlaceholder_3.png')] bg-cover bg-center bg-no-repeat pt-[100%]"
+                          style={{
+                            clipPath:
+                              'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
+                          }}
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  className="z-20 w-[250px] sm:hidden"
+                  style={{
+                    transform: 'rotate(-45deg) matrix(-1, 0, 0, -1, 0, 0)',
+                  }}
+                >
+                  <div className="curly_arrow down left-1/5 absolute -bottom-20">
+                    <img src={mapPathDown} alt="Mint your Private Island" />
+                  </div>
+                </div>
+                <div
+                  className="curly_arrow absolute -right-16 top-1/4 z-20 hidden sm:inline-block md:-right-24 md:max-w-[500px] lg:-right-96"
+                  style={{
+                    transform: 'rotate(45deg)',
+                  }}
+                >
+                  <div>
+                    <img src={mapPathRight} alt="Mint your Private Island" />
+                  </div>
+                </div>
+              </div>
+              <div className="clear-both h-20 sm:hidden"></div>
+              <div className="xspotbtn grid w-full max-w-md cursor-pointer space-y-3 place-self-center rounded-lg bg-[#FBF8EC] pb-3 text-center shadow-lg ring-1 ring-[#E5D7B9] hover:scale-105 hover:ring-accent">
+                <NavLink to="/pi/claimisland">
+                  <div className="text-9xl text-accent">&#10008;</div>
+                  <h4 className="text-2xl text-accent">Click Here</h4>
+                </NavLink>
+              </div>
+            </div>
           </div>
         </div>
       </div>

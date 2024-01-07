@@ -5,7 +5,8 @@ export const ThemeToggle = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
 
   useEffect(() => {
-    document.body.dataset.theme = theme;
+    document.body.dataset.theme = 'light';
+    // document.body.dataset.theme = theme;
   }, [theme]);
 
   return (

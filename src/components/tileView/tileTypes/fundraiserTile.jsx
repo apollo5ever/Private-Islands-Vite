@@ -16,7 +16,7 @@ export const FundraiserTile = (props) => {
     <div className="mx-auto grid w-full flex-1 grid-cols-1 content-between">
       <div className="img_container relative">
         <img
-          className="fundraiser_img relative inline-block h-96 w-full rounded-lg bg-cover bg-center bg-no-repeat"
+          className="fundraiser_img relative inline-block h-96 max-h-[300px] w-full rounded-lg bg-cover bg-center bg-no-repeat"
           src={Helpers.getTileImage(tile)}
         />
         <div
@@ -39,10 +39,10 @@ export const FundraiserTile = (props) => {
       <div className="relative flex min-w-full flex-row-reverse pt-4">
         <div className="w-3/4 items-end space-y-3 overflow-clip leading-6">
           <h2 className="w-full whitespace-nowrap py-1 text-right font-fell text-3xl text-[#484541]">
-            {tile.Name}
+            {Helpers.getTileName(tile)}
           </h2>
           <div className="progress_bar relative mt-6">
-            <div className="float-right w-full py-1 text-right text-3xl text-[#61C0A8]">
+            <div className="float-right w-full py-1 text-right text-3xl text-accent">
               {raised} / {goal}
             </div>
             <div

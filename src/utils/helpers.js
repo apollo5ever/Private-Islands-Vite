@@ -1,4 +1,9 @@
 import { default as GI } from '@/components/getIslands.js';
+import { Bounty } from '@/components/tileView/mainView/bounty.jsx';
+import litFlame from '/src/assets/icons/icon_fire_orange.svg';
+import bottle from '/src/assets/icons/icon_bottle_blue.svg';
+import chest from '/src/assets/icons/icon_locked-chest_tan.svg';
+import island from '/src/assets/icons/icon_island.png';
 
 // App Constants
 
@@ -48,6 +53,20 @@ export const breakPoint = {
   MEDIUM: 768,
   LARGE: 1024,
   DESKTOP: 1280,
+};
+
+export const iconColor = {
+  ISLAND: '#4E9A86',
+  FUNDRAISER: '#F89070',
+  BOUNTY: '#90663E',
+  SUBSCRIPTION: '#46BDDC',
+};
+
+export const iconMap = {
+  ISLAND: island,
+  BOUNTY: chest,
+  FUNDRAISER: litFlame,
+  SUBSCRIPTION: bottle,
 };
 
 // TODO - Install i18next component & set up json file to for text replacement/translation
@@ -247,6 +266,40 @@ export class Helpers {
     return DEFAULT_MESSAGE;
   };
 
+  static getIconColor(iconType) {
+    const typeKey = Object.keys(piAssetType).find(
+      (key) => piAssetType[key] === iconType
+    );
+
+    const color = iconColor[typeKey] || '#9a9a9a';
+    // Transform the color into a Tailwind-compatible class name
+    const iconFromGradient = `from-[${color}]`;
+    const iconTextColorClass = `text-[${color}]`;
+
+    return { color, iconFromGradient, iconTextColorClass };
+  }
+
+  static getIcon(iconType) {
+    const typeKey = Object.keys(piAssetType).find(
+      (key) => piAssetType[key] === iconType
+    );
+
+    return iconMap[typeKey];
+  }
+
+  static getIconDescription = (type) => {
+    switch (type) {
+      case piAssetType.BOUNTY:
+        return 'Treasure Chest';
+      case piAssetType.SUBSCRIPTION:
+        return 'Message In A Bottle';
+      case piAssetType.FUNDRAISER:
+        return 'Smoke Signals';
+      case piAssetType.ISLAND:
+        return 'Private Island';
+    }
+  };
+
   static isDateBeforeToday = (dateStr) => {
     const givenDate = new Date(dateStr);
     const today = new Date();
@@ -314,5 +367,14 @@ export class Helpers {
       default:
         return 'items-center';
     }
+  };
+
+  static calculatePercentage = (numerator, denominator, decimalPlaces = 2) => {
+    if (denominator === 0) {
+      return 'Division by zero error';
+    }
+
+    const result = (numerator / denominator) * 100;
+    return `${result.toFixed(decimalPlaces)}%`;
   };
 }

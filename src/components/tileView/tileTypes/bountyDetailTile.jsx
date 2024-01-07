@@ -25,7 +25,7 @@ export const BountyDetailTile = (props) => {
 
   return (
     <div
-      className="mx-auto grid w-full flex-1 grid-cols-1 content-between rounded-lg bg-[#FBF8EC]"
+      className="mx-auto grid h-full w-full flex-1 grid-cols-1 content-between rounded-lg bg-[#FBF8EC]"
       onClick={handleClick}
     >
       <div className="img_container relative">

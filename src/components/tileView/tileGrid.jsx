@@ -11,19 +11,14 @@ import { TileContext } from '@/components/providers/TileContext.jsx';
 import { useSearchParams } from 'react-router-dom';
 
 // TODO - figure out how to poll status of dero txn to know when its complete (for claim island process)
-// TODO - DetailCard is called in the new mainView/fundraiser.jsx -- I should move this to mainView folder and verify it works
-
-// TODO - Check bountyTile, bountyDetailTile & subscriptions and make sure css is right - missing card/outer styling??
 // TODO - Now that state removed as dependency from getIslands - when new island added, need a way to trigger re-render so getAllElements will update
-// TODO - maybe create a wrapper component for the repeated css in the tiel and tiledetail types
 
 /*
   TODO Notes for myself as I transition to new styling
    - Had to get rid of dynamic sizign based on tiles per row & fixed tiles per row to 4 for now
    - commented out icon that would toggle sizes
-   - Set fixed width/height in tileWrapper class
-   - Transition from bottom is somewhat problematic as its capturing focus on hidden tileDetail from nearby tile
-   - TASK - for onCLick on tile, move it to <Tile> & in <TileDetail, have click on icons go to appropriate asset type detail view
+   - PrimaryTileNav - buttons don't display/drop text --  (responsive design issue)
+
  */
 
 export const TileGrid = () => {
@@ -107,21 +102,15 @@ export const TileGrid = () => {
     logger(LOG.DEBUG, COMPNAME, 'SELECTED TILE', selectedTile);
 
     return (
-      <div className="flex h-full w-full">
-        <div className="mr-2 h-full w-full md:w-3/4">
-          <PrimaryCard
-            data={selectedTile}
-            selectedIndex={selectedIndex}
-            setSelectedTile={setSelectedTile}
-            setSelectedIndex={setSelectedIndex}
-            tiles={allElements}
-          />
-        </div>
-        {!isMobile && (
-          <div className="flex-grow overflow-auto">
-            <SidebarCard data={selectedTile} />
-          </div>
-        )}
+      <div className="main_container relative mx-5 mb-12 mt-0 grid h-full grid-cols-1 items-start gap-x-5 gap-y-2 lg:grid-cols-3">
+        <PrimaryCard
+          data={selectedTile}
+          selectedIndex={selectedIndex}
+          setSelectedTile={setSelectedTile}
+          setSelectedIndex={setSelectedIndex}
+          tiles={allElements}
+        />
+        <SidebarCard data={selectedTile} />
       </div>
     );
   }
@@ -150,7 +139,7 @@ export const TileGrid = () => {
       {/* Force tailwind to recognize these classes for tree shaking */}
       {/*<div className="hidden grid-cols-6 grid-cols-8"></div>*/}
       {/*<div className={`grid gap-2 grid-cols-${tilesPerRow}`}>*/}
-      <div className="main_container relative mx-5 mb-20 mt-20 grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="main_container relative mx-5 mb-20 mt-20 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {filteredElements &&
           filteredElements.map((tile, index) => (
             <div

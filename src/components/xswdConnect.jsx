@@ -38,8 +38,10 @@ export default function XSWDConnect() {
     setConnected(true);
   };
   return (
-    <button onClick={handleConnect}>
-      {connected ? 'Connected' : 'Connect'}
-    </button>
+    <div onClick={handleConnect}>
+      <div className="cursor-pointer rounded-bl-[25px] rounded-tr-[25px] bg-gradient-to-b from-accent to-[#6CCAB1] px-6 py-1 text-center text-lg leading-tight text-[#FFF] hover:scale-105 hover:shadow-lg sm:rounded-bl-[35px] sm:rounded-tr-[35px] sm:px-10 sm:text-2xl">
+        {connected ? 'Connected' : 'Connect Wallet'}
+      </div>
+    </div>
   );
 }

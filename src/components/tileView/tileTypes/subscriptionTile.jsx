@@ -10,7 +10,7 @@ export const SubscriptionTile = (props) => {
     <div className="mx-auto grid w-full flex-1 grid-cols-1 content-between">
       <div className="img_container relative">
         <div
-          className="subscription_img relative inline-block h-96 w-full rounded-lg bg-cover bg-center bg-no-repeat"
+          className="subscription_img relative inline-block h-96 max-h-[300px] w-full rounded-lg bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: `url(${Helpers.getTileImage(tile)})` }}
         />
         <div
@@ -34,7 +34,7 @@ export const SubscriptionTile = (props) => {
       {/*TODO Update content*/}
       <div className="relative flex min-w-full flex-row-reverse pt-16">
         <div className="w-3/4 items-end space-y-3 leading-6">
-          <div className="float-right w-3/4 cursor-pointer rounded-full bg-[#61C0A8] py-1 text-center font-fell text-3xl italic leading-tight text-[#FFF] hover:shadow-lg">
+          <div className="float-right w-3/4 cursor-pointer rounded-full bg-accent py-1 text-center font-fell text-3xl italic leading-tight text-[#FFF] hover:shadow-lg">
             Follow
           </div>
           <div className="absolute bottom-0 left-0 inline-block max-h-[90px] min-h-[70px] w-1/4 bg-cover bg-center bg-no-repeat">

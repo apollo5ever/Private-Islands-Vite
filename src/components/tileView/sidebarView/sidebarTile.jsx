@@ -6,6 +6,7 @@ import { TileContext } from '@/components/providers/TileContext.jsx';
 import { useGetAssociatedItems } from '@/components/hooks/useGetAssociatedItems.js';
 import { useSearchParams } from 'react-router-dom';
 
+// TODO MTS might be ready to delete this
 export const SidebarTile = () => {
   const { proseClass } = useTheme();
   const [searchParams, setSearchParams] = useSearchParams();
