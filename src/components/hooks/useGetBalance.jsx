@@ -12,10 +12,7 @@ export function useGetBalance() {
         scid: scid,
       })
     );
-    console.log('rpc balance check', scid, res,err);
-    if(err){
-      return 0
-    }
+    console.log('rpc balance check', scid, res);
     return res.data.result.balance;
   });
 
@@ -46,9 +43,13 @@ export function useGetBalance() {
   };
 
   async function getBalance(scid) {
+    const response = await state.xswd.wallet.GetBalance({ scid: scid });
+    return response.result.balance;
+
     if (state.walletMode == 'xswd') {
       return await getBalanceXSWD(scid);
     } else if (state.walletMode == 'rpc') {
+      console.log('getBalanceRPC', scid);
       return await getBalanceRPC(scid);
     }
 

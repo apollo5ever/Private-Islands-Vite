@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import to from 'await-to-js';
 import { useSendTransaction } from './hooks/useSendTransaction';
+import { useGetRandomAddress } from './hooks/useGetRandomAddress';
 import { Button } from '@/components/common/Button.jsx';
 
 export default function ATR(props) {
   const [sendTransaction] = useSendTransaction();
+  const [getRandomAddress] = useGetRandomAddress();
   const [recipient, setRecipient] = useState();
 
   const handleRecipientChange = (e) => {
@@ -19,7 +21,7 @@ export default function ATR(props) {
 
   const addRecipient = React.useCallback(async (e) => {
     e.preventDefault();
-    //const deroBridgeApi = props.dba.current
+    const randomAddress = getRandomAddress();
 
     var f = 0;
     if (e.target.final.checked) f = 1;
@@ -29,7 +31,7 @@ export default function ATR(props) {
       ringsize: 2,
       transfers: [
         {
-          destination: props.randomAddress,
+          destination: randomAddress,
           burn: 1,
           scid: props.judge,
         },

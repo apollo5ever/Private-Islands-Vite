@@ -7,10 +7,12 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import { LoginContext } from '../LoginContext';
 import Success from './success';
 import { useSendTransaction } from './hooks/useSendTransaction';
+import { useGetRandomAddress } from './hooks/useGetRandomAddress';
 import { useGetSC } from './hooks/useGetSC';
 
 export default function ModifyTier() {
   const [sendTransaction] = useSendTransaction();
+  const [getRandomAddress] = useGetRandomAddress();
   const [searchParams, setSearchParams] = useSearchParams();
   const params = useParams();
   const [state, setState] = React.useContext(LoginContext);
@@ -48,10 +50,11 @@ export default function ModifyTier() {
 
   const DoIt = React.useCallback(async (event) => {
     event.preventDefault();
+    const randomAddress = await getRandomAddress();
 
     const transfers = [
       {
-        destination: state.randomAddress,
+        destination: randomAddress,
         scid: island.SCID,
         burn: 1,
       },
@@ -142,13 +145,14 @@ export default function ModifyTier() {
 
   const SetMetadata = React.useCallback(async (event) => {
     event.preventDefault();
+    const randomAddress = await getRandomAddress();
 
     let fee;
     if (event.target.description.value.length > 360) fee = 10000;
 
     const transfers = [
       {
-        destination: state.randomAddress,
+        destination: randomAddress,
         scid: island.SCID,
         burn: 1,
       },

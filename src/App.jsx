@@ -171,7 +171,7 @@ function App() {
 
   useEffect(() => {
     populateMyIslands();
-  }, [state.deroBridgeApiRef, state.ipfs, state.walletMode, state.scid]);
+  }, [state.xswd]);
 
   return (
     <>

@@ -3,11 +3,15 @@ import { useParams } from 'react-router-dom';
 import { LoginContext } from '../LoginContext';
 import getFundraisers from './getFundraisers';
 import { useSendTransaction } from './hooks/useSendTransaction';
+import { useGetAddress } from './hooks/useGetAddress';
+import { useGetRandomAddress } from './hooks/useGetRandomAddress';
 import { Button } from '@/components/common/Button.jsx';
 import { DetailCard } from '@/components/smokeSignal/DetailCard.jsx';
 import { default as GI } from './getIslands';
 
 export default function Fundraiser() {
+  const [getAddress] = useGetAddress();
+  const [getRandomAddress] = useGetRandomAddress();
   const [signal, setSignal] = React.useState({});
   const params = useParams();
   const island = params.island;
@@ -61,6 +65,7 @@ export default function Fundraiser() {
 
   const supportGoal = React.useCallback(async (event) => {
     event.preventDefault();
+    const randomAddress = await getRandomAddress();
     var HashAndIndex = signal.SCID + params.index;
     if (event.target.refundable.checked) {
       var refundable = 1;
@@ -74,7 +79,7 @@ export default function Fundraiser() {
       transfers: [
         {
           burn: parseInt(event.target.amount.value * 100000),
-          destination: state.randomAddress,
+          destination: randomAddress,
         },
       ],
       sc_rpc: [
@@ -111,9 +116,10 @@ export default function Fundraiser() {
 
   const SetMetaData = React.useCallback(async (event) => {
     event.preventDefault();
+    const randomAddress = await getRandomAddress();
     const transfers = [
       {
-        destination: state.randomAddress,
+        destination: randomAddress,
         scid: signal.scid,
         burn: 1,
       },

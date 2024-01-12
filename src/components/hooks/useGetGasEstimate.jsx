@@ -6,7 +6,21 @@ export function useGetGasEstimate() {
   const [state, setState] = useContext(LoginContext);
 
   async function getGasEstimate(data) {
+    const payload = {
+      scid: data.scid,
+      ringsize: data.ringsize,
+      transfers: data.transfers,
+      sc_rpc: data.gas_rpc,
+      sc: data.sc,
+      signer: data.signer,
+    };
+
+    const response = await state.xswd.node.GetGasEstimate(payload);
+    console.log(payload);
+    console.log(response);
+    return response.result.gasstorage;
     if (state.daemonMode == 'pools') {
+      console.log('data data', data);
       let poolData = JSON.stringify({
         jsonrpc: '2.0',
         id: '1',
@@ -33,28 +47,22 @@ export function useGetGasEstimate() {
       console.log('gasData', gasData);
 
       return gasData.gasstorage;
-    } else if (state.walletMode === 'rpc') {
+    } else if (state.walletMode == 'rpc') {
       const deroBridgeApi = state.deroBridgeApiRef.current;
-      const rpcParams = {
-        scid: data.scid,
-        ringsize: data.ringsize,
-        transfers: data.transfers,
-        sc_rpc: data.gas_rpc,
-        sc: data.sc,
-        signer: data.signer,
-      };
 
       const [err, res] = await to(
-        deroBridgeApi.daemon('get-gas-estimate', rpcParams)
+        deroBridgeApi.daemon('get-gas-estimate', {
+          scid: data.scid,
+          ringsize: data.ringsize,
+          transfers: data.transfers,
+          sc_rpc: data.gas_rpc,
+          sc: data.sc,
+          signer: data.signer,
+        })
       );
-      if (res.data && res.data.error) {
-        console.log('ERROR Gas Estimate', res.data.error);
-        console.log(rpcParams);
-      } else {
-        console.log('rpc gas', res);
-        return res.data.result.gasstorage;
-      }
-    } else if (state.walletMode === 'xswd') {
+      console.log('rpc gas', res);
+      return res.data.result.gasstorage;
+    } else if (state.walletMode == 'xswd') {
       return new Promise((resolve, reject) => {
         const payload = {
           jsonrpc: '2.0',

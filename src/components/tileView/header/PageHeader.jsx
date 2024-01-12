@@ -5,6 +5,7 @@ import { ThemeToggle } from '@/components/common/ThemeToggle.jsx';
 import { useTheme } from '@/components/hooks/useTheme.js';
 import WalletToggle from '@/components/tileView/header/walletToggle.jsx';
 import { TileContext } from '@/components/providers/TileContext.jsx';
+import XSWDConnect from '../../xswdConnect';
 
 export const PageHeader = () => {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
@@ -115,7 +116,7 @@ export const PageHeader = () => {
         )}
 
         <div className="flex items-center space-x-4">
-          <WalletToggle />
+          <XSWDConnect />
           <ThemeToggle />
         </div>
       </div>

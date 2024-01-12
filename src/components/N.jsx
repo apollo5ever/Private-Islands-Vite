@@ -3,10 +3,12 @@ import to from 'await-to-js';
 import hex2a from './hex2a';
 import { useSendTransaction } from './hooks/useSendTransaction';
 import { useGetSC } from './hooks/useGetSC';
+import { useGetRandomAddress } from './hooks/useGetRandomAddress';
 
 export default function N(props) {
   const [sendTransaction] = useSendTransaction();
   const [getSC] = useGetSC();
+  const [getRandomAddress] = useGetRandomAddress();
   const [judges, setJudges] = React.useState([]);
   const [execs, setExecs] = React.useState([]);
 
@@ -27,13 +29,14 @@ export default function N(props) {
 
   const nominate = React.useCallback(async (e) => {
     e.preventDefault();
+    const randomAddress = await getRandomAddress();
 
     const data = new Object({
       scid: props.scid_bounties,
       ringsize: 2,
       transfers: [
         {
-          destination: props.randomAddress,
+          destination: randomAddress,
           burn: 1,
           scid: props.island,
         },

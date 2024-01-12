@@ -3,6 +3,8 @@ import bgImage from '@/assets/parallax/CoolIsland.png';
 import { FullPageContainer } from '@/components/common/FullPageContainer.jsx';
 import { useSearchParams } from 'react-router-dom';
 import { useSendTransaction } from '/src/components/hooks/useSendTransaction';
+import { useGetRandomAddress } from '../hooks/useGetRandomAddress';
+import { useGetAddress } from '../hooks/useGetAddress';
 import { useGetGasEstimate } from '../hooks/useGetGasEstimate';
 import { useGetSC } from '/src/components/hooks/useGetSC';
 import { LoginContext } from '@/LoginContext';
@@ -23,19 +25,21 @@ export const ClaimIsland = () => {
   const [execs, setExecs] = useState([]);
   const [error, setError] = useState('');
   const [sendTransaction] = useSendTransaction();
-  const [getGasEstimate] = useGetGasEstimate()
+  const [getRandomAddress] = useGetRandomAddress();
+  const [getAddress] = useGetAddress();
+  const [getGasEstimate] = useGetGasEstimate();
   const [getSC] = useGetSC();
   const [getBalance] = useGetBalance();
   const [islandSCID, setIslandSCID] = useState(searchParams.get('scid'));
   const [name, setName] = useState('');
   const [islandInWallet, setIslandInWallet] = useState(0);
-  const [minting,setMinting] = useState(false)
-  const [formData,setFormData] = useState({
-    image:"",
-    tagline:"",
-    bio:""
-  })
-  const [editorHtml,setEditorHtml] = useState("")
+  const [minting, setMinting] = useState(false);
+  const [formData, setFormData] = useState({
+    image: '',
+    tagline: '',
+    bio: '',
+  });
+  const [editorHtml, setEditorHtml] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -48,36 +52,35 @@ export const ClaimIsland = () => {
   const Claim = async (e) => {
     e.preventDefault();
     let scid = await mint(name);
-    setMinting(true)
+    let randomAddress = await getRandomAddress();
+    let userAddress = await getAddress();
+    setMinting(true);
     let balance = await balanceCheck(scid);
-    await register(name, scid,balance);
-    setMetadata(scid,balance)
-    
-    
+    await register(name, scid, balance, userAddress, randomAddress);
+    setMetadata(scid, balance, userAddress, randomAddress);
   };
 
   const balanceCheck = async (scid) => {
     let balance = 0;
     while (balance == 0) {
-      console.log("check balance of ",scid)
+      console.log('check balance of ', scid);
       balance = await getBalance(scid);
-     // await new Promise(resolve => setTimeout(resolve, 18000));
+      // await new Promise(resolve => setTimeout(resolve, 18000));
     }
-    setMinting(false)
+    setMinting(false);
     return balance;
   };
 
-  const setMetadata = async (scid,balance) =>{
-    
-   console.log("balance: ",balance)
+  const setMetadata = async (scid, balance, userAddress, randomAddress) => {
+    console.log('balance: ', balance);
 
     let metaDataData = {
       scid: scid,
       ringsize: 2,
-      signer:state.userAddress,
+      signer: userAddress,
       transfers: [
         {
-          destination: state.randomAddress,
+          destination: randomAddress,
           burn: 1,
           scid: scid,
         },
@@ -118,15 +121,14 @@ export const ClaimIsland = () => {
       },
     ].concat(metaDataData.sc_rpc);
 
-    metaDataData.gas_rpc= gas_rpc
+    metaDataData.gas_rpc = gas_rpc;
 
-    let fees = await getGasEstimate(metaDataData)
+    let fees = await getGasEstimate(metaDataData);
 
-     metaDataData.fees = fees
-
+    metaDataData.fees = fees;
 
     sendTransaction(metaDataData);
-  }
+  };
 
   const mint = async (name) => {
     const res = await getSC(state.scid_registry, false, true);
@@ -157,11 +159,12 @@ export const ClaimIsland = () => {
     });
 
     let newIslandSCID = await sendTransaction(mintData);
+    console.log('new scid', newIslandSCID);
     setIslandSCID(newIslandSCID);
     return newIslandSCID;
   };
-  const register = async (name, scid,balance) => {
-    console.log("balance: ",balance)
+  const register = async (name, scid, balance, userAddress, randomAddress) => {
+    console.log('balance: ', balance);
     const res = await getSC(state.scid_registry, false, true);
     var search = `aPRIVATE-ISLANDS${name}`;
     var island_scid = res.stringkeys[search];
@@ -176,13 +179,8 @@ export const ClaimIsland = () => {
       ringsize: 2,
       transfers: [
         {
-          destination: state.randomAddress,
+          destination: randomAddress,
           burn: 10000,
-        },
-        {
-          destination: state.randomAddress,
-          burn: 1,
-          scid: scid,
         },
       ],
       sc_rpc: [
@@ -391,13 +389,13 @@ export const ClaimIsland = () => {
             <form onSubmit={updateMetaData}>
               <FlexBoxColumn align="start">
                 <input
-                  className="input-bordered input mx-2 w-full max-w-xs"
+                  className="input input-bordered mx-2 w-full max-w-xs"
                   placeholder="Image URL"
                   id="image"
                   type="text"
                 />
                 <input
-                  className="input-bordered input mx-2 w-full max-w-xs"
+                  className="input input-bordered mx-2 w-full max-w-xs"
                   placeholder="Tagline"
                   id="tagline"
                   type="text"
@@ -431,14 +429,14 @@ export const ClaimIsland = () => {
             <div className="rounded-2xl border border-accent p-4 text-xl">
               <form onSubmit={Claim}>
                 <input
-                  className="input-bordered input mx-2 w-full max-w-xs"
+                  className="input input-bordered mx-2 w-full max-w-xs"
                   placeholder="Island Name"
                   id="island"
                   type="text"
                   onChange={(e) => setName(e.target.value)}
                 />
                 <input
-                  className="input-bordered input mx-2 w-full max-w-xs"
+                  className="input input-bordered mx-2 w-full max-w-xs"
                   placeholder="Image URL"
                   id="image"
                   name="image"
@@ -447,7 +445,7 @@ export const ClaimIsland = () => {
                   type="text"
                 />
                 <input
-                  className="input-bordered input mx-2 w-full max-w-xs"
+                  className="input input-bordered mx-2 w-full max-w-xs"
                   placeholder="Tagline"
                   id="tagline"
                   name="tagline"
@@ -455,21 +453,22 @@ export const ClaimIsland = () => {
                   onChange={handleChange}
                   type="text"
                 />
-                <RichTextEditor name="bio"
+                <RichTextEditor
+                  name="bio"
                   editorHtml={editorHtml}
                   setEditorHtml={setEditorHtml}
                   bio={formData.bio}
                   handleChange={handleChange}
                   formData={formData}
                   setFormData={setFormData}
-                  />
-               
+                />
+
                 <Button size="small" type={'submit'}>
                   Create
                 </Button>
               </form>
-              {minting&&"Waiting for confirmation... DO NOT LEAVE PAGE"}
-            
+              {minting && 'Waiting for confirmation... DO NOT LEAVE PAGE'}
+
               {error && (
                 <FlexBoxRow className="my-3 rounded border border-error bg-info text-2xl text-error">
                   {error}

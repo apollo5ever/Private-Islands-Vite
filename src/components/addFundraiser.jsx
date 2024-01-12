@@ -1,14 +1,17 @@
 import DeroBridgeApi from 'dero-rpc-bridge-api';
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import to from 'await-to-js';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { useSendTransaction } from './hooks/useSendTransaction';
+import { useGetAddress } from './hooks/useGetAddress.jsx';
+import { useGetRandomAddress } from './hooks/useGetRandomAddress.jsx';
 import { useGetSC } from './hooks/useGetSC';
 import { useGetGasEstimate } from './hooks/useGetGasEstimate';
 
 import { LoginContext } from '../LoginContext';
 import Success from './success.jsx';
+import RichTextEditor from './common/richTextEditor.jsx';
 
 export default function CreateFund() {
   const [sendTransaction] = useSendTransaction();
@@ -16,12 +19,30 @@ export default function CreateFund() {
   const [state, setState] = React.useContext(LoginContext);
   const [searchParams, setSearchParams] = useSearchParams();
   const [getSC] = useGetSC();
+  const [getAddress] = useGetAddress();
+  const [getRandomAddress] = useGetRandomAddress();
   const params = useParams();
   const island = params.island;
   const index = params.index;
+  const [editorHtml, setEditorHtml] = useState('');
+  const [formData, setFormData] = useState({
+    image: '',
+    bio: '',
+    tagline: '',
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
 
   const DoIt = React.useCallback(async (event) => {
     event.preventDefault();
+    const randomAddress = await getRandomAddress();
+    const userAddress = await getAddress();
 
     let oao = 0;
     if (event.target.OAO.checked) {
@@ -36,7 +57,7 @@ export default function CreateFund() {
 
     let transfers = [
       {
-        destination: state.randomAddress,
+        destination: randomAddress,
         scid: island,
         burn: 1,
       },
@@ -53,7 +74,7 @@ export default function CreateFund() {
       scid: state.scid_fundraisers,
       ringsize: 2,
       transfers: transfers,
-      signer: state.userAddress,
+      signer: userAddress,
       sc_rpc: [
         {
           name: 'entrypoint',
@@ -110,7 +131,7 @@ export default function CreateFund() {
         {
           name: 'desc',
           datatype: 'S',
-          value: event.target.description.value,
+          value: formData.bio,
         },
         {
           name: 'WithdrawlType',
@@ -158,7 +179,7 @@ export default function CreateFund() {
     const txData = new Object({
       scid: state.scid_fundraisers,
       ringsize: 2,
-      fees: fee,
+      fees: fees,
       transfers: transfers,
       sc_rpc: [
         {
@@ -195,7 +216,7 @@ export default function CreateFund() {
         {
           name: 'Description',
           datatype: 'S',
-          value: event.target.description.value,
+          value: formData.bio,
         },
       ],
     });
@@ -243,12 +264,15 @@ export default function CreateFund() {
             <input placeholder="Image URL" id="fundPhoto" type="text" />
             <input placeholder="Tagline" id="tagline" type="text" />
 
-            <textarea
-              placeholder="Description"
-              rows="44"
-              cols="80"
-              id="description"
+            <RichTextEditor
+              editorHtml={editorHtml}
+              setEditorHtml={setEditorHtml}
+              bio={formData.bio}
+              handleChange={handleChange}
+              formData={formData}
+              setFormData={setFormData}
             />
+
             <div>
               <input type="checkbox" id="OAO" />
               <label htmlFor="OAO">

@@ -4,6 +4,7 @@ import { TileContext } from '@/components/providers/TileContext.jsx';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { LoginContext } from '@/LoginContext.jsx';
 import { useSendTransaction } from '@/components/hooks/useSendTransaction';
+import { useGetRandomAddress } from '../../hooks/useGetRandomAddress';
 import { Button } from '@/components/common/Button.jsx';
 import { DetailCard } from '@/components/smokeSignal/DetailCard.jsx';
 import { FlexBoxColumn } from '@/components/common/FlexBoxColumn.jsx';
@@ -18,6 +19,7 @@ export const Fundraiser = ({ fundData }) => {
   const [state, setState] = useContext(LoginContext);
   const [editing, setEditing] = useState(false);
   const [sendTransaction] = useSendTransaction();
+  const [getRandomAddress] = useGetRandomAddress();
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
 
@@ -124,6 +126,7 @@ export const Fundraiser = ({ fundData }) => {
 
   const supportGoal = useCallback(async (event) => {
     event.preventDefault();
+    const randomAddress = await getRandomAddress();
     let HashAndIndex = fundData.SCID + fundData.Index;
     let refundable = 0;
     if (event.target.refundable.checked) {
@@ -136,7 +139,7 @@ export const Fundraiser = ({ fundData }) => {
       transfers: [
         {
           burn: parseInt(event.target.amount.value * 100000),
-          destination: state.randomAddress,
+          destination: randomAddress,
         },
       ],
       sc_rpc: [
@@ -173,9 +176,10 @@ export const Fundraiser = ({ fundData }) => {
 
   const SetMetaData = useCallback(async (event) => {
     event.preventDefault();
+    const randomAddress = await getRandomAddress();
     const transfers = [
       {
-        destination: state.randomAddress,
+        destination: randomAddress,
         scid: fundData.SCID,
         burn: 1,
       },
@@ -372,7 +376,7 @@ export const Fundraiser = ({ fundData }) => {
                         <FlexBoxColumn align="end" className="mb-2">
                           <input
                             id="amount"
-                            className="input-bordered input w-full sm:max-w-xs"
+                            className="input input-bordered w-full sm:max-w-xs"
                             placeholder="Dero amount to donate"
                             type="text"
                           />

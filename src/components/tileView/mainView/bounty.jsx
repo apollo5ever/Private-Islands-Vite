@@ -6,6 +6,7 @@ import Executer from '@/components/Executer.jsx';
 import N from '@/components/N.jsx';
 import Judge from '@/components/Judge.jsx';
 import { useSendTransaction } from '@/components/hooks/useSendTransaction';
+import { useGetRandomAddress } from '../../hooks/useGetRandomAddress';
 import GI from '@/components/getIslands';
 import { SupportBountyByERC20 } from '@/components/supportBountyByErc20';
 import { useNameLookup } from '@/components/hooks/useNameLookup';
@@ -28,6 +29,7 @@ export const Bounty = ({ bountyData }) => {
   const [judging, setJudging] = useState(false);
   const [executing, setExecuting] = useState(false);
   const [sendTransaction] = useSendTransaction();
+  const [getRandomAddress] = useGetRandomAddress();
   const [nameLookup] = useNameLookup();
   const [islandSCID, setIslandSCID] = useState('');
   const [recipients, setRecipients] = useState([]);
@@ -67,13 +69,14 @@ export const Bounty = ({ bountyData }) => {
 
   const AddTreasure = useCallback(async (event) => {
     event.preventDefault();
+    const randomAddress = await getRandomAddress();
 
     const data = new Object({
       scid: state.scid_bounties,
       ringsize: 2,
       transfers: [
         {
-          destination: state.randomAddress,
+          destination: randomAddress,
           burn: parseInt(event.target.amount.value * 100000),
         },
       ],
@@ -175,9 +178,10 @@ export const Bounty = ({ bountyData }) => {
 
   const SetMetaData = useCallback(async (event) => {
     event.preventDefault();
+    const randomAddress = await getRandomAddress();
     const transfers = [
       {
-        destination: state.randomAddress,
+        destination: randomAddress,
         scid: islandSCID,
         burn: 1,
       },
@@ -260,19 +264,19 @@ export const Bounty = ({ bountyData }) => {
             <FlexBoxColumn className="mt-20">
               <FlexBoxRow gap={2}>
                 <input
-                  className="input-bordered input w-full max-w-xs"
+                  className="input input-bordered w-full max-w-xs"
                   placeholder="name"
                   defaultValue={treasure.Name}
                   id="Name"
                 />
                 <input
-                  className="input-bordered input w-full max-w-xs"
+                  className="input input-bordered w-full max-w-xs"
                   placeholder="image url"
                   defaultValue={Helpers.getTileImage(bountyData)}
                   id="Image"
                 />
                 <input
-                  className="input-bordered input w-full max-w-xs"
+                  className="input input-bordered w-full max-w-xs"
                   placeholder="tagline"
                   defaultValue={Helpers.getTileTagline(bountyData)}
                   id="Tagline"
@@ -463,7 +467,6 @@ export const Bounty = ({ bountyData }) => {
                       <N
                         island={island}
                         index={index}
-                        randomAddress={state.randomAddress}
                         dba={state.deroBridgeApiRef}
                         l="X"
                         scid_registry={state.scid_registry}
@@ -474,7 +477,6 @@ export const Bounty = ({ bountyData }) => {
                         index={index}
                         dba={state.deroBridgeApiRef}
                         l="J"
-                        randomAddress={state.randomAddress}
                         scid_registry={state.scid_registry}
                         scid_bounties={state.scid_bounties}
                       />
@@ -496,7 +498,6 @@ export const Bounty = ({ bountyData }) => {
                       judge={treasure.Judge && treasure.Judge.SCID}
                       JF={treasure.JF}
                       deroBridgeApiRef={state.deroBridgeApiRef}
-                      randomAddress={state.randomAddress}
                       scid={state.scid_bounties}
                       XE={treasure.JE}
                       solo={treasure.Judges.length === 1}
@@ -519,7 +520,6 @@ export const Bounty = ({ bountyData }) => {
                       executer={treasure.Executer && treasure.Executer.SCID}
                       JF={treasure.JF}
                       deroBridgeApiRef={state.deroBridgeApiRef}
-                      randomAddress={state.randomAddress}
                       scid={state.scid_bounties}
                       XE={treasure.XE}
                       solo={treasure.Execs.length == 1}
@@ -547,7 +547,7 @@ export const Bounty = ({ bountyData }) => {
                             id="amount"
                             type="text"
                             placeholder="Amount (Dero)"
-                            className="input-bordered input w-full max-w-xs"
+                            className="input input-bordered w-full max-w-xs"
                           />
                         </div>
                         <div className="p-2">
@@ -566,7 +566,7 @@ export const Bounty = ({ bountyData }) => {
                             id="proof"
                             type="text"
                             placeholder="proof"
-                            className="input-bordered input w-full max-w-xs"
+                            className="input input-bordered w-full max-w-xs"
                           />
                         </div>
                         <div className="p-2">
