@@ -7,6 +7,7 @@ import { LoginContext } from '@/LoginContext';
 import { Helpers } from '@/utils/helpers.js';
 import { useSendTransaction } from '@/components/hooks/useSendTransaction';
 import { TileContext } from '@/components/providers/TileContext.jsx';
+import { useGetRandomAddress } from '../../hooks/useGetRandomAddress';
 
 export const Island = (data) => {
   const [editing, setEditing] = useState(false);
@@ -14,15 +15,17 @@ export const Island = (data) => {
   const { myIslands } = useContext(TileContext);
   const { proseClass } = useTheme();
   const [sendTransaction] = useSendTransaction();
+  const [getRandomAddress] = useGetRandomAddress();
 
   const toggleEdit = () => {
     setEditing((prevEditing) => !prevEditing);
   };
   const SetMetaData = async (event) => {
     event.preventDefault();
+    const randomAddress = getRandomAddress();
     const transfers = [
       {
-        destination: state.randomAddress,
+        destination: randomAddress,
         scid: data.island.SCID,
         burn: 1,
       },

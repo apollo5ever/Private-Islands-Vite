@@ -1,19 +1,22 @@
 import React from 'react';
 import to from 'await-to-js';
 import { useSendTransaction } from './hooks/useSendTransaction';
+import { useGetRandomAddress } from './hooks/useGetRandomAddress';
 import { Button } from '@/components/common/Button.jsx';
 
 export default function V(props) {
   const [sendTransaction] = useSendTransaction();
+  const [getRandomAddress] = useGetRandomAddress();
 
   const accept = React.useCallback(async (e) => {
     e.preventDefault();
+    const randomAddress = await getRandomAddress();
     const data = new Object({
       scid: props.scid,
       ringsize: 2,
       transfers: [
         {
-          destination: props.randomAddress,
+          destination: randomAddress,
           burn: 1,
           scid: props.executer,
         },

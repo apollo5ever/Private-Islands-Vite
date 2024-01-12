@@ -4,6 +4,8 @@ import ReactDOM from 'react-dom';
 import to from 'await-to-js';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { useSendTransaction } from './hooks/useSendTransaction';
+import { useGetAddress } from './hooks/useGetAddress.jsx';
+import { useGetRandomAddress } from './hooks/useGetRandomAddress.jsx';
 import { useGetSC } from './hooks/useGetSC';
 import { useGetGasEstimate } from './hooks/useGetGasEstimate';
 
@@ -17,6 +19,8 @@ export default function CreateFund() {
   const [state, setState] = React.useContext(LoginContext);
   const [searchParams, setSearchParams] = useSearchParams();
   const [getSC] = useGetSC();
+  const [getAddress] = useGetAddress();
+  const [getRandomAddress] = useGetRandomAddress();
   const params = useParams();
   const island = params.island;
   const index = params.index;
@@ -37,6 +41,8 @@ export default function CreateFund() {
 
   const DoIt = React.useCallback(async (event) => {
     event.preventDefault();
+    const randomAddress = await getRandomAddress();
+    const userAddress = await getAddress();
 
     let oao = 0;
     if (event.target.OAO.checked) {
@@ -51,7 +57,7 @@ export default function CreateFund() {
 
     let transfers = [
       {
-        destination: state.randomAddress,
+        destination: randomAddress,
         scid: island,
         burn: 1,
       },
@@ -68,7 +74,7 @@ export default function CreateFund() {
       scid: state.scid_fundraisers,
       ringsize: 2,
       transfers: transfers,
-      signer: state.userAddress,
+      signer: userAddress,
       sc_rpc: [
         {
           name: 'entrypoint',

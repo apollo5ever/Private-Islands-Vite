@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { LoginContext } from '../LoginContext';
 import Success from './success.jsx';
 import hex2a from './hex2a.js';
 import { useSendTransaction } from './hooks/useSendTransaction';
+import { useGetRandomAddress } from './hooks/useGetRandomAddress.jsx';
+import { useGetAddress } from './hooks/useGetAddress.jsx';
 import { useGetSC } from './hooks/useGetSC';
 import { Button } from '@/components/common/Button.jsx';
 import { useGetGasEstimate } from './hooks/useGetGasEstimate';
@@ -30,6 +32,22 @@ export default function BuryTreasure() {
   const [sendTransaction] = useSendTransaction();
   const [getGasEstimate] = useGetGasEstimate();
   const [getSC] = useGetSC();
+  const [getAddress] = useGetAddress();
+  const [getRandomAddress] = useGetRandomAddress();
+  const [editorHtml, setEditorHtml] = useState('');
+  const [formData, setFormData] = useState({
+    image: '',
+    bio: '',
+    tagline: '',
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
 
   const getJudges = React.useCallback(async () => {
     const res = await getSC(state.scid_registry, false, true);
@@ -57,12 +75,13 @@ export default function BuryTreasure() {
 
   const updateMetaData = React.useCallback(async (event) => {
     event.preventDefault();
+    const randomAddress = await getRandomAddress();
     let fee;
     if (event.target.description.value.length > 380) fee = 10000;
 
     const transfers = [
       {
-        destination: state.randomAddress,
+        destination: randomAddress,
         scid: island,
         burn: 1,
       },
@@ -120,6 +139,8 @@ export default function BuryTreasure() {
 
   const DoIt = React.useCallback(async (event) => {
     event.preventDefault();
+    const randomAddress = await getRandomAddress();
+    const userAddress = await getAddress();
     if (!event.target.bountyName.value) {
       setError('Bounty name is required.');
       return;
@@ -149,12 +170,12 @@ export default function BuryTreasure() {
 
     const transfers = [
       {
-        destination: state.randomAddress,
+        destination: randomAddress,
         scid: island,
         burn: 1,
       },
       {
-        destination: state.randomAddress,
+        destination: randomAddress,
         burn: parseInt(event.target.treasure.value * 100000),
       },
     ];
@@ -163,7 +184,7 @@ export default function BuryTreasure() {
       scid: state.scid_bounties,
       ringsize: 2,
       transfers: transfers,
-      signer: state.userAddress,
+      signer: userAddress,
       sc_rpc: [
         {
           name: 'entrypoint',
