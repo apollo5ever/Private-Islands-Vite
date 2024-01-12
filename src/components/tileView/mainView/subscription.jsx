@@ -1,6 +1,8 @@
 import React from 'react';
 import { useSendTransaction } from '@/components/hooks/useSendTransaction.jsx';
 import { useGetSC } from '@/components/hooks/useGetSC.jsx';
+import { useGetAddress } from '../../hooks/useGetAddress';
+import { useGetRandomAddress } from '../../hooks/useGetRandomAddress';
 import { Button } from '@/components/common/Button.jsx';
 import { useTheme } from '@/components/hooks/useTheme.js';
 import { Divider } from '@/components/common/Divider.jsx';
@@ -18,6 +20,8 @@ export const Subscription = ({ subData }) => {
   console.log('SUB DATA', subData);
   const [state, setState] = React.useContext(LoginContext);
   const [sendTransaction] = useSendTransaction();
+  const [getAddress] = useGetAddress();
+  const [getRandomAddress] = useGetRandomAddress();
   const [availability, setAvailability] = React.useState('');
   const [subbed, setSubbed] = React.useState(false);
   const [expiry, setExpiry] = React.useState(null);
@@ -50,11 +54,10 @@ export const Subscription = ({ subData }) => {
   };
 
   const checkSubbed = React.useCallback(async () => {
-    const res0 = await getSC(state.scid_subscriptions);
+    const userAddress = await getAddress();
+    const res0 = await getSC(state.scid_subscriptions, false, true);
     var scData = res0.stringkeys;
-    var supporterSearch = `${state.userAddress}_${
-      subData.SCID + subData.Index
-    }_E`;
+    var supporterSearch = `${userAddress}_${subData.SCID + subData.Index}_E`;
     var expiry = scData[supporterSearch];
     if (expiry) {
       if (expiry > new Date().getTime() / 1000) {
@@ -75,17 +78,19 @@ export const Subscription = ({ subData }) => {
 
   const topUp = React.useCallback(async (event) => {
     event.preventDefault();
+    const userAddress = await getAddress();
+    const randomAddress = await getRandomAddress();
     setError('');
 
     const TierHash = subData.SCID + subData.Index.toString();
-    const SupporterHash = state.userAddress;
+    const SupporterHash = userAddress;
     const data = new Object({
       scid: state.scid_subscriptions,
       ringsize: 2,
       transfers: [
         {
           burn: parseInt(event.target.amount.value * 100000),
-          destination: state.randomAddress,
+          destination: randomAddress,
         },
       ],
       sc_rpc: [
@@ -111,17 +116,19 @@ export const Subscription = ({ subData }) => {
 
   const subscribe = React.useCallback(async (event) => {
     event.preventDefault();
+    const randomAddress = await getRandomAddress();
+    const userAddress = await getAddress();
     setError('');
 
     const TierHash = subData.SCID + subData.Index.toString();
-    const SupporterHash = state.userAddress;
+    const SupporterHash = userAddress;
     const data = new Object({
       scid: state.scid_subscriptions,
       ringsize: 2,
       transfers: [
         {
           burn: parseInt(event.target.amount.value * 100000),
-          destination: state.randomAddress,
+          destination: randomAddress,
         },
       ],
       sc_rpc: [
