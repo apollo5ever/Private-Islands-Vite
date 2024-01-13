@@ -6,13 +6,12 @@ import './index.css';
 import { Home } from '@/components/tileView/home.jsx';
 import { LoginProvider } from './LoginContext';
 import { LOG, LoggerProvider } from '@/components/providers/LoggerContext.jsx';
-import OAO from './components/oao';
-import CEO from './components/ceo';
+
 import BountyList from './components/bountyList';
 
 import MyIsland from './components/myIsland';
 import { ClaimIsland } from './components/tileView/claimIsland';
-import IslandList from './components/islandList';
+
 import Island from './components/island';
 import PublishPost from './components/publishPost';
 import ModifyTier from './components/modifyTier';
@@ -92,8 +91,7 @@ createRoot(document.getElementById('root')).render(
                       path="/pi/burytreasure/:island/:index"
                       element={<BuryTreasure />}
                     />
-                    <Route path="/pi/oao" element={<OAO />} />
-                    <Route path="/pi/ceo" element={<CEO />} />
+
                     <Route path="myisland" element={<MyIsland />} />
                     <Route path="claimisland" element={<ClaimIsland />} />
                     <Route path="archipelago" element={<TileGrid />} />
