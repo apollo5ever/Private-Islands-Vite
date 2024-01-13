@@ -9,7 +9,7 @@ import { LOG, LoggerProvider } from '@/components/providers/LoggerContext.jsx';
 import OAO from './components/oao';
 import CEO from './components/ceo';
 import BountyList from './components/bountyList';
-import Treasure from './components/treasure';
+
 import MyIsland from './components/myIsland';
 import { ClaimIsland } from './components/tileView/claimIsland';
 import IslandList from './components/islandList';
@@ -18,7 +18,7 @@ import PublishPost from './components/publishPost';
 import ModifyTier from './components/modifyTier';
 import { About } from '@/components/tileView/about';
 import FundList from './components/fundList';
-import Fundraiser from './components/fundraiser';
+
 import CreateFund from './components/addFundraiser';
 import BuryTreasure from './components/buryTreasure';
 import Test from './components/simulatorTest';
@@ -80,14 +80,7 @@ createRoot(document.getElementById('root')).render(
                     <Route path="/pi/lotto" element={<COCOLotto />} />
                     <Route path="/pi/migration" element={<RevenueShare />} />
                     <Route path="/pi/island/:island" element={<Island />} />
-                    <Route
-                      path="/pi/island/:island/smokesignal/:index"
-                      element={<Fundraiser />}
-                    />
-                    <Route
-                      path="/pi/island/:island/treasure/:index"
-                      element={<Treasure />}
-                    />
+
                     <Route path="/pi/test" element={<Test />} />
                     <Route path="smokesignals" element={<FundList />} />
                     <Route path="treasure" element={<BountyList />} />
