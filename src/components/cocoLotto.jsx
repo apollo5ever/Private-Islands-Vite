@@ -1,6 +1,7 @@
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { LoginContext } from '../LoginContext';
 import { useSendTransaction } from './hooks/useSendTransaction';
+import { useGetRandomAddress } from './hooks/useGetRandomAddress';
 import { useGetSC } from './hooks/useGetSC';
 import dateString from '../utils/dateString';
 import hex2a from './hex2a';
@@ -14,6 +15,7 @@ import { Helpers } from '@/utils/helpers.js';
 export default function COCOLotto() {
   const [state, setState] = useContext(LoginContext);
   const [sendTransaction] = useSendTransaction();
+  const [getRandomAddress] = useGetRandomAddress();
   const [getSC] = useGetSC();
   const [lottos, setLottos] = useState([]);
   const [userTickets, setUserTickets] = useState([]);
@@ -76,13 +78,14 @@ export default function COCOLotto() {
 
   const BuyTickets = useCallback(async (e) => {
     e.preventDefault();
+    const randomAddress = await getRandomAddress();
 
     const data = new Object({
       scid: state.scid_lotto,
       ringsize: 2,
       transfers: [
         {
-          destination: state.randomAddress,
+          destination: randomAddress,
           scid: 'a9a977297ed6ed087861bfa117e6fbbd603c2051b0cc1b0d704bc764011aabb6',
           burn: parseInt(e.target.tickets.value) * 10000,
         },

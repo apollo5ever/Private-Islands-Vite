@@ -7,6 +7,7 @@ import N from '@/components/N.jsx';
 import Judge from '@/components/Judge.jsx';
 import { useSendTransaction } from '@/components/hooks/useSendTransaction';
 import { useGetRandomAddress } from '../../hooks/useGetRandomAddress';
+import { useGetAddress } from '../../hooks/useGetAddress';
 import GI from '@/components/getIslands';
 import { SupportBountyByERC20 } from '@/components/supportBountyByErc20';
 import { useNameLookup } from '@/components/hooks/useNameLookup';
@@ -30,6 +31,7 @@ export const Bounty = ({ bountyData }) => {
   const [executing, setExecuting] = useState(false);
   const [sendTransaction] = useSendTransaction();
   const [getRandomAddress] = useGetRandomAddress();
+  const [getAddress] = useGetAddress();
   const [nameLookup] = useNameLookup();
   const [islandSCID, setIslandSCID] = useState('');
   const [recipients, setRecipients] = useState([]);
@@ -148,6 +150,7 @@ export const Bounty = ({ bountyData }) => {
 
   const ClaimTreasure = useCallback(async (event) => {
     event.preventDefault();
+    const userAddress = await getAddress();
     console.log(treasure.judge);
     var hash = bountyData.Initiator.SCID;
 
@@ -162,7 +165,7 @@ export const Bounty = ({ bountyData }) => {
             {
               name: 'C',
               datatype: 'S',
-              value: 'Treasure Claim Submitted by: ' + state.userAddress,
+              value: 'Treasure Claim Submitted by: ' + userAddress,
             },
             {
               name: 'POC',
