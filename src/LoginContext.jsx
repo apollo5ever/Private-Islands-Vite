@@ -6,8 +6,6 @@ const LoginContext = React.createContext([{}, () => {}]);
 
 const LoginProvider = (props) => {
   const [state, setState] = useState({
-    walletMode: 'rpc',
-    daemonMode: 'pools',
     ws: null,
     scid_registry:
       'f8a81d0e5c5f9df1f9e41b186f77d1ddbd4daab4e25a380ddde44d66c040da8f',
