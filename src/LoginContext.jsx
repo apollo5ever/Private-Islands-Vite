@@ -14,7 +14,7 @@ const LoginProvider = (props) => {
     scid_fundraisers:
       'd6ad66e39c99520d4ed42defa4643da2d99f297a506d3ddb6c2aaefbe011f3dc',
     scid_subscriptions:
-      'a4943b10767d3b4b28a0c39fe75303b593b2a8609b07394c803fca1a877716cc',
+      'ce99dae86c4172378e53be91b4bb2d99f057c1eb24400510621af6002b2b10e3',
     scid_lotto:
       'c166e646ac69477c1b50bb365362f8150a8befb6ca2e3acb2b17e0f47b5876d3',
     scid_registry_mainnet:
@@ -24,7 +24,7 @@ const LoginProvider = (props) => {
     scid_fundraisers_mainnet:
       'd6ad66e39c99520d4ed42defa4643da2d99f297a506d3ddb6c2aaefbe011f3dc',
     scid_subscriptions_mainnet:
-      'a4943b10767d3b4b28a0c39fe75303b593b2a8609b07394c803fca1a877716cc',
+      'ce99dae86c4172378e53be91b4bb2d99f057c1eb24400510621af6002b2b10e3',
   });
   return (
     <LoginContext.Provider value={[state, setState]}>
