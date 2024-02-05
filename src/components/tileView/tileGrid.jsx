@@ -54,27 +54,31 @@ export const TileGrid = () => {
       : 'h-[calc((100vw/6)*7/3)] w-[calc(100vw/6)]'; // 4:3 aspect ratio for 6 tiles per row
 
   useEffect(() => {
-    console.log(
-      'umm?',
-      allElements.find(
-        (x) =>
-          x.SCID == searchParams.get('scid') &&
-          x.type == searchParams.get('type') &&
-          x.Index == searchParams.get('index')
-      )
-    );
-    return () => {
-      // When component is unmounted, lets reset this so when we come back we see all the tiles
-      setSelectedTile(
-        allElements.find(
-          (x) =>
-            x.SCID == searchParams.get('scid') &&
-            x.type == searchParams.get('type') &&
-            x.Index == searchParams.get('index')
-        )
-      );
-    };
-  }, [allElements]);
+    const scid = searchParams.get('scid');
+    const type = searchParams.get('type');
+    const index = searchParams.get('index');
+    if (scid && type && index) {
+      const foundElement = allElements.find((x) => x.SCID === scid);
+      // Ensure foundElement exists and has the necessary properties based on type
+      if (
+        foundElement &&
+        ((type === piAssetType.FUNDRAISER && 'Fundraisers' in foundElement) ||
+          (type === piAssetType.BOUNTY && 'Bounties' in foundElement) ||
+          (type === piAssetType.SUBSCRIPTION && 'Tiers' in foundElement) ||
+          type === piAssetType.ISLAND)
+      ) {
+        const foundTile = Helpers.getTileFromIsland(foundElement, type, index);
+        if (foundTile) {
+          setSelectedTile(foundTile);
+        }
+      } else {
+        console.log(
+          `No element found with SCID: ${scid} or missing expected property for type: ${type}`
+        );
+        // TODO reset selectedTile here if needed
+      }
+    }
+  }, [allElements, searchParams, setSelectedTile]);
 
   useEffect(() => {
     const filtered = allElements.filter((element) => {
