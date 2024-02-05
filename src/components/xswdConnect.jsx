@@ -13,6 +13,7 @@ export default function XSWDConnect() {
       description: 'Truly unstoppable',
     };
     const xswd = new Api(appInfo);
+    xswd.config.ip = '127.0.0.1';
     await xswd.initialize();
 
     setState({ ...state, xswd: xswd });
