@@ -145,16 +145,16 @@ export class Helpers {
     }
   };
 
-  static getTileFromIsland = (island, type) => {
+  static getTileFromIsland = (island, type, index = 0) => {
     switch (type) {
       case piAssetType.ISLAND:
         return { ...island, type: piAssetType.ISLAND };
       case piAssetType.SUBSCRIPTION:
-        return { ...island.Tiers[0], type: piAssetType.SUBSCRIPTION };
+        return { ...island.Tiers[index], type: piAssetType.SUBSCRIPTION };
       case piAssetType.BOUNTY:
-        return { ...island.Bounties[0], type: piAssetType.BOUNTY };
+        return { ...island.Bounties[index], type: piAssetType.BOUNTY };
       case piAssetType.FUNDRAISER:
-        return { ...island.Fundraisers[0], type: piAssetType.FUNDRAISER };
+        return { ...island.Fundraisers[index], type: piAssetType.FUNDRAISER };
     }
   };
 
