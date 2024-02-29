@@ -14,7 +14,7 @@ export const EditFundraiser = ({ tile }) => {
 
   {
     /*
-    TODO DO - TEST - From submission NOT TESTED as of Feb 4, 2024
+    TODO DO - TEST - Successfully tested by Apollo on Feb 29
             - Handle a user response post submit based on searchParams.get('status') == 'success'
             - Create a snackbar type message?
   */
