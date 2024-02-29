@@ -16,9 +16,10 @@ export const ActionButtons = ({ tile }) => {
           >
             Donate
           </button>
-          <button className="btn w-full cursor-pointer rounded-bl-[35px] rounded-tr-[35px] bg-gradient-to-b from-[#61C0A8] to-[#6CCAB1] py-1 text-center text-3xl leading-tight text-[#FFF] hover:shadow-lg">
-            Share
-          </button>
+          {/*TODO Hiding this for now as we have not share functionality yet*/}
+          {/*<button className="btn w-full cursor-pointer rounded-bl-[35px] rounded-tr-[35px] bg-gradient-to-b from-[#61C0A8] to-[#6CCAB1] py-1 text-center text-3xl leading-tight text-[#FFF] hover:shadow-lg">*/}
+          {/*  Share*/}
+          {/*</button>*/}
         </div>
       ) : tile.Status === 1 ? (
         <>
