@@ -12,7 +12,7 @@ import { useGetContracts } from './components/hooks/useGetContracts';
 import { useGetRandomAddress } from './components/hooks/useGetRandomAddress';
 import { PageHeader } from '@/components/tileView/header/PageHeader.jsx';
 import ThemeContext from './components/providers/ThemeContext';
-import { PageFooter } from '@/components/tileView/PageFooter.jsx';
+// import { PageFooter } from '@/components/tileView/PageFooter.jsx';
 
 function App() {
   const [menuActive, setMenuActive] = useState(false);
@@ -114,7 +114,7 @@ function App() {
       >
         <h3>Coco Balance: {state.cocoBalance}</h3>
       </div>
-      <PageFooter />
+      {/*<PageFooter />*/}
       <button
         onClick={() => {
           logger(LOG.DEBUG, COMPNAME, 'state', state);

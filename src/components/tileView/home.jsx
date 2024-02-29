@@ -15,8 +15,13 @@ import litFlame from '/src/assets/icons/icon_fire_orange.svg';
 import bottle from '/src/assets/icons/icon_bottle_blue.svg';
 import { PageHeader } from '@/components/tileView/header/PageHeader.jsx';
 import { NavLink } from 'react-router-dom';
+import { useContext } from 'react';
+import { TileContext } from '@/components/providers/TileContext.jsx';
 
 export const Home = () => {
+  const { setSelectedTile, isMobile } = useContext(TileContext);
+  setSelectedTile(null);
+
   return (
     <>
       <div className="inner_body justify-top relative flex min-h-screen flex-col bg-gradient-to-b from-[#FDFBEA] via-[#F0EBDD] to-[#E5D7B9]">

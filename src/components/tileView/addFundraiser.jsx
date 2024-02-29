@@ -269,20 +269,21 @@ export const AddFundraiser = () => {
                     className="inline-block w-full appearance-none rounded-md border-0 py-1.5 pl-4 pr-4 text-base leading-8 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-accent"
                     placeholder="0.00000"
                   />
-                  <div className="absolute inset-y-0 right-0 flex items-center">
-                    <label htmlFor="currency" className="sr-only">
-                      Currency
-                    </label>
-                    <select
-                      id="Currency"
-                      name="currency"
-                      className="h-full rounded-md border-0 bg-transparent py-0 pl-2 pr-7 text-gray-500 focus:ring-2 focus:ring-inset focus:ring-accent sm:text-sm"
-                    >
-                      <option>DERO</option>
-                      <option>COCO</option>
-                      <option>DUSDT</option>
-                    </select>
-                  </div>
+                  {/*TODO - Currency options not available yet*/}
+                  {/*<div className="absolute inset-y-0 right-0 flex items-center">*/}
+                  {/*  <label htmlFor="currency" className="sr-only">*/}
+                  {/*    Currency*/}
+                  {/*  </label>*/}
+                  {/*  <select*/}
+                  {/*    id="Currency"*/}
+                  {/*    name="currency"*/}
+                  {/*    className="h-full rounded-md border-0 bg-transparent py-0 pl-2 pr-7 text-gray-500 focus:ring-2 focus:ring-inset focus:ring-accent sm:text-sm"*/}
+                  {/*  >*/}
+                  {/*    <option>DERO</option>*/}
+                  {/*    <option>COCO</option>*/}
+                  {/*    <option>DUSDT</option>*/}
+                  {/*  </select>*/}
+                  {/*</div>*/}
                 </div>
                 <p className="mt-2 text-sm text-accent">
                   *This field is immutable. It cannot be changed afterwards.
