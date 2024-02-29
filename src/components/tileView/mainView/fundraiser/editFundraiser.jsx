@@ -1,9 +1,16 @@
 import { useFundraiserActions } from '@/components/hooks/useFundraiserActions.js';
 import { Helpers } from '@/utils/helpers.js';
 import { FlexBoxRow } from '@/components/common/FlexBoxRow.jsx';
+import { useState } from 'react';
 
 export const EditFundraiser = ({ tile }) => {
   const { handleSetMetaData } = useFundraiserActions(tile);
+  const [image, setImage] = useState(Helpers.getTileImage(tile));
+  const [name, setName] = useState(Helpers.getTileName(tile));
+  const [tagline, setTagline] = useState(Helpers.getTileTagline(tile));
+  const [description, setDescription] = useState(
+    Helpers.getTileDescription(tile)
+  );
 
   {
     /*
@@ -69,7 +76,8 @@ export const EditFundraiser = ({ tile }) => {
                 name="fund_img"
                 id="Image"
                 className="inline-block flex-grow rounded-md border-0 py-1.5 pl-4 pr-4 text-base leading-8 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-accent"
-                value={Helpers.getTileImage(tile)}
+                value={image}
+                onChange={(e) => setImage(e.value)}
                 placeholder="Image URL"
               />
             </FlexBoxRow>
@@ -87,7 +95,8 @@ export const EditFundraiser = ({ tile }) => {
                 name="fund_name"
                 id="Name"
                 className="inline-block flex-grow rounded-md border-0 py-1.5 pl-4 pr-4 text-base leading-8 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-accent"
-                value={Helpers.getTileName(tile)}
+                value={name}
+                onChange={(e) => setName(e.value)}
               />
             </FlexBoxRow>
             <div className="clear-both h-6"></div>
@@ -103,7 +112,8 @@ export const EditFundraiser = ({ tile }) => {
                 name="fund_tagline"
                 id="Tagline"
                 className="inline-block flex-grow rounded-md border-0 py-1.5 pl-4 pr-4 text-base leading-8 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-[#61C0A8]"
-                value={Helpers.getTileTagline(tile)}
+                value={tagline}
+                onChange={(e) => setTagline(e.value)}
                 placeholder="Your Tagline Here"
               />
             </FlexBoxRow>
@@ -118,7 +128,10 @@ export const EditFundraiser = ({ tile }) => {
                 id="Description"
                 className="textarea textarea-lg inline-block min-h-[300px] w-full rounded-md border-0 py-2 pl-4 pr-4 text-base leading-7 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-[#61C0A8]"
                 placeholder="Your Description Here"
-                value={Helpers.getTileDescription(tile)}
+                value={description}
+                onChange={(e) => {
+                  setDescription(e.value);
+                }}
               ></textarea>
             </div>
             <div className="clear-both h-10"></div>
