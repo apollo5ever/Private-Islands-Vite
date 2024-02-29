@@ -20,7 +20,7 @@
     "crypto-js": "^4.1.1",
     "daisyui": "^3.1.6",
     "dero-rpc-bridge-api": "^1.1.3",
-    "dero-xswd-api": "^0.6.3",
+    "dero-xswd-api": "^0.8.3-b",
     "ethers": "^5.7.2",
     "fs": "^0.0.1-security",
     "golang": "^0.1.5-stable",

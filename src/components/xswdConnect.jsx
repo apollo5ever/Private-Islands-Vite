@@ -6,14 +6,14 @@ export default function XSWDConnect() {
   const [state, setState] = useContext(LoginContext);
   const [connected, setConnected] = useState(false);
   const handleConnect = async () => {
-    const name = 'Dero Web';
+    const name = 'Private Islands';
     const appInfo = {
       id: await generateAppId(name),
       name,
-      description: 'Truly unstoppable',
+      description: `The World's Most Resilient Crowdfunding Platform`,
     };
     const xswd = new Api(appInfo);
-    xswd.config.ip = '127.0.0.1';
+
     await xswd.initialize();
 
     setState({ ...state, xswd: xswd });

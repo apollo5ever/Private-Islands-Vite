@@ -15,6 +15,12 @@ export function useSendTransaction() {
 
   async function sendTransaction(data) {
     console.log(data);
+    if (data.sc_rpc && data.sc_rpc.length > 0) {
+      data.sc_rpc.push(
+        { name: 'SC_ID', datatype: 'H', value: data.scid },
+        { name: 'SC_ACTION', datatype: 'U', value: 0 }
+      );
+    }
     const response = await state.xswd.wallet.transfer(data);
 
     return response.result.txid;
