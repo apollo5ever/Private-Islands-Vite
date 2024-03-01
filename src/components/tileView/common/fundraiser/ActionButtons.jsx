@@ -9,7 +9,9 @@ export const ActionButtons = ({ tile }) => {
   return (
     <>
       {tile.Status === 0 ? (
-        <div className="buttons grid justify-items-center gap-5 pb-2 pt-4 sm:grid-cols-2">
+        // TODO Got rid of 'grid' until we add back other button so remainig will go full width
+        // <div className="buttons grid justify-items-center gap-5 pb-2 pt-4 sm:grid-cols-2">
+        <div className="buttons justify-items-center gap-5 pb-2 pt-4 sm:grid-cols-2">
           <button
             onClick={() => setIsModalOpen(true)}
             className="btn w-full cursor-pointer rounded-bl-[35px] rounded-tr-[35px] bg-gradient-to-b from-[#61C0A8] to-[#6CCAB1] py-1 text-center text-3xl leading-tight text-[#FFF] hover:shadow-lg"
