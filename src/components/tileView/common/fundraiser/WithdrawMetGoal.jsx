@@ -9,7 +9,12 @@ export const WithdrawMetGoal = ({ tile }) => {
       tile.WithdrawlType === 'address' &&
       tile.Raised >= tile.Goal ? (
         <form onSubmit={handleWithdraw}>
-          <button type={'submit'}>Withdraw</button>
+          <button
+            className="btn w-full cursor-pointer rounded-bl-[35px] rounded-tr-[35px] bg-gradient-to-b from-[#61C0A8] to-[#6CCAB1] py-1 text-center text-3xl leading-tight text-[#FFF] hover:shadow-lg"
+            type={'submit'}
+          >
+            Withdraw
+          </button>
         </form>
       ) : (
         ''
@@ -19,7 +24,12 @@ export const WithdrawMetGoal = ({ tile }) => {
       tile.Raised >= tile.Goal ? (
         <form onSubmit={handleOaoWithdraw}>
           <input type="number" placeholder="amount" id="amount" />
-          <button type={'submit'}>Withdraw</button>
+          <button
+            className="btn w-full cursor-pointer rounded-bl-[35px] rounded-tr-[35px] bg-gradient-to-b from-[#61C0A8] to-[#6CCAB1] py-1 text-center text-3xl leading-tight text-[#FFF] hover:shadow-lg"
+            type={'submit'}
+          >
+            Withdraw
+          </button>
         </form>
       ) : (
         <></>
