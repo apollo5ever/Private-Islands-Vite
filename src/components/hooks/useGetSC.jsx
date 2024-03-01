@@ -25,7 +25,7 @@ export function useGetSC() {
       keysstring: keysstring,
       keysbytes: keysbytes,
     });
-    console.log(response);
+    console.log(scid, response);
     return response.result;
     if (state.daemonMode == 'pools') {
       let data = JSON.stringify({

@@ -7,7 +7,7 @@ export function ThemeProvider({ children }) {
   const proseClass = theme === 'dark' ? 'prose dark:prose-dark' : 'prose';
 
   const toggleTheme = () => {
-    setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
+    setTheme((prevTheme) => (prevTheme === 'dark' ? 'light' : 'dark'));
   };
 
   return (

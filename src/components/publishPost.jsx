@@ -6,6 +6,7 @@ import CryptoJS, { x64 } from 'crypto-js';
 import to from 'await-to-js';
 import Success from './success';
 import { useGetSC } from './hooks/useGetSC';
+import { useSendTransaction } from './hooks/useSendTransaction';
 
 //REDESIGNING PUBLISH POSTS TO SUBSCRIBERS
 
@@ -55,24 +56,27 @@ export default function PublishPost(props) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [randomKey, setRandomKey] = React.useState(true);
   const [getSC] = useGetSC();
+  const [sendTransaction] = useSendTransaction();
 
   const getIsland = async () => {
     setTierList(
-      state.myIslands[state.active].tiers.map((x) => (
-        <li>
-          <div className="tierList">
-            <label for={`tier_${x.index}`}>{x.name}</label>
-            <input id={`tier_${x.index}`} type="checkbox" />
-          </div>
-        </li>
-      ))
+      state.myIslands
+        .filter((x) => x.SCID == params.island)[0]
+        .Tiers.map((x) => (
+          <li>
+            <div className="tierList">
+              <label for={`tier_${x.Index}`}>{x.Name}</label>
+              <input id={`tier_${x.Index}`} type="checkbox" />
+            </div>
+          </li>
+        ))
     );
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const res0 = await getSC(state.scid_subscriptions);
+    const res0 = await getSC(state.scid_subscriptions, false, true);
     var scData = res0.stringkeys;
 
     let supporterList = [];
@@ -83,8 +87,11 @@ export default function PublishPost(props) {
 
       if (!e.target[check].checked) continue;
       var supporterSearch = new RegExp(
-        state.myIslands[state.active].scid + i + `_E`
+        state.myIslands.filter((x) => x.SCID == params.island)[0][SCID] +
+          i +
+          `_E`
       );
+      console.log(supporterSearch);
       checkedTiers.push(i);
 
       let subs = Object.keys(scData)
@@ -115,8 +122,8 @@ export default function PublishPost(props) {
       tiers: checkedTiers,
     });
 
-    e.target.post = new Object({ value: postObject });
-    props.editIsland(e);
+    /*    e.target.post = new Object({ value: postObject });
+    props.editIsland(e); */
 
     // const addPost= await state.ipfs.add(JSON.stringify(encryptedPost).toString())
     // const M =addPost.cid.toString()
@@ -156,34 +163,23 @@ export default function PublishPost(props) {
       }))
 */
     // console.log(supporterList,new Date().getTime()*1000)
-    const fee = encryptedPost.length * 3;
-
-    const [err1, res1] = await to(
-      deroBridgeApi.wallet('start-transfer', {
-        scid: '8088b0089725de1d323276a0daa1f25cfab9c0b68ccb9318cbf6bf83f5a127c1',
-        ringsize: 2,
-
-        sc_rpc: [
-          {
-            name: 'entrypoint',
-            datatype: 'S',
-            value: 'StoreKeyString',
-          },
-          {
-            name: 'k',
-            datatype: 'S',
-            value: `private.islands.${params.island}_${Date.now()}`,
-          },
-          {
-            name: 'v',
-            datatype: 'S',
-            value: `00000${encryptedPost}00000`,
-          },
-        ],
-      })
-    );
-    console.log(res1.data.result.txid);
-    const txid = res1.data.result.txid;
+    let data = {
+      scid: 'a57f3bf082290d9538d245b621bcdb34fae3a557d30200cb44ada5efc2c21d89',
+      sc_rpc: [
+        {
+          name: 'entrypoint',
+          datatype: 'S',
+          value: 'PublishPost',
+        },
+        {
+          name: 'content',
+          datatype: 'S',
+          value: `00000${encryptedPost}00000`,
+        },
+      ],
+    };
+    const txid = await sendTransaction(data);
+    console.log('publish txid ', txid);
 
     supporterList = supporterList.map(
       (x) =>
@@ -205,14 +201,19 @@ export default function PublishPost(props) {
         })
     );
 
-    const [err, res] = await to(
+    await sendTransaction({
+      ringsize: 16,
+      transfers: supporterList,
+    });
+
+    /*   const [err, res] = await to(
       deroBridgeApi.wallet('start-transfer', {
         ringsize: 16,
         transfers: supporterList,
       })
     );
 
-    setSearchParams({ status: 'success' });
+    setSearchParams({ status: 'success' }); */
   };
 
   React.useEffect(() => {

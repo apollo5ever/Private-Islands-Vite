@@ -30,7 +30,7 @@ export const FundraiserDetailTile = (props) => {
 
   return (
     <div
-      className="fundraiser_card relative mx-auto flex w-full rounded-lg bg-[#FBF8EC] px-4 pb-6 pt-4 shadow-xl ring-1 ring-gray-900/5 hover:bg-gray-100"
+      className="fundraiser_card relative mx-auto flex h-full w-full rounded-lg bg-[#FBF8EC] px-4 pb-6 pt-4 shadow-xl ring-1 ring-gray-900/5 hover:bg-gray-100"
       onClick={handleClick}
     >
       <div className="mx-auto grid w-full flex-1 grid-cols-1 content-between">
@@ -84,18 +84,6 @@ export const FundraiserDetailTile = (props) => {
                 />
               </div>
             </div>
-          </div>
-        </div>
-        <div className="progress_bar relative mt-6">
-          <div className="float-right w-full py-1 text-right text-3xl text-[#61C0A8]">
-            {raised} / {goal}
-          </div>
-          <div className="float-right inline-block w-full rounded-full">
-            <progress
-              className="progress progress-accent w-full"
-              value={raised}
-              max={goal}
-            />
           </div>
         </div>
       </div>

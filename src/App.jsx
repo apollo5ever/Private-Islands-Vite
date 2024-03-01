@@ -1,16 +1,8 @@
-import React, {
-  useState,
-  useEffect,
-  useContext,
-  useRef,
-  useCallback,
-} from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { Outlet, NavLink, Link } from 'react-router-dom';
-// import './App.css';
 import { LoginContext } from './LoginContext';
 import { useGetSC } from './components/hooks/useGetSC';
 import { default as GI } from './components/getIslands';
-import hex2a from './components/hex2a';
 import { useGetBalance } from './components/hooks/useGetBalance';
 import LoggerContext, { LOG } from '@/components/providers/LoggerContext.jsx';
 
@@ -20,6 +12,7 @@ import { useGetContracts } from './components/hooks/useGetContracts';
 import { useGetRandomAddress } from './components/hooks/useGetRandomAddress';
 import { PageHeader } from '@/components/tileView/header/PageHeader.jsx';
 import ThemeContext from './components/providers/ThemeContext';
+// import { PageFooter } from '@/components/tileView/PageFooter.jsx';
 
 function App() {
   const [menuActive, setMenuActive] = useState(false);
@@ -111,34 +104,32 @@ function App() {
   }, [state.xswd]);
 
   return (
-    <>
+    <div className="inner_body justify-top relative flex min-h-screen flex-col bg-gradient-to-b from-[#FDFBEA] via-[#F0EBDD] to-[#E5D7B9]">
       <PageHeader />
-      <div className="App">
-        <Outlet />
-        <div
-          style={{
-            color: '#B6DCE4',
-            display: theme.theme == 'dark' ? 'none' : 'block',
-          }}
-        >
-          <h3>Coco Balance: {state.cocoBalance}</h3>
-          <button
-            onClick={() => {
-              logger(LOG.DEBUG, COMPNAME, 'state', state);
-            }}
-          >
-            State
-          </button>
-          <button
-            onClick={() => {
-              getContracts();
-            }}
-          >
-            Get Contracts
-          </button>
-        </div>
+      <Outlet />
+      <div
+        style={{
+          display: theme.theme === 'light' ? 'none' : 'block',
+        }}
+      >
+        <h3>Coco Balance: {state.cocoBalance}</h3>
       </div>
-    </>
+      {/*<PageFooter />*/}
+      <button
+        onClick={() => {
+          logger(LOG.DEBUG, COMPNAME, 'state', state);
+        }}
+      >
+        State
+      </button>
+      <button
+        onClick={() => {
+          getContracts();
+        }}
+      >
+        Get Contracts
+      </button>
+    </div>
   );
 }
 

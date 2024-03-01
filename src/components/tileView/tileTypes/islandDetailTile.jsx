@@ -1,8 +1,8 @@
 import { Helpers, piAssetType } from '@/utils/helpers.js';
-import treasureChest from '@/assets/icons/icon_locked-chest_tan.svg';
-import flame from '@/assets/icons/icon_fire_orange.svg';
+import treasureChest from '/src/assets/icons/icon_locked-chest_tan.svg';
+import flame from '/src/assets/icons/icon_fire_orange.svg';
 import unlitFlame from '/src/assets/icons/icon_fire_light.svg';
-import bottle from '@/assets/icons/icon_bottle_blue.svg';
+import bottle from '/src/assets/icons/icon_bottle_blue.svg';
 import { useTheme } from '@/components/hooks/useTheme.js';
 import { useContext, useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
@@ -56,7 +56,7 @@ export const IslandDetailTile = (props) => {
   };
 
   return (
-    <div className="main_card relative mx-auto flex w-full cursor-default rounded-lg bg-[#FBF8EC] px-4 pb-6 pt-4 shadow-xl ring-1 ring-gray-900/5 hover:bg-gray-100">
+    <div className="main_card relative mx-auto flex h-full w-full cursor-default rounded-lg bg-[#FBF8EC] px-4 pb-6 pt-4 shadow-xl ring-1 ring-gray-900/5 hover:bg-gray-100">
       <div className="mx-auto grid w-full flex-1 grid-cols-1 content-between">
         <div className="img_container relative w-full justify-center pt-[140px]">
           <div

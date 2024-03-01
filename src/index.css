@@ -1,8 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IM+Fell+Double+Pica+SC&family=IM+Fell+Double+Pica:ital@0;1&family=Lora:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap');
 @import 'daisyui/dist/full.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+  .text-txt {
+    @apply text-black dark:text-white;
+  }
+}
 
 html,
 body,
@@ -10,11 +17,26 @@ body,
 .app,
 .content {
   width: 100%;
-  font-family: "Roboto Thin", sans-serif;
+  font-family: "Lora", sans-serif;
+  font-size: 18px;
+  color: #484541;
   margin: 0;
   padding: 0;
   outline: none;
   box-sizing: border-box;
+}
+
+h1, h2, h3, h4, h5, h6, .font-pica-fell {
+  font-family: 'IM FELL Double Pica SC', sans-serif;
+}
+h1, h2, h3, h4, h5, h6 {
+  color: #484541;
+}
+label, h2, h3, h4 {
+  letter-spacing: 1px;
+}
+label.checkbox {
+  letter-spacing: inherit;
 }
 
 button {
@@ -30,7 +52,7 @@ button {
 /* MTS Additions */
 /* Using this to so I can reference as vars for light/dark theme backgrounds in tailwind.config */
 :root {
-  --background-light: #B6DCE4;
+  --background-light: #FDFBEA;
   --background-dark: linear-gradient(191deg, #e4e4e7 0%, #52525B 70%, #52525B 100%);
 }
 
@@ -70,11 +92,64 @@ input, textarea {
   color: white;
 }
 
+.talk-box-arrow:before {
+  content: "";
+  position: absolute;
+  display: inline-block;
+  right: -34px;
+  bottom: 40px;
+  width: 0;
+  height: 0;
+  border-top: 18px solid transparent;
+  border-left: 18px solid #ffffff;
+  border-bottom: 18px solid transparent;
+  z-index: 40;
+}
+
 /* PageHeader for Tile view with background image */
 .page-header {
   background: url('/src/assets/parallax/HeaderBackground.png') no-repeat center center;
   background-size: cover;
 }
+
+/*
+  Work around to prose class customization not figured out yet in tailwind config file
+  Where I used the innerHtml rendering, add the embedded-html class
+*/
+.embedded-html h1 {
+  @apply text-accent;
+}
+
+.embedded-html h2 {
+  @apply text-accent;
+}
+
+.embedded-html h3 {
+  @apply text-accent;
+}
+
+.embedded-html h4 {
+  @apply text-accent;
+}
+
+.embedded-html h5 {
+  @apply text-accent;
+}
+
+/* Had to use this instead of using text-txt -- apply not playing properly with jit compiler ??
+   Works with daisyui's defined color names but the custome color names no bueno -- I can dig into this (much) later
+ */
+/*.embedded-html p {*/
+/*  @apply text-txt;*/
+/*}*/
+.embedded-html p {
+  color: black;
+}
+
+body[data-theme="dark"] .embedded-html p {
+  color: white;
+}
+
 
 /* Bubble Text for SeniorCoco */
 .bubble {
@@ -119,8 +194,11 @@ input, textarea {
   z-index: 1;
 }
 
-/* For use in inline styling */
-.hidden {
+/* For use in inline styling
+   NOTE - 1/14/24 -- Changed name from hidden to hidden-class as I it was messing with tailwind hidden class for responsiveness
+                  -- have NOT gone thru to find where I was using it to fix/adjust this - might be obsolete, but if not, find them
+*/
+.hidden-class {
   position: absolute;
   opacity: 0;
   cursor: pointer;
@@ -151,8 +229,6 @@ input, textarea {
   cursor: pointer;
   border-radius: 0.375rem; /* Tailwind's 'rounded-md' */
   transition: all 0.3s ease;
-  min-width: 350px;
-  min-height: 600px;
 }
 
 .tile {
@@ -203,4 +279,18 @@ input, textarea {
   overflow: hidden;
   text-overflow: ellipsis;
   -webkit-line-clamp: 5;
+}
+
+/* Updates from Red */
+
+.bg-homepage-fade:before {
+  content: "";
+  position: absolute;
+  display: inline-block;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height:100%;
+  background: url('src/assets/images/homePage/cloudblur.png');
+  z-index: 10;
 }

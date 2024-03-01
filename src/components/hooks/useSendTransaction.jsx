@@ -15,11 +15,13 @@ export function useSendTransaction() {
 
   async function sendTransaction(data) {
     console.log(data);
-    if (data.sc_rpc && data.sc_rpc.length > 0) {
-      data.sc_rpc.push(
-        { name: 'SC_ID', datatype: 'H', value: data.scid },
-        { name: 'SC_ACTION', datatype: 'U', value: 0 }
-      );
+    if (data.sc) {
+      data.sc_rpc.push({ name: 'SC_ACTION', datatype: 'U', value: 1 });
+    } else if (data.sc_rpc && data.sc_rpc.length > 0) {
+      data.sc_rpc.push({ name: 'SC_ACTION', datatype: 'U', value: 0 });
+    }
+    if (data.scid) {
+      data.sc_rpc.push({ name: 'SC_ID', datatype: 'H', value: data.scid });
     }
     const response = await state.xswd.wallet.transfer(data);
 

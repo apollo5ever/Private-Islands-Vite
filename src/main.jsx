@@ -21,7 +21,6 @@ import FundList from './components/fundList';
 import CreateFund from './components/addFundraiser';
 import BuryTreasure from './components/buryTreasure';
 import Test from './components/simulatorTest';
-import { PageHeader } from '@/components/tileView/header/PageHeader.jsx';
 import { ThemeProvider } from '@/components/providers/ThemeContext.jsx';
 
 import './polyfills';
@@ -39,6 +38,7 @@ import RevenueShare from './components/revenueShare';
 import COCOLotto from './components/cocoLotto';
 import { TileGrid } from '@/components/tileView/tileGrid.jsx';
 import { TileProvider } from '@/components/providers/TileContext.jsx';
+import { AddFundraiser } from '@/components/tileView/addFundraiser.jsx';
 
 const { chains, provider } = configureChains(
   [mainnet],
@@ -85,7 +85,7 @@ createRoot(document.getElementById('root')).render(
                     <Route path="treasure" element={<BountyList />} />
                     <Route
                       path="/pi/newsignal/:island/:index"
-                      element={<CreateFund />}
+                      element={<AddFundraiser />}
                     />
                     <Route
                       path="/pi/burytreasure/:island/:index"
