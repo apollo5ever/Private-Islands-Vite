@@ -39,7 +39,7 @@ export const PageHeader = () => {
   }, [isDropDownOpen]);
 
   return (
-    <header className="navigation_container sticky top-0 z-50 mb-6 grid h-[80px] w-full bg-gradient-to-b from-[#FDFBEA] via-[#F0EBDD] to-[#E5D7B9] px-4 shadow-md">
+    <header className="navigation_container sticky top-0 z-30 mb-6 grid h-[80px] w-full bg-gradient-to-b from-[#FDFBEA] via-[#F0EBDD] to-[#E5D7B9] px-4 shadow-md">
       <div className="main_navigation grid w-full grid-cols-4 items-center gap-y-6 lg:grid-cols-5">
         <div className="navbar col-span-2 grid">
           <div className="flex items-center justify-start gap-2">
@@ -52,7 +52,7 @@ export const PageHeader = () => {
                 className="max-h-[50px] min-h-[40px] w-auto max-w-fit"
               />
               {isDropDownOpen && (
-                <div className="absolute top-[80px] z-50 inline-block w-full rounded-b-lg bg-[#E5D7B9] shadow-lg md:w-1/2 lg:w-1/3">
+                <div className="absolute top-[80px] z-30 inline-block w-full rounded-b-lg bg-[#E5D7B9] shadow-lg md:w-1/2 lg:w-1/3">
                   <div className="space-y-1 px-2 pb-3 pt-2">
                     <NavLink to="/" className="menu-item block px-1 text-black">
                       Home

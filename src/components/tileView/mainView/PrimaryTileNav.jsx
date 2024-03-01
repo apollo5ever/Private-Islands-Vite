@@ -43,7 +43,7 @@ export const PrimaryTileNav = ({ tiles }) => {
   };
 
   return (
-    <div className="fund_nav_btns sticky inset-y-0 left-0 z-50 grid grid-cols-4 content-center rounded-b-lg bg-[#FDFBEA] px-2 pb-1 pt-2 shadow-xl lg:col-span-2">
+    <div className="fund_nav_btns sticky inset-y-0 left-0 z-10 grid grid-cols-4 content-center rounded-b-lg bg-[#FDFBEA] px-2 pb-1 pt-2 shadow-xl lg:col-span-2">
       <div className="prev_next_btns flex justify-start gap-3">
         <PreviousTileButton
           onClick={handlePreviousClick}
